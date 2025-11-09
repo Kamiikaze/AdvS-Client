@@ -1,9 +1,12 @@
 <div align="center">
 
 ![GitHub Release](https://img.shields.io/github/v/release/Kamiikaze/advs-client)
+![GitHub Release Date](https://img.shields.io/github/release-date/kamiikaze/advs-client)
 ![GitHub Downloads (all assets, all releases)](https://img.shields.io/github/downloads/Kamiikaze/advs-client/total)
 ![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/Kamiikaze/advs-client/release.yml)
 [![CodeFactor](https://www.codefactor.io/repository/github/kamiikaze/advs-client/badge)](https://www.codefactor.io/repository/github/kamiikaze/advs-client)
+
+![GitHub License](https://img.shields.io/github/license/kamiikaze/advs-client)
 ![GitHub Created At](https://img.shields.io/badge/created%20at-28.April%202025-red)
 </div>
 

@@ -1,0 +1,322 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Startup</title>
+    <style>
+      html {
+        height: 100%;
+        margin: 0 !important;
+        padding: 0 !important;
+        overflow: hidden;
+      }
+
+      body {
+        background-color: black;
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-position: center;
+        height: 100%;
+        margin: 0 !important;
+        padding: 0 !important;
+      }
+
+      .container {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        height: 400px;
+        align-items: center;
+        justify-content: center;
+        font-family: Arial, sans-serif;
+        color: #fff;
+        margin: auto;
+        position: absolute;
+        top: 0;
+        bottom: 0;
+      }
+
+      .version {
+        position: absolute;
+        right: 0;
+        bottom: 0;
+        padding-right: 8px;
+        padding-bottom: 8px;
+        font-family: Arial, sans-serif;
+        color: white;
+      }
+
+      /* Vollbild-Hintergrundvideo */
+      #bg-video {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        z-index: -1;
+        pointer-events: none;
+      }
+
+
+      .loading-container {
+        width: 400px;
+        padding: 20px;
+        background: rgba(69, 35, 154, 0.5);
+        box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+        backdrop-filter: blur(6px);
+        -webkit-backdrop-filter: blur(6px);
+        border: 1px solid rgba(69, 35, 154, 0.25);
+        border-radius: 12px;
+      }
+
+      .messages {
+        position: relative;
+        height: 120px;
+        overflow: hidden;
+      }
+
+      .message {
+        position: absolute;
+        width: 100%;
+        left: 0;
+        transition: bottom 0.5s cubic-bezier(0.4, 0, 0.2, 1),
+        left 0.5s cubic-bezier(0.4, 0, 0.2, 1),
+        opacity 0.5s cubic-bezier(0.4, 0, 0.2, 1),
+        color 0.5s ease;
+      }
+
+      .message.current {
+        bottom: 0;
+        opacity: 1;
+        font-size: 20px;
+        font-weight: 800;
+        color: #e9d5ff;
+      }
+
+      .message.old-1 {
+        bottom: 38px;
+        left: 10px;
+        opacity: 0.6;
+        font-size: 16px;
+        font-weight: 600;
+        color: #c4b5fd;
+      }
+
+      .message.old-2 {
+        bottom: 70px;
+        left: 20px;
+        opacity: 0.3;
+        font-size: 14px;
+        color: #a78bfa;
+      }
+
+      .message.old-3 {
+        bottom: 100px;
+        left: 30px;
+        opacity: 0.1;
+        font-size: 12px;
+        color: #a78bfa;
+      }
+
+      .message.fade-out {
+        bottom: 120px;
+        left: 40px;
+        opacity: 0;
+        font-size: 10px;
+      }
+
+      @keyframes slideUp {
+        from {
+          bottom: -40px;
+          opacity: 0;
+        }
+        to {
+          bottom: 0;
+          opacity: 1;
+        }
+      }
+
+      .message.slide-in {
+        animation: slideUp 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <video
+        id="bg-video"
+        autoplay
+        loop
+        muted
+        playsinline
+        src="./img/preload-bg.webm"
+        type="video/webm"
+      ></video>
+
+      <div class="loading-container">
+        <div class="messages" id="messages"></div>
+      </div>
+
+    </div>
+    <span class="version">v<span id="version-field"></span></span>
+
+
+    <script>
+      class LoadingStateDisplay {
+        constructor(containerId) {
+          this.container = document.getElementById(containerId);
+          this.messages = [];
+          this.isProgressActive = false;
+          this.lastProgressUpdate = 0;
+
+          // Queue to ensure minimum display duration
+          this.queue = [];
+          this.isDisplaying = false;
+          this.minDisplayTime = 1000; // ms
+        }
+
+        addMessage(message) {
+          const isProgress =
+                  /\d+\/\d+/.test(message) || /\d+\s\/\s\d+/.test(message);
+
+          if (isProgress) {
+            const now = Date.now();
+
+            // Cancel all queued messages to avoid overlap
+            this.queue = [];
+
+            if (!this.isProgressActive) {
+              // First progress message
+              this.isProgressActive = true;
+              this.lastProgressUpdate = now;
+              this.addNewMessage(message);
+            } else if (now - this.lastProgressUpdate >= this.minDisplayTime) {
+              // Only update if enough time has passed since last visual update
+              this.messages[this.messages.length - 1] = message;
+              this.updateDisplay(false);
+              this.lastProgressUpdate = now;
+            } else {
+              // Too soon: update stored message silently (next update will catch it)
+              this.messages[this.messages.length - 1] = message;
+            }
+            return;
+          }
+
+          // Non-progress message => end progress mode
+          this.isProgressActive = false;
+
+          // Queue normal messages
+          this.queue.push(message);
+          this.processQueue();
+        }
+
+        async processQueue() {
+          if (this.isDisplaying || this.queue.length === 0) return;
+
+          this.isDisplaying = true;
+          const message = this.queue.shift();
+
+          // Skip if progress mode starts mid-delay
+          if (this.isProgressActive) {
+            this.isDisplaying = false;
+            return;
+          }
+
+          this.addNewMessage(message);
+
+          await new Promise((res) => setTimeout(res, this.minDisplayTime));
+
+          this.isDisplaying = false;
+          await this.processQueue();
+        }
+
+        addNewMessage(message) {
+          this.messages.push(message);
+          if (this.messages.length > 4) {
+            this.messages.shift();
+          }
+          this.updateDisplay(true);
+        }
+
+        updateDisplay(animate) {
+          // Clear container
+          this.container.innerHTML = '';
+
+          // Render all messages
+          this.messages.forEach((msg, index) => {
+            const div = document.createElement('div');
+            div.className = 'message';
+            div.textContent = msg;
+
+            const position = this.messages.length - 1 - index;
+
+            if (position === 0) {
+              div.classList.add('current');
+              if (animate) {
+                div.classList.add('slide-in');
+              }
+            } else if (position === 1) {
+              div.classList.add('old-1');
+            } else if (position === 2) {
+              div.classList.add('old-2');
+            } else if (position === 3) {
+              div.classList.add('old-3');
+            }
+
+            this.container.appendChild(div);
+          });
+        }
+      }
+
+      // Initialize the display
+      const display = new LoadingStateDisplay('messages');
+
+      // Simulate receiving messages from backend
+      // In your electron preload, you'd receive these via IPC
+      function simulateMessages() {
+        const messages = [
+          { msg: "Starting application...", delay: 100 },
+          { msg: "Loading application...", delay: 300 },
+          { msg: "Finished loading", delay: 500 },
+          { msg: "Fetching 10/200", delay: 800 },
+          { msg: "Fetching 50/200", delay: 1000 },
+          { msg: "Fetching 100/200", delay: 1200 },
+          { msg: "Fetching 150/200", delay: 1400 },
+          { msg: "Fetching 200/200", delay: 1600 },
+          { msg: "Updating dependencies...", delay: 2000 },
+          { msg: "Installing 5/25", delay: 2300 },
+          { msg: "Installing 15/25", delay: 2500 },
+          { msg: "Installing 25/25", delay: 2700 },
+          { msg: "Initializing modules...", delay: 3000 },
+          { msg: "Loading configuration...", delay: 3500 },
+          { msg: "Ready!", delay: 4000 }
+        ];
+
+        let totalDelay = 0;
+        messages.forEach(({ msg, delay }) => {
+          totalDelay += delay;
+          setTimeout(() => display.addMessage(msg), totalDelay);
+        });
+      }
+
+      // Run simulation
+      // simulateMessages()
+
+
+      window.onload = function () {
+        const search = document.location.search;
+        const elements = search.replace("?", "").split("&");
+        const version = elements[0];
+
+        const versionEl = document.getElementById("version-field");
+        versionEl.innerText = "" + version;
+
+        window.glxApi.on("preload-msg-update", (ev, msg) => {
+          // console.log("recieved msg", msg, ev);
+          display.addMessage(msg)
+        });
+      };
+    </script>
+  </body>
+</html>

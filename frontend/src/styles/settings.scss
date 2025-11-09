@@ -1,0 +1,49 @@
+/**
+ * src/styles/settings.scss
+ *
+ * Configures SASS variables and Vuetify overwrites
+ */
+
+// https://vuetifyjs.com/features/sass-variables/`
+// @use 'vuetify/settings' with (
+//   $color-pack: false
+// );
+
+html, body, .main, .root, #root, #mount, #app {
+  height: 100%;
+  width: 100%;
+  padding: 0;
+  margin: 0;
+  overflow: auto;
+}
+
+.app {
+  height: calc(100% - 32px);
+}
+
+.v-overlay__content.flex-start {
+  align-self: flex-start;
+}
+
+.v-dialog {
+  margin-top: 32px;
+}
+.v-dialog > .v-overlay__scrim {
+  margin-top: 32px;
+}
+
+
+
+
+.v-overlay .v-overlay__content .letter {
+  display: inline-block;
+  animation: bounce 3s ease infinite;
+  animation-fill-mode: both;
+}
+
+@keyframes bounce {
+  0%   { transform: translateY(0); }
+  30%  { transform: translateY(-10px); }
+  60%  { transform: translateY(0); }
+  100% { transform: translateY(0); }
+}

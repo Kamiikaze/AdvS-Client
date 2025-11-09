@@ -1,0 +1,11 @@
+/.idea/
+
+node_modules
+dist
+test
+.env
+
+/electron/engine.bin
+/electron/config/
+/electron/res/ui
+/electron/out/

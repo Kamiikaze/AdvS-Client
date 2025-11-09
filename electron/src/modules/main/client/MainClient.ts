@@ -1,0 +1,291 @@
+import {
+  BaseClient,
+  IBaseKernelModule,
+  IKernel,
+  KernelWindowName,
+} from '@grandlinex/e-kernel';
+import * as njsParser from 'node-html-parser';
+import { HTMLElement as njsParserReturn } from 'node-html-parser';
+import MainDB from '../db/MainDB';
+import ShowList from '../db/entities/ShowList';
+import Episodes, { Episode } from '../db/entities/Episodes';
+import EpisodeHosters, { HosterLanguage } from '../db/entities/EpisodeHosters';
+import axiosGet from '../../../util/routedRequest';
+import WatchHistory, {
+  WatchHistoryListItem,
+} from '../db/entities/WatchHistory';
+
+export interface FetchedShow {
+  seasons: string[];
+  episodes: Episode[];
+  startYear: number;
+  endYear: number;
+  imdbId: string | null;
+}
+
+export default class MainClient extends BaseClient<IKernel, MainDB> {
+  constructor(mod: IBaseKernelModule<MainDB, any, any>) {
+    super('main', mod);
+  }
+
+  static getBaseUrl(showType: string) {
+    return showType === 'anime' ? 'https://aniworld.to' : 'https://s.to';
+  }
+
+  async fetchShowList(type: 'anime' | 'serie') {
+    const url = type === 'anime' ? 'https://aniworld.to' : 'https://s.to';
+    const listPath = type === 'anime' ? 'animes' : 'serien';
+
+    this.log('fetchShowList', type, url, listPath);
+    const response = await axiosGet(`${url}/${listPath}`);
+
+    if (!response) {
+      this.error('Failed to fetch show list');
+      return [];
+    }
+
+    const body: njsParserReturn = njsParser.parse(response.data);
+    this.log('body', type, body);
+
+    const genreSelector = '.genre';
+    const genreNameSelector = 'h3';
+    const titleSelector = 'li a';
+
+    const genres = body.querySelectorAll(genreSelector);
+    const mappedItems = genres
+      .map((genre) => {
+        const genreName = genre
+          .querySelector(genreNameSelector)!
+          .textContent?.trim();
+        return genre.querySelectorAll(titleSelector).map((el) => ({
+          name: el.textContent!.trim(),
+          genre: genreName,
+          type,
+          slug: el.getAttribute('href')!.replace(`/${type}/stream/`, ''),
+          meta: {
+            alternativeTitles: el.getAttribute('data-alternative-title'),
+          },
+        }));
+      })
+      .flat();
+    this.log('mappedItems', type, mappedItems.length);
+    return mappedItems;
+  }
+
+  async fetchShowDetails(show: ShowList): Promise<FetchedShow | null> {
+    this.log('fetchShowDetails', show.e_id);
+
+    const showSlug = show.show_slug;
+    const showType = show.show_type;
+
+    const url = showType === 'anime' ? 'https://aniworld.to' : 'https://s.to';
+
+    const response = await axiosGet(
+      `${url}/${showType}/stream/${showSlug}/staffel-1`,
+    );
+    if (!response) {
+      this.error('Failed to fetch show details');
+      return null;
+    }
+    const showBody: njsParserReturn = njsParser.parse(response.data);
+
+    const seasonsSelector = '#stream ul:nth-child(1) li a';
+    const episodesSelector = '#stream ul:nth-child(4) li a';
+    const yearsSelector = '.series-title small span';
+    const imdbSelector = 'a.imdb-link';
+
+    const [startYear, endYear] = showBody
+      .querySelectorAll(yearsSelector)
+      .map((el) => el.textContent);
+
+    const imdbId =
+      showBody.querySelector(imdbSelector)?.getAttribute('data-imdb') || null;
+
+    const seasonList = showBody
+      .querySelectorAll(seasonsSelector)
+      .map((s) => (s.textContent === 'Filme' ? '0' : s.textContent.trim()));
+
+    const episodes: Episode[] = [];
+
+    await Promise.all(
+      seasonList.map(async (season) => {
+        const seasonPage = await axiosGet(
+          `${url}/${showType}/stream/${showSlug}/staffel-${season}`,
+        );
+        if (!seasonPage) {
+          this.error(
+            `Failed to fetch season ${season} for show ${showType} ${showSlug}`,
+          );
+          return;
+        }
+        const seasonBody = njsParser.parse(seasonPage.data);
+        const episodesList = seasonBody
+          .querySelectorAll(episodesSelector)
+          .map((el) => {
+            const episode: Episode = {
+              show_id: show.e_id,
+              season_number: season,
+              episode_number: el.textContent.trim(),
+              episode_name: seasonBody
+                .querySelectorAll('.seasonEpisodesList tbody tr')
+                [
+                  Number(el.textContent.trim()) - 1
+                ].children[1].innerText.trim(),
+              episode_description: null,
+              createdAt: new Date(),
+            };
+            return episode;
+          });
+        episodes.push(...episodesList);
+      }),
+    );
+
+    return {
+      seasons: seasonList,
+      episodes,
+      startYear: Number(startYear),
+      endYear: Number(endYear),
+      imdbId,
+    } as FetchedShow;
+  }
+
+  async fetchEpisodeDetails(episode: Episodes) {
+    const show = await this.getModule().getDb().showList.findObj({
+      e_id: episode.show_id,
+    });
+
+    if (!show) {
+      throw new Error('Show not found');
+    }
+
+    const showSlug = show.show_slug;
+    const showType = show.show_type;
+
+    const baseUrl = MainClient.getBaseUrl(showType);
+    const episodeUrl = `${baseUrl}/${showType}/stream/${showSlug}/staffel-${episode.season_number}/episode-${episode.episode_number}`;
+
+    const response = await axiosGet(episodeUrl);
+
+    if (!response) {
+      this.error('Failed to fetch episode details');
+      return null;
+    }
+
+    const body: njsParserReturn = njsParser.parse(response.data);
+
+    const episodeDescription =
+      body
+        .querySelector('.hosterSiteTitle .descriptionSpoiler')
+        ?.textContent.trim() || null;
+    this.log('episodeDescription', episodeDescription);
+
+    const hosterList = await this.fetchEpisodeHosters(
+      body,
+      episode.e_id,
+      showType,
+    );
+
+    return {
+      episodeDescription,
+      hosterList,
+    };
+  }
+
+  async fetchEpisodeHosters(body: njsParserReturn, epId: string, type: string) {
+    const hosterSelector = '.hosterSiteVideo ul li';
+    const hosters = body.querySelectorAll(hosterSelector);
+
+    const episodeHosters: EpisodeHosters[] = [];
+
+    for (const host of hosters) {
+      const linkId = host.getAttribute('data-link-id');
+      const name = host.querySelector('h4')?.textContent!.trim();
+      const language = host.getAttribute('data-lang-key') as HosterLanguage;
+
+      if (linkId && name && language) {
+        episodeHosters.push(
+          new EpisodeHosters({
+            episode_id: epId,
+            hoster_language: language,
+            hoster_label: name,
+            hoster_key: name.toLowerCase(),
+            hoster_redirect: `${MainClient.getBaseUrl(
+              type,
+            )}/redirect/${linkId}`,
+            createdAt: new Date(),
+            hoster_resolved: null,
+            resolvedAt: null,
+          }),
+        );
+      }
+    }
+
+    return episodeHosters;
+  }
+
+  updatePreloadMsg(message: string) {
+    const eKernel = this.getKernel();
+    const preloadWindow = eKernel
+      .getWindowManager()
+      .get(KernelWindowName.PRELOAD);
+    if (preloadWindow) {
+      // preloadWindow.webContents.openDevTools();
+      preloadWindow.webContents.send('preload-msg-update', message);
+    } else {
+      this.error('Not Found preloadWindow');
+    }
+  }
+
+  async filterWatchHistoryByShow(history: WatchHistory[]) {
+    const db = this.getModule().getDb();
+    // return a show once and only for the highest season and episode number. episode and season num can be get from fetching episode by episode_id
+
+    const result: WatchHistoryListItem[] = [];
+
+    await Promise.all(
+      history.map(async (curr) => {
+        const currShow = await db.showList.getObjById(curr.show_id);
+        const currEp = await db.episodes.findObj({ e_id: curr.episode_id });
+
+        if (!currShow || !currEp) return;
+
+        const existing = result.find((h) => h.show_id === curr.show_id);
+
+        if (!existing) {
+          result.push({
+            ...curr,
+            showName: currShow.show_name,
+            showType: currShow.show_type,
+            seasonNum: Number(currEp.season_number),
+            episodeNum: Number(currEp.episode_number),
+          });
+          return;
+        }
+
+        const existingEp = await db.episodes.findObj({
+          e_id: existing.episode_id,
+        });
+
+        if (!existingEp) return;
+
+        if (
+          currEp.season_number > existingEp.season_number ||
+          (currEp.season_number === existingEp.season_number &&
+            currEp.episode_number > existingEp.episode_number)
+        ) {
+          // Replace existing with current since current is higher
+          const index = result.indexOf(existing);
+          result[index] = {
+            ...curr,
+            showName: currShow.show_name,
+            showType: currShow.show_type,
+            seasonNum: Number(currEp.season_number),
+            episodeNum: Number(currEp.episode_number),
+          };
+        }
+      }),
+    );
+
+    return result;
+  }
+}

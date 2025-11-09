@@ -41,7 +41,7 @@
       <v-divider />
 
       <v-list-item v-if="watchHistory.length === 0">
-        No history found
+        Kein Verlauf gefunden
       </v-list-item>
 
       <template

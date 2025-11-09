@@ -16,34 +16,25 @@ html, body, .main, .root, #root, #mount, #app {
   margin: 0;
   overflow: auto;
 }
+html {
+  overflow-y: hidden !important;
+}
+#app {
+  overflow: auto;
+}
 
-.app {
-  height: calc(100% - 32px);
+#search-dialog {
+  margin-top: 32px;
+
+  .v-overlay__scrim {
+    margin-top: 32px;
+  }
+
+  .v-card {
+    box-shadow: unset;
+  }
 }
 
 .v-overlay__content.flex-start {
   align-self: flex-start;
-}
-
-.v-dialog {
-  margin-top: 32px;
-}
-.v-dialog > .v-overlay__scrim {
-  margin-top: 32px;
-}
-
-
-
-
-.v-overlay .v-overlay__content .letter {
-  display: inline-block;
-  animation: bounce 3s ease infinite;
-  animation-fill-mode: both;
-}
-
-@keyframes bounce {
-  0%   { transform: translateY(0); }
-  30%  { transform: translateY(-10px); }
-  60%  { transform: translateY(0); }
-  100% { transform: translateY(0); }
 }

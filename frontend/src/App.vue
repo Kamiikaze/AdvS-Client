@@ -1,10 +1,10 @@
 <template>
   <v-app>
     <SearchDialog />
+    <Toolbar />
+    <NavDrawerMain />
+    <NavDrawerExtendedHistory />
     <v-main>
-      <Toolbar />
-      <NavDrawerMain />
-      <NavDrawerExtendedHistory />
       <router-view />
     </v-main>
   </v-app>

@@ -1,0 +1,27 @@
+{
+  "name": "advs-client",
+  "description": "A modern desktop streaming client built with Electron and Vue.js, designed to provide a seamless video streaming experience with advanced features and customization options.",
+  "homepage": "https://github.com/Kamiikaze/advs-client",
+  "repository": "https://github.com/Kamiikaze/advs-client",
+  "keywords": [
+    "electron",
+    "grandlinex",
+    "vue",
+    "vuetify",
+    "typescript",
+    "streaming",
+    "serienstream",
+    "aniworld"
+  ],
+  "author": {
+    "name": "Kamikaze",
+    "url": "https://github.com/Kamiikaze"
+  },
+  "funding": [
+    {
+      "type": "Github",
+      "url": "https://github.com/sponsors/Kamiikaze"
+    }
+  ],
+  "license": "GNU AGPLv3"
+}

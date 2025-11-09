@@ -77,14 +77,16 @@
       >
         <ExternalLink
           :url="`https://imdb.com/title/${currentShow?.show_meta.imdbId}`"
-          text="IMDB"
-        />
+        >
+          IMDB
+        </ExternalLink>
       </v-col>
       <v-col cols="auto">
         <ExternalLink
           :url="srcUrl.url"
-          :text="srcUrl.title"
-        />
+        >
+          {{ srcUrl.title }}
+        </ExternalLink>
       </v-col>
     </v-row>
 

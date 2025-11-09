@@ -28,6 +28,8 @@ export default async function createWindow(kernel: IKernel) {
       const mainWindow = new BrowserWindow({
         ...w,
         ...config.bounds,
+        minWidth: 600,
+        minHeight: 500,
         backgroundColor: '#2e2c29',
         frame: false,
         roundedCorners: false,

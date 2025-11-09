@@ -3,32 +3,32 @@
     class="external-link"
     @click="openExternalConfirm = true"
   >
-    {{ text }}
+    <slot />
+    <sup v-if="!noText"><v-icon size="8"> mdi-open-in-new </v-icon></sup>
   </span>
-  <sup><v-icon size="8"> mdi-open-in-new </v-icon></sup>
   <v-dialog
     v-model="openExternalConfirm"
     max-width="500px"
   >
     <v-card>
       <v-card-text>
-        You are about to open an external link:<br>
+        Du bist dabei, einen externen Link zu öffnen:<br>
         <v-code>{{ url }}</v-code>
         <br><br>
-        Do you want to proceed?
+        Möchtest du fortfahren?
       </v-card-text>
       <v-card-actions>
         <v-btn
           color="success"
           @click="openExternal()"
         >
-          Open
+          Öffnen
         </v-btn>
         <v-btn
           color="warning"
           @click="copyToClipboard()"
         >
-          Copy
+          Kopieren
         </v-btn>
 
         <v-spacer />
@@ -37,7 +37,7 @@
           color="error"
           @click="openExternalConfirm = false"
         >
-          Cancel
+          Abbrechen
         </v-btn>
       </v-card-actions>
     </v-card>
@@ -53,9 +53,10 @@ export default defineComponent({
       type: String,
       required: true,
     },
-    text: {
-      type: String,
-      required: true,
+    noText: {
+      type: Boolean,
+      required: false,
+      default: false,
     },
   },
   name: 'ExternalLink',
@@ -64,7 +65,7 @@ export default defineComponent({
   }),
   methods: {
     openExternal() {
-      console.log('openExternal', this.text, this.url);
+      console.log('openExternal', this.url);
       this.openExternalConfirm = false;
       window.open(this.url, '_blank');
     },

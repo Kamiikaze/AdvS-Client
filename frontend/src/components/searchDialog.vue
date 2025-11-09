@@ -5,7 +5,7 @@
     max-width="60%"
     transition="dialog-top-transition"
     content-class="flex-start"
-    @click:outside="showSearch = false"
+    @click:outside="showSearch = false, clearSearch"
   >
     <v-card class="overflow-hidden">
       <v-card-title

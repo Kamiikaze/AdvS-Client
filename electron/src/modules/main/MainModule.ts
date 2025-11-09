@@ -69,14 +69,14 @@ export default class MainModule extends BaseKernelModule<
       this.log(`ElectronBlocker: Blocked(${request.tabId})`, request.url);
     });
 
-    // if (!this.getKernel().getDevMode()) {
-    await checkUpdate(
-      this,
-      app.getVersion(),
-      store.get(StoreGlobal.GLOBAL_PATH_TEMP)!,
-      'update.exe',
-    );
-    // }
+    if (!this.getKernel().getDevMode()) {
+      await checkUpdate(
+        this,
+        app.getVersion(),
+        store.get(StoreGlobal.GLOBAL_PATH_TEMP)!,
+        'update.exe',
+      );
+    }
   }
 
   async final() {

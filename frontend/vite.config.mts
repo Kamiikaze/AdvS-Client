@@ -16,6 +16,24 @@ export default defineConfig({
   build: {
     outDir: '../electron/res/ui',
     emptyOutDir: true,
+    rollupOptions: {
+      output: {
+        manualChunks: (id) => {
+          // Handle node_modules
+          if (id.includes('node_modules')) {
+            if (id.includes('vuetify')) return 'vendor-vuetify';
+            if (id.includes('vidstack')) return 'vendor-vidstack';
+            if (id.includes('vue')) return 'vendor-vue';
+            if (id.includes('pinia')) return 'vendor-vue';
+            if (id.includes('vue-router')) return 'vendor-vue';
+            return 'vendor-other';
+          }
+
+          // Let Vite decide
+          return undefined;
+        },
+      },
+    },
   },
   base: './',
   plugins: [

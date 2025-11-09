@@ -54,7 +54,7 @@
           >
             <v-btn
               :class="
-                getEpisodeIndex == index ? 'episode-selected bg-success' : ''
+                getEpisodeIndex == index ? 'episode-selected' : ''
               "
               :rounded="false"
               @click="$emit('nextEpisode', ep.episode_number)"
@@ -222,6 +222,7 @@ export default defineComponent({
   position: sticky;
   left: 0;
   z-index: 999;
+  background-color: #643bc9;
 }
 
 .ellipsis-wrapper {

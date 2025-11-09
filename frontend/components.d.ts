@@ -21,7 +21,6 @@ declare module 'vue' {
     SearchDialog: typeof import('./src/components/searchDialog.vue')['default']
     ShortcutsOverview: typeof import('./src/components/videoPlayerV2/shortcutsOverview.vue')['default']
     Toolbar: typeof import('./src/components/toolbar.vue')['default']
-    VideoPlayer: typeof import('./src/components/videoPlayer.vue')['default']
     VideoPlayerV2: typeof import('./src/components/videoPlayerV2/index.vue')['default']
     Volume: typeof import('./src/components/videoPlayerV2/controls/Volume.vue')['default']
     WatchNav: typeof import('./src/components/watchNav.vue')['default']

@@ -85,7 +85,7 @@ export default async function checkUpdate(
     logger.log('Download URL:', releasesDownloadUrl.toString());
 
     const setupFile = await downStream(
-      `https://api.github.com/repos/Kamiikaze/AdvS-Client/releases/assets/${latestRelease.data.assets[0].id}`,
+      releasesDownloadUrl.toString(),
       {
         Accept: 'application/octet-stream',
       },

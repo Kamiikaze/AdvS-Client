@@ -17,12 +17,12 @@ export default async function downStream(
 
       const options = { headers };
 
-      const req = protocol.get(urlObj, options, (res) => {
+      const req = protocol.get(urlObj, options, async (res) => {
         // handle redirect
         if ([301, 302, 303, 307, 308].includes(res.statusCode || 0)) {
           if (res.headers.location) {
             req.destroy();
-            downStream(
+            await downStream(
               res.headers.location,
               headers,
               folderPath,

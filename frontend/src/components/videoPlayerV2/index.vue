@@ -5,7 +5,9 @@
         ref="player-controls-top"
         class="player-controls-top px-2 py-2"
       >
-        <span>{{ options.videoTitle }}</span>
+        <v-spacer />
+
+        <span class="video-title">{{ options.videoTitle }}</span>
 
         <v-spacer />
 
@@ -537,6 +539,7 @@ export default defineComponent({
         setTimeout(() => {
           this.sleeptimer.show = false;
           this.sleeptimer.text = null;
+          this.sleeptimer.enabled = false
         }, 2000);
       }
     },
@@ -990,6 +993,15 @@ export default defineComponent({
   z-index: 20;
   transform: translateY(0%);
   transition: transform 0.5s;
+}
+
+.video-title {
+  max-width: 60%;
+  margin-right: -46px;
+  font-size: 1.5em;
+}
+.player-wrapper.fullscreen-active .video-title {
+  font-size: 3em;
 }
 
 .player-volume-hint,

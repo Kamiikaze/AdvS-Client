@@ -3,9 +3,7 @@
     <v-row>
       <v-col>
         <h1
-          :data-alternative-title="
-            currentShow?.show_meta?.alternativeTitles || ''
-          "
+          :data-alternative-title="currentShow?.show_meta?.alternativeTitles || ''"
         >
           {{ currentShow?.show_name }}
         </h1>

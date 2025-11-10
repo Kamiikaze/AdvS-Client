@@ -23,7 +23,7 @@ html {
   overflow: auto;
 }
 
-#search-dialog {
+.v-dialog:not(.fullscreen-active) {
   margin-top: 32px;
 
   .v-overlay__scrim {

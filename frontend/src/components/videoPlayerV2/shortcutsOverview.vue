@@ -1,75 +1,67 @@
 <template>
-  <div>
-    <v-list-item
-      link
-      prepend-icon="mdi-keyboard-outline"
-      @click="show = true"
-    >
-      Tastenkombinationen
-    </v-list-item>
+  <v-dialog
+    v-model="showDialog"
+    width="600"
+    max-width="80%"
+    :contained="isFullscreen"
+    :class="isFullscreen ? 'fullscreen-active' : ''"
+  >
+    <v-card>
+      <v-card-title class="d-flex flex-row align-center">
+        Tastenkombinationen
+        <v-spacer />
+        <v-btn
+          icon="mdi-close"
+          variant="text"
+          @click="$emit('hide')"
+        />
+      </v-card-title>
 
-    <v-dialog
-      v-model="show"
-      width="600"
-      max-width="80%"
-    >
-      <v-card>
-        <v-card-title class="d-flex flex-row align-center">
-          Tastenkombinationen
-          <v-spacer />
-          <v-btn
-            icon="mdi-close"
-            variant="text"
-            @click="show = false"
-          />
-        </v-card-title>
+      <v-divider />
 
-        <v-divider />
+      <v-card-text>
+        <v-data-table
+          :items="keyMappings.playback"
+          :headers="[
+            { title: 'Wiederegabe', value: 'description' },
+            { title: '', value: 'hotkey', align: 'end' },
+          ]"
+          class="mb-8"
+          hide-default-footer
+          density="compact"
+        >
+          <template #[`item.hotkey`]="{ item }">
+            <VHotkey
+              :keys="item.hotkey"
+              variant="elevated"
+              display-mode="icon"
+              platform="auto"
+            />
+          </template>
+        </v-data-table>
 
-        <v-card-text>
-          <v-data-table
-            :items="keyMappings.playback"
-            :headers="[
-              { title: 'Wiederegabe', value: 'description' },
-              { title: '', value: 'hotkey', align: 'end' },
-            ]"
-            class="mb-8"
-            hide-default-footer
-            density="compact"
-          >
-            <template #[`item.hotkey`]="{ item }">
-              <VHotkey
-                :keys="item.hotkey"
-                variant="elevated"
-                display-mode="icon"
-                platform="auto"
-              />
-            </template>
-          </v-data-table>
-
-          <v-data-table
-            :items="keyMappings.general"
-            :headers="[
-              { title: 'Allgemein', value: 'description' },
-              { title: '', value: 'hotkey', align: 'end' },
-            ]"
-            class="mb-8"
-            hide-default-footer
-            density="compact"
-          >
-            <template #[`item.hotkey`]="{ item }">
-              <VHotkey
-                :keys="item.hotkey"
-                variant="elevated"
-                display-mode="icon"
-                platform="auto"
-              />
-            </template>
-          </v-data-table>
-        </v-card-text>
-      </v-card>
-    </v-dialog>
-  </div>
+        <v-data-table
+          :items="keyMappings.general"
+          :headers="[
+            { title: 'Allgemein', value: 'description' },
+            { title: '', value: 'hotkey', align: 'end' },
+          ]"
+          class="mb-8"
+          hide-default-footer
+          density="compact"
+        >
+          <template #[`item.hotkey`]="{ item }">
+            <VHotkey
+              :keys="item.hotkey"
+              variant="elevated"
+              display-mode="icon"
+              platform="auto"
+            />
+          </template>
+        </v-data-table>
+      </v-card-text>
+    </v-card>
+  </v-dialog>
 </template>
 
 <script lang="ts">
@@ -81,8 +73,18 @@ export default defineComponent({
   components: {
     VHotkey,
   },
+  emits: ['hide'],
+  props: {
+    show: {
+      type: Boolean,
+      required: true,
+    },
+    isFullscreen: {
+      type: Boolean,
+      required: true,
+    },
+  },
   data: () => ({
-    show: false,
     keyMappings: {
       playback: [
         { description: 'Wiedergabe fortsetzen/pausieren', hotkey: 'Space' },
@@ -103,7 +105,18 @@ export default defineComponent({
     },
   }),
   methods: {},
-  computed: {},
+  computed: {
+    showDialog: {
+      get() {
+        return this.show;
+      },
+      set(value: boolean) {
+        if (!value) {
+          this.$emit('hide');
+        }
+      },
+    },
+  },
 });
 </script>
 

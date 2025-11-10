@@ -194,9 +194,21 @@
 
           <v-divider />
 
-          <ShortcutsOverview />
+          <v-list-item
+            link
+            prepend-icon="mdi-keyboard-outline"
+            @click="showKeybinds = true"
+          >
+            Tastenkombinationen
+          </v-list-item>
         </v-list>
       </div>
+
+      <ShortcutsOverview
+        :is-fullscreen="isFullscreen"
+        :show="showKeybinds"
+        @hide="showKeybinds = false"
+      />
 
       <div
         v-if="sleeptimer.show"
@@ -344,6 +356,7 @@ export default defineComponent({
     nextUpTimeout: 0,
     nextUpShown: false,
     saveProgressIntervalId: 0,
+    showKeybinds: false,
     eventListeners: [] as [
       HTMLElement | Document,
       string,
@@ -541,9 +554,11 @@ export default defineComponent({
       if (!fullscreenEl) return;
       if (!this.isFullscreen) {
         fullscreenEl.requestFullscreen();
+        fullscreenEl.classList.add('fullscreen-active')
         this.isFullscreen = true;
       } else {
         document.exitFullscreen();
+        fullscreenEl.classList.remove('fullscreen-active')
         this.isFullscreen = false;
       }
     },

@@ -70,7 +70,14 @@ export default async function checkUpdate(
       latestRelease.data.assets[0].browser_download_url,
     );
 
-    fs.unlinkSync(path.join(downloadPath, fileName));
+    try {
+      fs.unlinkSync(path.join(downloadPath, fileName));
+    } catch (error) {
+      logger.error(
+        'No old updater found or failed to delete old download file:',
+        error,
+      );
+    }
 
     logger.log('Download URL:', releasesDownloadUrl.toString());
 

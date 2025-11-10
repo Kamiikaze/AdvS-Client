@@ -284,6 +284,7 @@
         ref="player"
         :src="options.sources[0].src || ''"
         key-disabled
+        aspect-ratio="16/9"
         @click="playPause"
       >
         <media-provider />
@@ -954,8 +955,9 @@ export default defineComponent({
 .player-wrapper {
   position: relative;
   width: 100%;
-  height: 488px;
+  height: auto;
   overflow: hidden;
+  aspect-ratio: 16/9;
 }
 
 #media-player {

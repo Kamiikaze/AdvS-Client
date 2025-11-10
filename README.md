@@ -20,6 +20,25 @@ A modern desktop streaming client built with Electron and Vue.js, designed to pr
 
 AdvS-Client was created to offer users a dedicated desktop application for streaming content with enhanced privacy, performance, and user experience features. The application provides a native desktop experience with integrated ad-blocking, history tracking, and an intuitive interface built on modern web technologies.
 
+## 🌐 Supported Streaming Sources
+
+AdvS-Client is designed to work with the following streaming platforms:
+
+- **[s.to](https://s.to)** - Series streaming platform
+- **[aniworld.to](https://aniworld.to)** - Anime streaming platform
+
+The application provides a unified interface to browse, search, and watch content from these platforms with enhanced features like ad-blocking, watch history, and improved video playback.
+
+### Platform Features
+
+- **Unified Library**: Access content from both platforms in one application
+- **Cross-Platform History**: Track your viewing progress across all sources
+- **Consistent Experience**: Same interface and features regardless of the source
+- **Episode Management**: Easy navigation through seasons and episodes
+- **Direct Streaming**: Stream content directly without browser overhead
+
+**Note:** AdvS-Client acts as a client interface only. All content is provided by the respective streaming platforms. The application does not host, modify, or redistribute any content.
+
 ## ✨ Features
 
 ### 🎬 **Video Streaming**

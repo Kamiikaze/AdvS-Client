@@ -234,7 +234,7 @@
       >
         <v-list-item-title> Nächste Episode </v-list-item-title>
         <v-list-item-subtitle>
-          S1 E4 • Title of the next episode
+          {{ options.nextEpisodeTitle }}
         </v-list-item-subtitle>
 
         <template #append>
@@ -311,13 +311,18 @@ export interface VideoPlayerOptions {
   sources: { src: string; type: string }[];
   videoTitle: string;
   showName: string;
+  nextEpisodeTitle: string;
   storageName?: string;
 }
 
 export default defineComponent({
   name: 'VideoPlayerV2',
   components: { ShortcutsOverview, PlayerButton, VolumeControl },
-  emits: ['nextEpisode'],
+  emits: {
+    nextEpisode: (episodeNumber?: number) => {
+      return episodeNumber === undefined || (Number.isInteger(episodeNumber) && episodeNumber > 0);
+    },
+  },
   props: {
     options: {
       type: Object as PropType<VideoPlayerOptions>,
@@ -704,7 +709,7 @@ export default defineComponent({
                   this.nextUpTimeout = window.setTimeout(() => {
                     nextUp.style.opacity = '0';
                     nextUp.style.transform = 'translateX(100%)';
-                  }, 5000);
+                  }, 1000 * 10);
                 }
               }
               // Hide "next up" again

@@ -57,7 +57,7 @@
                 getEpisodeIndex == index ? 'episode-selected' : ''
               "
               :rounded="false"
-              @click="$emit('nextEpisode', ep.episode_number)"
+              @click="$emit('nextEpisode', Number(ep.episode_number))"
             >
               {{ ep.episode_number }}
             </v-btn>
@@ -92,7 +92,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, type PropType } from 'vue';
+import { defineComponent, defineEmits, type PropType } from 'vue';
 import { type Episode } from '@/lib/electron';
 import { mapActions, mapState } from 'pinia';
 import { useShowStore } from '@/store/show';
@@ -105,7 +105,11 @@ export default defineComponent({
       required: true,
     },
   },
-  emits: ['nextEpisode'],
+  emits: {
+    nextEpisode: (episodeNumber?: number) => {
+      return episodeNumber === undefined || (Number.isInteger(episodeNumber) && episodeNumber > 0);
+    },
+  },
   name: 'WatchNav',
   data: () => ({
     showMore: false,

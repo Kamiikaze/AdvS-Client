@@ -82,10 +82,8 @@
         </ExternalLink>
       </v-col>
       <v-col cols="auto">
-        <ExternalLink
-          :url="srcUrl.url"
-        >
-          {{ srcUrl.title }}
+        <ExternalLink :url="externalSource.url">
+          {{ externalSource.title }}
         </ExternalLink>
       </v-col>
     </v-row>
@@ -116,7 +114,7 @@
 import WatchNav from '@/components/watchNav.vue';
 import { mapActions, mapState, mapWritableState } from 'pinia';
 import ExternalLink from '@/components/externalLink.vue';
-import type { EpisodeHoster, ScraperLink, Show } from '@/lib/electron';
+import type { Episode, EpisodeHoster, ScraperLink, Show } from '@/lib/electron';
 import { useShowStore } from '@/store/show';
 import type { VideoPlayerOptions } from '@/components/videoPlayerV2/index.vue';
 import VideoPlayerV2 from '@/components/videoPlayerV2/index.vue';
@@ -160,6 +158,7 @@ export default {
 
       if (this.currentShow)
         this.playerOptions.showName = this.currentShow.show_name;
+        this.playerOptions.nextEpisodeTitle = this.nextEpisodeTitle;
 
       const episodeParam = this.$route.params.episode;
 
@@ -189,29 +188,45 @@ export default {
     },
     nextEpisode(episodeNum?: number) {
       const nextEpisodeNum = episodeNum ?? Number(this.selections.episode) + 1;
-      const watchNavComponent = this.$refs['watch-nav'] as InstanceType<
-        typeof WatchNav
-      >;
 
-      const seasons = watchNavComponent.getSeasons;
+      const nextPossibleEpisode = this.findNextEpisode(
+        Number(this.selections.season),
+        nextEpisodeNum
+      );
 
-      if (nextEpisodeNum > watchNavComponent.getSeasonEpisodes.length) {
-        // Go to next season
-        const nextSeason = seasons.find(
-          (season) => Number(season.value) > Number(this.selections.season)
-        );
-        if (nextSeason) {
-          this.selections.season = nextSeason.value.toString();
-          this.selections.episode = '1';
-        } else {
-          console.warn('No more seasons available');
-        }
-      } else {
-        // Next episode of season
-        this.selections.episode = nextEpisodeNum.toString();
+      if (!nextPossibleEpisode) {
+        console.log('No next episode found');
+        return;
       }
 
+      this.selections.season = nextPossibleEpisode.season_number;
+      this.selections.episode = nextPossibleEpisode.episode_number;
+
+      this.playerOptions.nextEpisodeTitle = this.nextEpisodeTitle;
+
       this.fetchEpisodeHosters();
+    },
+    findNextEpisode(seasonNum: number, episodeNum: number): Episode | null {
+      // Find current season episodes
+      const seasonEpisodes = this.episodes.filter(
+        (ep) => Number(ep.season_number) === seasonNum
+      );
+
+      // Check if next episode exists in current season
+      const nextEpisode = seasonEpisodes.find((ep) => Number(ep.episode_number) === episodeNum);
+
+      if (nextEpisode) {
+        return nextEpisode;
+      }
+
+      // If no next episode in current season, try next season
+      const nextSeasonEpisode = this.episodes.find(
+        (ep) =>
+          Number(ep.season_number) === seasonNum + 1 &&
+          Number(ep.episode_number) === 1
+      );
+
+      return nextSeasonEpisode || null;
     },
     toggleIframe() {
       const wrapper = this.$refs['iframe-wrapper'] as HTMLElement;
@@ -234,6 +249,10 @@ export default {
         this.showIframe = true;
       }
     },
+    getEpisodeTitle(ep: Episode) {
+      const langTitles = splitEpisodeTitle(ep);
+      return `S${ep.season_number}E${ep.episode_number} • ${langTitles.german}`;
+    },
   },
   computed: {
     ...mapState(useShowStore, [
@@ -243,7 +262,7 @@ export default {
       'currentEpisode',
     ]),
     ...mapWritableState(useShowStore, ['currentShow']),
-    srcUrl() {
+    externalSource() {
       let title, url;
 
       if (!this.currentShow) return { title: '', url: '' };
@@ -304,13 +323,15 @@ export default {
           hoster.episode_id === this.currentEpisode?.e_id
       ) as EpisodeHoster;
     },
-    getEpisodeTitles() {
-      return this.currentEpisode
-        ? splitEpisodeTitle(this.currentEpisode)
-        : { german: '', english: '' };
+    currentEpisodeTitle() {
+      return this.getEpisodeTitle(this.currentEpisode as Episode);
     },
-    getVideoTitle() {
-      return `S${this.selections.season}E${this.selections.episode} • ${this.getEpisodeTitles.german}`;
+    nextEpisodeTitle() {
+      const nextEpisode = this.findNextEpisode(Number(this.selections.season), Number(this.selections.episode)+1);
+
+      if (!nextEpisode) return "Keine weitere Episode gefunden";
+
+      return this.getEpisodeTitle(nextEpisode);
     },
   },
   created() {
@@ -336,12 +357,15 @@ export default {
       async () => {
         if (!this.selectedEpisodeHost) return;
 
-        this.playerOptions.videoTitle = this.getVideoTitle;
+        this.playerOptions.videoTitle = this.currentEpisodeTitle;
         this.playerOptions.storageName = this.currentEpisode?.e_id;
 
         const streamUrl: ScraperLink = await window.glxApi.invoke(
           'get-stream-url',
-          { episodeHosterId: this.selectedEpisodeHost.e_id, refreshCache: this.clearResolvedCache }
+          {
+            episodeHosterId: this.selectedEpisodeHost.e_id,
+            refreshCache: this.clearResolvedCache,
+          }
         );
         console.log('getStreamUrl', streamUrl);
 

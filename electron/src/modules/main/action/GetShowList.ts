@@ -1,7 +1,7 @@
-import { BaseAction, ICoreAnyModule, IKernel } from '@grandlinex/e-kernel';
+import { BaseAction, ICoreAnyModule } from '@grandlinex/e-kernel';
 import MainDB from '../db/MainDB';
 
-export default class GetShowList extends BaseAction<IKernel, MainDB> {
+export default class GetShowList extends BaseAction<MainDB> {
   constructor(mod: ICoreAnyModule) {
     super('get-show-list', mod);
     this.handler = this.handler.bind(this);

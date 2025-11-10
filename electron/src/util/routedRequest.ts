@@ -28,7 +28,7 @@ export default async function axiosGet(
   console.log('axiosGet', url);
   try {
     response = await axios.get(url, {
-      lookup: customLookup,
+      lookup: (hostname, options, cb) => customLookup(hostname, options, cb),
       ...config,
     });
     console.log('axiosGet res.status', response.status);

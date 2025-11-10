@@ -3,8 +3,9 @@ import {
   IBaseKernelModule,
   OsRelease,
   StoreGlobal,
+  XActionEvent,
 } from '@grandlinex/e-kernel';
-import { app, IpcMainInvokeEvent, shell } from 'electron';
+import { app, shell } from 'electron';
 import * as path from 'path';
 
 export default class DesktopShortCut extends BaseAction {
@@ -13,7 +14,7 @@ export default class DesktopShortCut extends BaseAction {
     this.handler = this.handler.bind(this);
   }
 
-  async handler(event: IpcMainInvokeEvent, args: string[]): Promise<boolean> {
+  async handler({ args }: XActionEvent<string[]>): Promise<boolean> {
     this.log(args);
     const store = this.getConfigStore();
     const [link, name] = args;

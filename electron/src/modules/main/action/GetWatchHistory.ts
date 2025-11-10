@@ -1,15 +1,15 @@
-import { BaseAction, ICoreAnyModule, IKernel } from '@grandlinex/e-kernel';
+import { BaseAction, ICoreAnyModule } from '@grandlinex/e-kernel';
 import MainDB from '../db/MainDB';
 import MainClient from '../client/MainClient';
 
-export default class GetWatchHistory extends BaseAction<IKernel, MainDB> {
+export default class GetWatchHistory extends BaseAction<MainDB, MainClient> {
   constructor(mod: ICoreAnyModule) {
     super('get-watch-history', mod);
     this.handler = this.handler.bind(this);
   }
 
   async handler() {
-    const client = this.getModule().getClient() as MainClient;
+    const client = this.getModule().getClient();
     const db = this.getModule().getDb();
 
     const dbHistory = await db.watchHistory.getObjList({

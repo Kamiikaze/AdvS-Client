@@ -83,7 +83,7 @@ export default class Kernel extends ElectronKernel {
     store.set(ElectronGlobals.GLX_WINDOW_FRAME, 'true');
     store.set(ElectronGlobals.GLX_WINDOW_H, '700');
     store.set(ElectronGlobals.GLX_WINDOW_W, '1024');
-    store.set(StoreGlobal.GLOBAL_LOG_LEVEL, LogLevel.VERBOSE);
+    store.set(StoreGlobal.GLOBAL_LOG_LEVEL, '0');
     store.set(ElectronGlobals.GLX_IMG_ICON, Path.join(imgPath, 'icon.png'));
     store.set(ElectronGlobals.GLX_IMG_THUMP, Path.join(imgPath, 'icon.png'));
 

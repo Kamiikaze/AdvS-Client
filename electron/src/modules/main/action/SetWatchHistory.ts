@@ -1,17 +1,14 @@
-import { BaseAction, ICoreAnyModule, IKernel } from '@grandlinex/e-kernel';
+import { BaseAction, ICoreAnyModule, XActionEvent } from '@grandlinex/e-kernel';
 import MainDB from '../db/MainDB';
 import WatchHistory, { WatchHistoryItem } from '../db/entities/WatchHistory';
 
-export default class SetWatchHistory extends BaseAction<IKernel, MainDB> {
+export default class SetWatchHistory extends BaseAction<MainDB> {
   constructor(mod: ICoreAnyModule) {
     super('set-watch-history', mod);
     this.handler = this.handler.bind(this);
   }
 
-  async handler(
-    event: Electron.CrossProcessExports.IpcMainInvokeEvent,
-    historyItem: WatchHistoryItem,
-  ) {
+  async handler({ args: historyItem }: XActionEvent<WatchHistoryItem>) {
     const db = this.getModule().getDb();
 
     const exists = await db.watchHistory.findObj({

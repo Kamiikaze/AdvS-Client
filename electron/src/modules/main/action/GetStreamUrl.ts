@@ -1,18 +1,21 @@
-import { BaseAction, ICoreAnyModule, IKernel } from '@grandlinex/e-kernel';
+import { BaseAction, ICoreAnyModule, XActionEvent } from '@grandlinex/e-kernel';
 import MainDB from '../db/MainDB';
 import scraperWindow from '../../../window/scraperWindow';
 import { ScraperLink } from '../lib';
+import MainClient from '../client/MainClient';
 
-export default class GetStreamUrl extends BaseAction<IKernel, MainDB> {
+export default class GetStreamUrl extends BaseAction<MainDB, MainClient> {
   constructor(mod: ICoreAnyModule) {
     super('get-stream-url', mod);
     this.handler = this.handler.bind(this);
   }
 
-  async handler(
-    event: Electron.CrossProcessExports.IpcMainInvokeEvent,
-    args: { episodeHosterId: string; refreshCache: boolean },
-  ): Promise<ScraperLink | null> {
+  async handler({
+    args,
+  }: XActionEvent<{
+    episodeHosterId: string;
+    refreshCache: boolean;
+  }>): Promise<ScraperLink | null> {
     const db = this.getModule().getDb();
     this.log('GetStreamUrl', args);
     const episodeHosters = await this.getModule()

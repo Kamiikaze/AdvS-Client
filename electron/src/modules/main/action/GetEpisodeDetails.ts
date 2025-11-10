@@ -1,19 +1,16 @@
-import { BaseAction, ICoreAnyModule, IKernel } from '@grandlinex/e-kernel';
+import { BaseAction, ICoreAnyModule, XActionEvent } from '@grandlinex/e-kernel';
 import MainDB from '../db/MainDB';
 import MainClient from '../client/MainClient';
 
-export default class GetEpisodeDetails extends BaseAction<IKernel, MainDB> {
+export default class GetEpisodeDetails extends BaseAction<MainDB, MainClient> {
   constructor(mod: ICoreAnyModule) {
     super('get-episode-details', mod);
     this.handler = this.handler.bind(this);
   }
 
-  async handler(
-    event: Electron.CrossProcessExports.IpcMainInvokeEvent,
-    episodeId: string,
-  ) {
+  async handler({ args: episodeId }: XActionEvent<string>) {
     this.log('GetEpisodeDetails', episodeId);
-    const client = this.getModule().getClient() as MainClient;
+    const client = this.getModule().getClient();
     const db = this.getModule().getDb();
 
     const dbEpisode = await db.episodes.getObjById(episodeId);

@@ -71,7 +71,10 @@ export default async function checkUpdate(
     );
 
     try {
-      fs.unlinkSync(path.join(downloadPath, fileName));
+      const oldInstaller = fs.existsSync(path.join(downloadPath, fileName));
+      if (oldInstaller) {
+        fs.unlinkSync(path.join(downloadPath, fileName));
+      }
     } catch (error) {
       logger.error(
         'No old updater found or failed to delete old download file:',

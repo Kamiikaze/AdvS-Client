@@ -114,7 +114,6 @@ export const useShowStore = defineStore('show', {
       this.watchHistory = await window.glxApi.invoke('get-watch-history');
     },
     async updateWatchHistory(currentTime: number, duration: number) {
-      console.log("updateWatchHistory", currentTime, duration)
       const currEp = this.currentEpisode
 
       if (!currEp) {

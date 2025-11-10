@@ -790,9 +790,6 @@ export default defineComponent({
                 const storageName =
                   this.options.storageName ?? this.options.videoTitle;
                 localStorage.setItem(storageName, this.currentTime.toString());
-                console.log(
-                  `Saved progress: ${this.currentTime}s as ${storageName}`
-                );
 
                 this.updateWatchHistory(
                   Math.trunc(this.currentTime),

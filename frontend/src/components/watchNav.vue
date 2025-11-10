@@ -147,6 +147,7 @@ export default defineComponent({
       const languages = this.episodeHosters.map(
         (hoster) => hoster.hoster_language
       );
+
       return (
         this.availableLanguages().filter((lang) =>
           languages.includes(lang.value)
@@ -210,6 +211,15 @@ export default defineComponent({
     'selections.season'() {
       this.updateCurrentEpisode();
     },
+    uniqueLanguages() {
+      const isAvailable = this.uniqueLanguages.find(
+          (lang) => lang.value === this.selections.language
+      )
+
+      if (!isAvailable)
+        console.log("Selected Language is not available")
+        this.selections.language = this.uniqueLanguages[0].value
+    }
   },
 });
 </script>

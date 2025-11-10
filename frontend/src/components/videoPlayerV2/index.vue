@@ -438,7 +438,7 @@ export default defineComponent({
     },
     goToTooltip(event: MouseEvent) {
       if (!this.player) return;
-      const progressBar = event.target as HTMLElement;
+      const progressBar = this.elementRefs.progressBar;
       const rect = progressBar.getBoundingClientRect();
       const hoverPosition = event.clientX - rect.left;
       const percentage = hoverPosition / rect.width;

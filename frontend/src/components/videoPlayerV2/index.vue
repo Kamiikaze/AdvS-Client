@@ -1109,7 +1109,8 @@ export default defineComponent({
   width: 33%;
   min-width: 200px;
   max-width: 400px;
-  height: calc(100% - 56px);
+  height: auto;
+  max-height: calc(100% - 56px);
   opacity: 0;
   z-index: 30;
   transition:

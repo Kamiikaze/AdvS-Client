@@ -39,9 +39,6 @@ export default defineConfig({
   plugins: [
     VueRouter(),
     Vue({
-      hot: {
-        preserveState: false,
-      },
       template: {
         transformAssetUrls,
         compilerOptions: { isCustomElement: (tag) => tag.startsWith('media-') },

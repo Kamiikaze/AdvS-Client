@@ -641,9 +641,9 @@ export default defineComponent({
           if (event.ctrlKey || event.metaKey) {
             goToTime = this.player.currentTime + 85;
           } else if (event.shiftKey) {
-            goToTime = this.player.currentTime + 30;
-          } else {
             goToTime = this.player.currentTime + 10;
+          } else {
+            goToTime = this.player.currentTime + 30;
           }
           this.currentTime = goToTime;
           this.player.currentTime = goToTime;
@@ -653,9 +653,9 @@ export default defineComponent({
           if (event.ctrlKey || event.metaKey) {
             goToTime = this.player.currentTime - 85;
           } else if (event.shiftKey) {
-            goToTime = this.player.currentTime - 30;
-          } else {
             goToTime = this.player.currentTime - 10;
+          } else {
+            goToTime = this.player.currentTime - 30;
           }
           this.currentTime = goToTime;
           this.player.currentTime = goToTime;
@@ -671,6 +671,10 @@ export default defineComponent({
         case 'KeyM':
           event.preventDefault();
           this.elementRefs.controlVolume.toggleMute();
+          break;
+        case 'KeyN':
+          event.preventDefault();
+          this.$emit('nextEpisode');
           break;
       }
     },

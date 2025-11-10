@@ -88,11 +88,12 @@ export default defineComponent({
     keyMappings: {
       playback: [
         { description: 'Wiedergabe fortsetzen/pausieren', hotkey: 'Space' },
-        { description: 'Vorlauf 10 Sekunden', hotkey: 'arrowRight' },
-        { description: 'Vorlauf 30 Sekunden', hotkey: 'shift+arrowRight' },
+        { description: 'Nächste Episode', hotkey: 'N' },
+        { description: 'Vorlauf 10 Sekunden', hotkey: 'shift+arrowRight' },
+        { description: 'Vorlauf 30 Sekunden', hotkey: 'arrowRight' },
         { description: 'Vorlauf 85 Sekunden', hotkey: 'ctrl+arrowRight' },
-        { description: 'Rücklauf 10 Sekunden', hotkey: 'arrowLeft' },
-        { description: 'Rücklauf 30 Sekunden', hotkey: 'shift+arrowLeft' },
+        { description: 'Rücklauf 10 Sekunden', hotkey: 'shift+arrowLeft' },
+        { description: 'Rücklauf 30 Sekunden', hotkey: 'arrowLeft' },
         { description: 'Rücklauf 85 Sekunden', hotkey: 'ctrl+arrowLeft' },
       ],
       general: [

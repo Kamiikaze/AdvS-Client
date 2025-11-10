@@ -92,7 +92,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, defineEmits, type PropType } from 'vue';
+import { defineComponent, type PropType } from 'vue';
 import { type Episode } from '@/lib/electron';
 import { mapActions, mapState } from 'pinia';
 import { useShowStore } from '@/store/show';

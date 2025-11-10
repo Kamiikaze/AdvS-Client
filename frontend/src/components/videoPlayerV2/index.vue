@@ -230,7 +230,7 @@
         ref="player-next-up"
         class="player-next-up"
         link
-        @click="$emit('nextEpisode'), player.pause()"
+        @click="nextUpAction"
       >
         <v-list-item-title> Nächste Episode </v-list-item-title>
         <v-list-item-subtitle>
@@ -553,6 +553,15 @@ export default defineComponent({
           return Math.max(delay - elapsed, 0);
         },
       };
+    },
+    async nextUpAction(ev: PointerEvent | MouseEvent | KeyboardEvent) {
+      // Prevent spacebar trigger when element is focused
+      if (ev.detail === 0) return;
+
+      clearInterval(this.saveProgressIntervalId)
+      this.player.pause();
+      this.$emit('nextEpisode');
+      this.elementRefs.videoPlayer.focus()
     },
     toggleFullscreen() {
       const fullscreenEl = document.querySelector('.player-wrapper');

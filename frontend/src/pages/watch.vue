@@ -103,6 +103,7 @@
 
     <VideoPlayerV2
       v-if="playerOptions.sources"
+      ref="videoPlayer"
       :options="playerOptions"
       @next-episode="nextEpisode"
     />
@@ -119,6 +120,7 @@ import { useShowStore } from '@/store/show';
 import type { VideoPlayerOptions } from '@/components/videoPlayerV2/index.vue';
 import VideoPlayerV2 from '@/components/videoPlayerV2/index.vue';
 import { splitEpisodeTitle } from '@/lib/utils';
+import type {ComponentInstance} from "vue";
 
 export default {
   name: 'Watch',
@@ -186,7 +188,7 @@ export default {
     updateWindowTitle() {
       document.title = `S${this.selections.season}E${this.selections.episode} - ${this.currentShow?.show_name} | AdvS`;
     },
-    nextEpisode(episodeNum?: number) {
+    async nextEpisode(episodeNum?: number) {
       const nextEpisodeNum = episodeNum ?? Number(this.selections.episode) + 1;
 
       const nextPossibleEpisode = this.findNextEpisode(
@@ -204,7 +206,18 @@ export default {
 
       this.playerOptions.nextEpisodeTitle = this.nextEpisodeTitle;
 
-      this.fetchEpisodeHosters();
+      // Start playback on manual next-interaction
+      const videoPlayerChildComponent = this.$refs.videoPlayer as ComponentInstance<typeof VideoPlayerV2>
+      if (!videoPlayerChildComponent.autoplay) {
+        videoPlayerChildComponent.autoplay = true
+        videoPlayerChildComponent.toggleAutoplay()
+        setTimeout(() => {
+          videoPlayerChildComponent.autoplay = false
+          videoPlayerChildComponent.toggleAutoplay()
+        }, 1000 * 2)
+      }
+
+      await this.fetchEpisodeHosters();
     },
     findNextEpisode(seasonNum: number, episodeNum: number): Episode | null {
       // Find current season episodes

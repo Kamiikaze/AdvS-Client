@@ -37,7 +37,9 @@ export default class ShowListUpdater extends CoreTriggerService<
     this.log('Adding shows to database');
     // eslint-disable-next-line no-restricted-syntax
     for (const [index, show] of showList.entries()) {
-      client.updatePreloadMsg(`Adding Show ${index + 1} / ${showList.length}`);
+      client.updatePreloadMsg(
+        `Updating Show ${index + 1} / ${showList.length}`,
+      );
 
       const exists = await db.showList.findObj({
         show_slug: show.slug,

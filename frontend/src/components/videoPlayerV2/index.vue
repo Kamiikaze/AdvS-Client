@@ -1009,7 +1009,7 @@ export default defineComponent({
 .player-volume-hint,
 .player-sleeptimer-hint {
   position: absolute;
-  top: 60px;
+  top: 100px;
   left: 0;
   right: 0;
   width: fit-content;

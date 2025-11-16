@@ -1000,10 +1000,10 @@ export default defineComponent({
 .video-title {
   max-width: 60%;
   margin-right: -46px;
-  font-size: 1.5em;
+  font-size: 1.2em;
 }
 .player-wrapper.fullscreen-active .video-title {
-  font-size: 3em;
+  font-size: 2em;
 }
 
 .player-volume-hint,

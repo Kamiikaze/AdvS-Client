@@ -511,9 +511,9 @@ export default defineComponent({
             this.player.pause();
             this.sleeptimer.text = `Good night! 🌙`;
           },
-          duration * 60 * 1000
+          (this.sleeptimer.current + duration) * 60 * 1000
         );
-        this.sleeptimer.duration = duration;
+        this.sleeptimer.duration = this.sleeptimer.current + duration;
 
         // update current every second
         this.sleeptimer.intervalId = window.setInterval(() => {
@@ -522,7 +522,7 @@ export default defineComponent({
             const minutes = Math.floor(remainingMs / 60000);
             const seconds = Math.floor((remainingMs % 60000) / 1000);
 
-            this.sleeptimer.show = minutes < 5;
+            this.sleeptimer.show = minutes < 3;
             this.sleeptimer.text = `⏲️ ${minutes}m ${seconds}s`;
             this.sleeptimer.current = minutes;
           }
@@ -536,6 +536,7 @@ export default defineComponent({
         this.sleeptimer.timer?.clear();
         this.sleeptimer.timer = null;
         this.sleeptimer.duration = 0;
+        this.sleeptimer.current = 0;
 
         setTimeout(() => {
           this.sleeptimer.show = false;

@@ -564,6 +564,8 @@ export default defineComponent({
       if (ev.detail === 0) return;
 
       clearInterval(this.saveProgressIntervalId)
+      this.elementRefs.nextUp.style.opacity = '0';
+      this.elementRefs.nextUp.style.transform = 'translateX(100%)';
       this.player.pause();
       this.$emit('nextEpisode');
       this.elementRefs.videoPlayer.focus()

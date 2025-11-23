@@ -43,7 +43,7 @@
 <script lang="ts">
 import { mapState } from 'pinia';
 import { useShowStore } from '@/store/show';
-import moment from 'moment/min/moment-with-locales';
+import moment from "moment";
 
 export default {
   name: 'RecentlyAdded',
@@ -56,8 +56,18 @@ export default {
   }),
   methods: {
     dateFromNow(date: Date) {
-      moment.locale('de');
-      return moment(date).fromNow();
+      return moment(date).calendar(null, {
+        sameDay: '[Heute]',
+        lastDay: '[Gestern]',
+        lastWeek: () => {
+          const days = moment().diff(moment(date), 'days');
+          return `[vor ${days} Tagen]`;
+        },
+        sameElse: () => {
+          const days = moment().diff(moment(date), 'days');
+          return `[vor ${days} Tagen]`;
+        },
+      });
     },
     openShow(ev: any, val: any) {
       this.$router.push(`/watch/${val.item.e_id}`);
@@ -73,7 +83,7 @@ export default {
         (show) => new Date(show.createdAt) > thirtyDaysAgo
       );
       return recentShows.sort(
-        (a, b) => a.createdAt.getTime() - b.createdAt.getTime()
+        (a, b) => b.createdAt.getTime() - a.createdAt.getTime()
       );
     },
   },

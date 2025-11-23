@@ -41,11 +41,14 @@
       :key="getSeasonEpisodes.length"
       align="center"
     >
-      <div :style="{ width: getSeasonEpisodes.length < 14 ? 'auto' : '100%' }">
+      <div
+        ref="episodeContainer"
+        class="episode-list-wrapper"
+      >
         <v-slide-group
           v-model="getEpisodeIndex"
           class="episode-list pa-4"
-          :show-arrows="getSeasonEpisodes.length > 13"
+          :show-arrows="shouldShowArrows"
         >
           <v-slide-group-item
             v-for="(ep, index) in getSeasonEpisodes"
@@ -53,9 +56,7 @@
             :value="ep.episode_number"
           >
             <v-btn
-              :class="
-                getEpisodeIndex == index ? 'episode-selected' : ''
-              "
+              :class="getEpisodeIndex == index ? 'episode-selected' : ''"
               :rounded="false"
               @click="$emit('nextEpisode', Number(ep.episode_number))"
             >
@@ -107,12 +108,16 @@ export default defineComponent({
   },
   emits: {
     nextEpisode: (episodeNumber?: number) => {
-      return episodeNumber === undefined || (Number.isInteger(episodeNumber) && episodeNumber > 0);
+      return (
+        episodeNumber === undefined ||
+        (Number.isInteger(episodeNumber) && episodeNumber > 0)
+      );
     },
   },
   name: 'WatchNav',
   data: () => ({
     showMore: false,
+    containerWidth: 0,
   }),
   methods: {
     splitEpisodeTitle,
@@ -133,6 +138,14 @@ export default defineComponent({
         );
         console.log('getEpisode', getEpisode);
         state.currentEpisode = getEpisode;
+      });
+    },
+    checkContainerWidth() {
+      this.$nextTick(() => {
+        const container = this.$refs.episodeContainer as HTMLElement;
+        if (container) {
+          this.containerWidth = container.offsetWidth;
+        }
       });
     },
   },
@@ -203,6 +216,14 @@ export default defineComponent({
         ? this.splitEpisodeTitle(this.currentEpisode)
         : { german: '', english: '' };
     },
+    shouldShowArrows() {
+      const episodeButtonWidth = 64;
+      const estimatedTotalWidth =
+        this.getSeasonEpisodes.length * episodeButtonWidth;
+
+      // Add padding and some buffer
+      return estimatedTotalWidth > this.containerWidth - 100;
+    },
   },
   watch: {
     'selections.episode'() {
@@ -210,21 +231,40 @@ export default defineComponent({
     },
     'selections.season'() {
       this.updateCurrentEpisode();
+      this.$nextTick(() => {
+        this.checkContainerWidth();
+      });
+    },
+    getSeasonEpisodes() {
+      this.$nextTick(() => {
+        this.checkContainerWidth();
+      });
     },
     uniqueLanguages() {
       const isAvailable = this.uniqueLanguages.find(
-          (lang) => lang.value === this.selections.language
-      )
+        (lang) => lang.value === this.selections.language
+      );
 
-      if (!isAvailable)
-        console.log("Selected Language is not available")
-        this.selections.language = this.uniqueLanguages[0].value
-    }
+      if (!isAvailable) console.log('Selected Language is not available');
+      this.selections.language = this.uniqueLanguages[0].value;
+    },
+  },
+  mounted() {
+    this.checkContainerWidth();
+    window.addEventListener('resize', this.checkContainerWidth);
+  },
+  beforeUnmount() {
+    window.removeEventListener('resize', this.checkContainerWidth);
   },
 });
 </script>
 
 <style>
+.episode-list-wrapper {
+  width: 100%;
+  max-width: 100%;
+}
+
 .episode-list button:first-child {
   border-radius: 5px 0 0 5px !important;
 }

@@ -3,6 +3,7 @@
     <v-row>
       <v-col>
         <h1
+          style="text-wrap: balance"
           :data-alternative-title="currentShow?.show_meta?.alternativeTitles || ''"
         >
           {{ currentShow?.show_name }}
@@ -106,7 +107,6 @@
       @next-episode="nextEpisode"
     />
   </v-container>
-  <v-skeleton-loader />
 </template>
 
 <script lang="ts">

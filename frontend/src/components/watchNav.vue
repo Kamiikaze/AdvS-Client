@@ -130,7 +130,11 @@ export default defineComponent({
       this.selections.episode = (val + 1).toString();
       this.fetchEpisodeHosters();
     },
-    updateCurrentEpisode() {
+    updateCurrentEpisode(seasonChanged?: boolean) {
+      if (seasonChanged) {
+        this.selections.episode = "1";
+      }
+
       useShowStore().$patch((state) => {
         const getEpisode = this.getEpisodeByNumber(
           state.selections.season,
@@ -229,8 +233,9 @@ export default defineComponent({
     'selections.episode'() {
       this.updateCurrentEpisode();
     },
-    'selections.season'() {
-      this.updateCurrentEpisode();
+    'selections.season'(oldS, newS) {
+      console.log(`Season changed from ${oldS} to ${newS}`);
+      this.updateCurrentEpisode(true);
       this.$nextTick(() => {
         this.checkContainerWidth();
       });

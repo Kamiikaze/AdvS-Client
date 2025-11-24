@@ -3,15 +3,11 @@
     v-model="showExtendedDrawer.history"
     temporary
   >
-    <v-list
-      class="pt-0"
-    >
+    <v-list class="pt-0">
       <v-list-item class="header">
         <span class="v-list-item-subtitle">Verlauf</span>
         <template #append>
-          <v-tooltip
-            text="Bearbeiten"
-          >
+          <v-tooltip text="Bearbeiten">
             <template #activator="{ props }">
               <v-btn
                 v-bind="props"
@@ -88,7 +84,7 @@ import { mapActions, mapState, mapWritableState } from 'pinia';
 import { useAppStore } from '@/store/app';
 import { useShowStore } from '@/store/show';
 import type { WatchHistoryListItem } from '@/lib/electron';
-import moment from 'moment/min/moment-with-locales';
+import { convertSecToMin, getRelativeTime } from '@/lib/utils';
 
 export default defineComponent({
   name: 'NavDrawerExtended',
@@ -97,6 +93,7 @@ export default defineComponent({
     refreshTimeout: null as NodeJS.Timeout | null,
   }),
   methods: {
+    getRelativeTime,
     ...mapActions(useShowStore, ['fetchWatchHistory']),
     refreshHistory() {
       this.fetchWatchHistory();
@@ -105,20 +102,9 @@ export default defineComponent({
         this.refreshTimeout = null;
       }, 1000 * 5);
     },
-    convertSecToMin(sec: number) {
-      // display 00:00
-      const minutes = Math.floor(sec / 60);
-      const seconds = Math.floor(sec % 60);
-
-      return `${minutes.toString().padStart(2, '0')}:${seconds < 10 ? '0' : ''}${seconds}`;
-    },
-    getRelativeTime(date: Date) {
-      moment.locale('de');
-      return moment(date).fromNow();
-    },
     getEpisodeProgress(item: WatchHistoryListItem) {
       if (Number(item.progressPercent) > 95) return 'Abgeschlossen';
-      return `${this.convertSecToMin(Number(item.progressSeconds))} | ${Number(item.progressPercent).toFixed(0)}%`;
+      return `${convertSecToMin(Number(item.progressSeconds))} | ${Number(item.progressPercent).toFixed(0)}%`;
     },
   },
   computed: {

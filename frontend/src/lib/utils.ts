@@ -1,4 +1,5 @@
 import type { Episode } from '@/lib/electron';
+import moment from 'moment/min/moment-with-locales';
 
 type Callback = () => void;
 
@@ -67,4 +68,17 @@ export function useInactivityTracker(
     start,
     stop,
   };
+}
+
+export function getRelativeTime(date: Date) {
+  moment.locale('de');
+  return moment(date).fromNow();
+}
+
+// Displays 00:00
+export function convertSecToMin(sec: number) {
+  const minutes = Math.floor(sec / 60);
+  const seconds = Math.floor(sec % 60);
+
+  return `${minutes.toString().padStart(2, '0')}:${seconds < 10 ? '0' : ''}${seconds}`;
 }

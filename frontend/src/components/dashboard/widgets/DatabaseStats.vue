@@ -42,7 +42,7 @@ import { useShowStore } from '@/store/show';
 export default {
   name: 'DatabaseStats',
   computed: {
-    ...mapState(useShowStore, ['shows', "watchHistory"]),
+    ...mapState(useShowStore, ['shows']),
     showCount() {
       return this.shows.reduce(
         (count, show) => {
@@ -54,14 +54,6 @@ export default {
           return count;
         },
         { serien: 0, animes: 0 }
-      );
-    },
-    recentlyAdded() {
-      // show if createdAt is past 30 days
-      const thirtyDaysAgo = new Date();
-      thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
-      return this.shows.filter(
-        (show) => new Date(show.createdAt) > thirtyDaysAgo
       );
     },
   },

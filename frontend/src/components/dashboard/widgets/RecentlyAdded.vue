@@ -8,7 +8,7 @@
     <v-card-text>
       <v-data-table-virtual
         id="recent-table"
-        :height="300"
+        :height="520"
         :items="recentlyAdded"
         :headers="headers"
         :row-props="{ class: 'list-item' }"

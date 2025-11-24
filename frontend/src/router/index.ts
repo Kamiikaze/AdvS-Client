@@ -5,7 +5,7 @@
  */
 
 // Composables
-import { createRouter, createWebHistory } from 'vue-router/auto';
+import { createRouter, createWebHistory } from 'vue-router';
 import Dashboard from '@/pages/index.vue';
 import Watch from '@/pages/watch.vue';
 import Settings from '@/pages/settings.vue';
@@ -55,7 +55,7 @@ const router = createRouter({
 
 router.beforeEach((to, from, next) => {
   console.debug('Routing to', to);
-  if (to.path === '/watch' && !to.params.id) {
+  if (to.path === '/watch' && !('id' in to.params)) {
     console.log('NavGuard');
     next(false);
     return;

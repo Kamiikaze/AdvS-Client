@@ -3,7 +3,6 @@ import Components from 'unplugin-vue-components/vite';
 import Vue from '@vitejs/plugin-vue';
 import Vuetify, { transformAssetUrls } from 'vite-plugin-vuetify';
 import ViteFonts from 'unplugin-fonts/vite';
-import VueRouter from 'unplugin-vue-router/vite';
 import { vite as vidstack } from 'vidstack/plugins';
 
 // Utilities
@@ -37,7 +36,6 @@ export default defineConfig({
   },
   base: './',
   plugins: [
-    VueRouter(),
     Vue({
       template: {
         transformAssetUrls,

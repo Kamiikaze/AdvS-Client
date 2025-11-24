@@ -52,7 +52,8 @@ module.exports = {
         authors: 'Kamikaze',
         name: 'AdvS-Client',
         title: 'AdvS-Client',
-        description: 'An example Electron app',
+        productName: "AdvS-Client",
+        description: 'A modern desktop streaming client built with Electron and Vue.js, designed to provide a seamless video streaming experience with advanced features and customization options.',
         setupIcon: './res/img/icon.ico',
         loadingGif: './res/img/loading.gif',
       }

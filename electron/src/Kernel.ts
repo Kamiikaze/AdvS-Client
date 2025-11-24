@@ -31,7 +31,7 @@ if (isDev()) {
   config = undefined;
 }
 
-const appName = 'ADVS-Client';
+const appName = 'AdvS-Client';
 const appCode = 'advs-client';
 
 /**
@@ -46,6 +46,8 @@ if (process.defaultApp) {
 } else {
   app.setAsDefaultProtocolClient('advs');
 }
+
+app.setAppUserModelId('com.squirrel.advs-client');
 
 const gotTheLock = app.requestSingleInstanceLock();
 

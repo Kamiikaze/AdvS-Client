@@ -5,7 +5,7 @@
  */
 
 import pluginVue from 'eslint-plugin-vue';
-import vueTsEslintConfig from '@vue/eslint-config-typescript';
+import { defineConfigWithVueTs, vueTsConfigs } from '@vue/eslint-config-typescript';
 import pluginPrettier from 'eslint-plugin-prettier';
 
 export default [
@@ -19,8 +19,10 @@ export default [
     ignores: ['**/dist/**', '**/dist-ssr/**', '**/coverage/**'],
   },
 
-  ...pluginVue.configs['flat/recommended'],
-  ...vueTsEslintConfig(),
+  ...defineConfigWithVueTs(
+    pluginVue.configs['flat/recommended'],
+    vueTsConfigs.recommended
+  ),
 
   {
     plugins: {

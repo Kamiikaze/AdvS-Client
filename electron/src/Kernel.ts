@@ -16,20 +16,11 @@ import MainModule from './modules/main/MainModule';
 import InitTray from './Tray';
 import createWindow from './window/createWindow';
 import resolveCommand from './util/ComandResolver';
-/**
- * Define global resource path
- */
-
-/**
- * Override the preload glx default
- * ```typescript
- * const preload = Path.join(app.getAppPath(), 'html' ,'preload.html');
- * ```
- */
 
 const preload = Path.join(app.getAppPath(), 'res', 'preload.html');
 const appRoot = Path.join(app.getAppPath(), 'res', 'ui', 'index.html');
 const imgPath = Path.join(app.getAppPath(), 'res', 'img');
+
 /**
  * Override config path in dev mode to current folder
  */

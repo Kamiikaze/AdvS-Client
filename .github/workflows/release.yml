@@ -77,7 +77,7 @@ jobs:
         id: changelog
         run: |
           # Generate changelog and save to variable
-          CHANGELOG=$(conventional-changelog -p angular -r 1)
+          CHANGELOG=$(conventional-changelog -p angular -r 2)
           # Use multiline string for GitHub Actions output
           echo "content<<EOF" >> $GITHUB_OUTPUT
           echo "$CHANGELOG" >> $GITHUB_OUTPUT

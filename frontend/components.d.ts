@@ -25,5 +25,6 @@ declare module 'vue' {
     VideoPlayerV2: typeof import('./src/components/videoPlayerV2/index.vue')['default']
     Volume: typeof import('./src/components/videoPlayerV2/controls/Volume.vue')['default']
     WatchNav: typeof import('./src/components/watchNav.vue')['default']
+    WidgetWrapper: typeof import('./src/components/dashboard/WidgetWrapper.vue')['default']
   }
 }

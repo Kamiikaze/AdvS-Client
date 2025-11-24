@@ -1,9 +1,12 @@
 <template>
-  <v-card
+  <div
     v-if="lastSeenEpisode"
-    color="#643bc9"
+    class="widget-content"
   >
-    <v-card-title>Zuletzt gesehen</v-card-title>
+    <v-card-title>Zuletzt gesehen </v-card-title>
+    <v-card-subtitle>
+      {{ getRelativeTime(lastSeenEpisode.updatedAt) }}
+    </v-card-subtitle>
     <v-card-text>
       <v-row dense>
         <v-col style="text-wrap: balance">
@@ -13,25 +16,23 @@
       <v-row dense>
         <v-col>Staffel {{ lastSeenEpisode.seasonNum }}</v-col>
         <v-col>Episode {{ lastSeenEpisode.episodeNum }}</v-col>
-        <v-col>{{ convertSecToMin(Number(lastSeenEpisode.progressSeconds)) }}</v-col>
-      </v-row>
-      <v-row dense>
         <v-col>
-          Gesehen {{ getRelativeTime(lastSeenEpisode.updatedAt) }}
-        </v-col>
-      </v-row>
-      <v-row dense>
-        <v-col>
-          <v-btn
-            append-icon="mdi-play"
-            @click="openShow(lastSeenEpisode.show_id, lastSeenEpisode.episode_id)"
-          >
-            Weiter anschauen
-          </v-btn>
+          {{ convertSecToMin(Number(lastSeenEpisode.progressSeconds)) }}
         </v-col>
       </v-row>
     </v-card-text>
-  </v-card>
+    <v-card-actions>
+      <v-btn
+        class="w-100"
+        variant="outlined"
+        density="comfortable"
+        append-icon="mdi-play"
+        @click="openShow(lastSeenEpisode.show_id, lastSeenEpisode.episode_id)"
+      >
+        Weiter anschauen
+      </v-btn>
+    </v-card-actions>
+  </div>
 </template>
 
 <script lang="ts">
@@ -58,7 +59,9 @@ export default {
 </script>
 
 <style scoped>
-.stats .v-col {
-  max-width: 80px;
+.widget-content {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
 }
 </style>

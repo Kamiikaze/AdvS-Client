@@ -1,14 +1,14 @@
 <template>
-  <v-card color="#643bc9">
-    <v-card-title>Kürzlich hinzugefügt</v-card-title>
+  <div class="widget-content">
+    <v-card-title>Kürzlich hinzugefügt </v-card-title>
     <v-card-subtitle>
       {{ recentlyAdded.length }} neue Titel wurden in den letzten 30 Tagen
       hinzugefügt
     </v-card-subtitle>
-    <v-card-text>
+    <v-card-text class="widget-table-container">
       <v-data-table-virtual
         id="recent-table"
-        :height="520"
+        :height="tableHeight"
         :items="recentlyAdded"
         :headers="headers"
         :row-props="{ class: 'list-item' }"
@@ -37,15 +37,16 @@
         </template>
       </v-data-table-virtual>
     </v-card-text>
-  </v-card>
+  </div>
 </template>
 
 <script lang="ts">
 import { mapState } from 'pinia';
 import { useShowStore } from '@/store/show';
-import moment from "moment";
+import moment from 'moment';
+import { defineComponent } from 'vue';
 
-export default {
+export default defineComponent({
   name: 'RecentlyAdded',
   data: () => ({
     headers: [
@@ -53,8 +54,26 @@ export default {
       { title: 'show_name', key: 'show_name' },
       { title: 'Created', key: 'createdAt', width: 150 },
     ],
+    tableHeight: 520,
   }),
+  mounted() {
+    this.updateTableHeight();
+    window.addEventListener('resize', this.updateTableHeight);
+  },
+  beforeUnmount() {
+    window.removeEventListener('resize', this.updateTableHeight);
+  },
   methods: {
+    updateTableHeight() {
+      // Calculate dynamic height based on parent container
+      const container = this.$el?.closest('.vgl-item');
+
+      if (container) {
+        const containerHeight = container.offsetHeight;
+        // Subtract space for title, subtitle, and padding
+        this.tableHeight = Math.max(200, containerHeight - 110);
+      }
+    },
     dateFromNow(date: Date) {
       return moment(date).calendar(null, {
         sameDay: '[Heute]',
@@ -87,7 +106,7 @@ export default {
       );
     },
   },
-};
+});
 </script>
 
 <style>

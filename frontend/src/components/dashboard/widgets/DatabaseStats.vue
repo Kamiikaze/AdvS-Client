@@ -1,38 +1,28 @@
 <template>
-  <v-card
-    color="#643bc9"
-  >
-    <v-card-title>Stats</v-card-title>
+  <div class="widget-content">
+    <v-card-title>Statistik</v-card-title>
+    <v-card-subtitle>Einträge in der Datenbank</v-card-subtitle>
     <v-card-text>
-      <v-row
-        dense
-        class="stats"
-      >
+      <v-row dense>
         <v-col> Serien: </v-col>
         <v-col>
           {{ showCount.serien }}
         </v-col>
       </v-row>
-      <v-row
-        dense
-        class="stats"
-      >
+      <v-row dense>
         <v-col> Animes: </v-col>
         <v-col>
           {{ showCount.animes }}
         </v-col>
       </v-row>
-      <v-row
-        dense
-        class="stats"
-      >
+      <v-row dense>
         <v-col> Gesamt: </v-col>
         <v-col>
           {{ showCount.animes + showCount.serien }}
         </v-col>
       </v-row>
     </v-card-text>
-  </v-card>
+  </div>
 </template>
 
 <script lang="ts">
@@ -47,9 +37,9 @@ export default {
       return this.shows.reduce(
         (count, show) => {
           if (show.show_type === 'serie') {
-            count.serien++;
+            count.serien += 1;
           } else if (show.show_type === 'anime') {
-            count.animes++;
+            count.animes += 1;
           }
           return count;
         },
@@ -60,8 +50,4 @@ export default {
 };
 </script>
 
-<style scoped>
-.stats .v-col {
-  max-width: 80px;
-}
-</style>
+<style scoped></style>

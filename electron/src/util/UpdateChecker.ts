@@ -6,7 +6,10 @@ import fs from 'node:fs';
 import downStream from './downloader';
 import axiosGet from './routedRequest';
 
-function VersionMatcher(oldVersion: string, newVersion: string): boolean {
+export function VersionMatcher(
+  oldVersion: string,
+  newVersion: string,
+): boolean {
   const versionRegex = /^\d+.\d+.\d+$/;
 
   // Validate both version strings
@@ -26,6 +29,19 @@ function VersionMatcher(oldVersion: string, newVersion: string): boolean {
   }
 
   return false; // Versions are equal
+}
+
+export async function getLatestVeresion() {
+  const latestRelease = await axiosGet(
+    'https://api.github.com/repos/Kamiikaze/AdvS-Client/releases/latest',
+  );
+
+  if (!latestRelease || !latestRelease.data) {
+    console.error('Failed to fetch latest release information');
+    return null;
+  }
+
+  return latestRelease.data.tag_name;
 }
 
 export default async function checkUpdate(

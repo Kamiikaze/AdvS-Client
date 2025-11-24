@@ -18,7 +18,24 @@
           src="@/assets/icon.png"
         />
       </v-avatar>
+
       <span class="ml-2">AdvS-Client v{{ version }}</span>
+
+      <v-tooltip
+        v-if="updateAvailable"
+        :text="`Neue Version verfügbar: ${latestVersion}`"
+        location="bottom"
+      >
+        <template #activator="{ props }">
+          <v-btn
+            class="cursor-default"
+            icon="mdi-download"
+            color="success"
+            variant="text"
+            v-bind="props"
+          />
+        </template>
+      </v-tooltip>
     </div>
 
     <v-spacer />
@@ -57,6 +74,8 @@ export default defineComponent({
   name: 'Toolbar',
   data: () => ({
     version: '0.0.0',
+    latestVersion: '',
+    updateAvailable: false,
   }),
   methods: {
     windowControl(type: 'maximize' | 'minimize' | 'close' | 'refresh') {
@@ -76,7 +95,16 @@ export default defineComponent({
       }
     },
     async getAppVersion() {
-      this.version = await window.glxApi.invoke('get-version');
+      const appVersion = await window.glxApi.invoke('get-version');
+
+      if (!appVersion) {
+        console.error('Failed to retrieve app version information')
+        return;
+      }
+
+      this.version = appVersion.currentVersion;
+      this.latestVersion = appVersion.latestVersion;
+      this.updateAvailable = appVersion.updateAvailable;
     },
   },
   mounted() {

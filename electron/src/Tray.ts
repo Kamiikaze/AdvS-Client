@@ -18,23 +18,21 @@ export default function InitTray(kernel: IKernel) {
           createWindow(kernel);
         },
       },
+      {
+        label: 'Dev Tools',
+        type: 'normal',
+        click: () => {
+          kernel.getMainWindow()?.webContents.openDevTools({ mode: 'bottom' });
+        },
+      },
+      {
+        label: 'Schließen',
+        type: 'normal',
+        click: () => {
+          process.exit(0);
+        },
+      },
     ];
-
-    rows.push({
-      label: 'Dev Tools',
-      type: 'normal',
-      click: () => {
-        kernel.getMainWindow()?.webContents.openDevTools({ mode: 'bottom' });
-      },
-    });
-
-    rows.push({
-      label: 'Schließen',
-      type: 'normal',
-      click: () => {
-        process.exit(0);
-      },
-    });
 
     const contextMenu = Menu.buildFromTemplate(rows);
 

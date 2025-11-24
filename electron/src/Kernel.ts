@@ -3,7 +3,6 @@ import ElectronKernel, {
   ElectronGlobals,
   isDev,
   KernelWindowName,
-  LogLevel,
   OsRelease,
   StoreGlobal,
   XUtil,

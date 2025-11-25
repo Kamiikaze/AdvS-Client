@@ -4,30 +4,45 @@
  * ESLint configuration file.
  */
 
-import pluginVue from 'eslint-plugin-vue';
-import { defineConfigWithVueTs, vueTsConfigs } from '@vue/eslint-config-typescript';
-import pluginPrettier from 'eslint-plugin-prettier';
+import eslint from '@eslint/js';
+import * as eslintVueConfigTs from '@vue/eslint-config-typescript';
+import eslintPluginPrettierRecommended from 'eslint-plugin-prettier/recommended';
+import eslintPluginVue from 'eslint-plugin-vue';
+import tsEslint from 'typescript-eslint';
+import vueParser from 'vue-eslint-parser';
 
 export default [
+  // Include / Exclude
+  {
+    name: 'app/vue-files',
+    files: ['*.vue', '**/*.vue'],
+    languageOptions: {
+      parser: vueParser,
+    },
+  },
   {
     name: 'app/files-to-lint',
-    files: ['**/*.{ts,mts,tsx,vue}'],
+    files: ['**/*.{js,ts,mts,tsx}'],
+    languageOptions: {
+      parser: tsEslint.parser,
+    },
   },
-
   {
     name: 'app/files-to-ignore',
     ignores: ['**/dist/**', '**/dist-ssr/**', '**/coverage/**'],
   },
 
-  ...defineConfigWithVueTs(
-    pluginVue.configs['flat/recommended'],
-    vueTsConfigs.recommended
+  // Base Configs
+  eslint.configs.recommended,
+  ...tsEslint.configs.recommended,
+
+  // VueTs Configs
+  ...eslintVueConfigTs.defineConfigWithVueTs(
+    eslintPluginVue.configs['flat/recommended'],
+    eslintVueConfigTs.vueTsConfigs.recommended
   ),
 
   {
-    plugins: {
-      prettier: pluginPrettier,
-    },
     rules: {
       '@typescript-eslint/no-unused-expressions': [
         'error',
@@ -37,15 +52,22 @@ export default [
         },
       ],
       '@typescript-eslint/no-explicit-any': 'warn',
+
       'no-plusplus': 'warn',
       'no-restricted-syntax': 'warn',
       'no-underscore-dangle': 'warn',
       'no-await-in-loop': 'off',
       'no-restricted-properties': 'warn',
       'linebreak-style': 'off',
+
       'vue/multi-word-component-names': 'off',
       'vue/order-in-components': 'off',
       'vue/no-unused-vars': 'warn',
+
+      'prettier/prettier': 'warn',
     },
   },
+
+  // Prettier
+  eslintPluginPrettierRecommended,
 ];

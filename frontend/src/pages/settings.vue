@@ -1,11 +1,6 @@
 <template>
   <v-container>
-    <v-alert
-      class="mb-4"
-      type="warning"
-    >
-      Noch in Arbeit!
-    </v-alert>
+    <v-alert class="mb-4" type="warning"> Noch in Arbeit! </v-alert>
     <v-row>
       <v-col>
         <SettingsGeneral disabled />
@@ -18,9 +13,9 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
 import SettingsGeneral from '@/components/settings/general.vue';
 import SettingsIntegrations from '@/components/settings/integrations.vue';
+import { defineComponent } from 'vue';
 
 export default defineComponent({
   name: 'Settings',

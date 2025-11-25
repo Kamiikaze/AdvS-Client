@@ -5,13 +5,10 @@
     max-width="60%"
     transition="dialog-top-transition"
     content-class="flex-start"
-    @click:outside="showSearch = false, clearSearch"
+    @click:outside="((showSearch = false), clearSearch)"
   >
     <v-card class="overflow-hidden">
-      <v-card-title
-        class="pa-0"
-        style="padding-top: 1rem"
-      >
+      <v-card-title class="pa-0" style="padding-top: 1rem">
         <v-text-field
           ref="input"
           v-model="search"
@@ -26,16 +23,10 @@
 
       <v-card-text>
         <v-row>
-          <v-col
-            v-show="filterSeries.length > 0"
-            class="pb-0"
-          >
+          <v-col v-show="filterSeries.length > 0" class="pb-0">
             <h3>Serien ({{ filterSeries.length }})</h3>
           </v-col>
-          <v-col
-            v-show="filterAnimes.length > 0"
-            class="pb-0"
-          >
+          <v-col v-show="filterAnimes.length > 0" class="pb-0">
             <h3>Animes ({{ filterAnimes.length }})</h3>
           </v-col>
         </v-row>
@@ -82,11 +73,11 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
-import { mapState, mapWritableState } from 'pinia';
-import type { VTextField } from 'vuetify/components';
-import { useShowStore } from '@/store/show';
 import { useAppStore } from '@/store/app'; // noinspection JSUnusedGlobalSymbols
+import { useShowStore } from '@/store/show';
+import { mapState, mapWritableState } from 'pinia';
+import { defineComponent } from 'vue';
+import type { VTextField } from 'vuetify/components';
 
 // noinspection JSUnusedGlobalSymbols
 export default defineComponent({

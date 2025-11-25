@@ -1,8 +1,5 @@
 <template>
-  <v-system-bar
-    id="system-bar"
-    window
-  >
+  <v-system-bar id="system-bar" window>
     <v-btn
       icon="mdi-refresh"
       variant="text"
@@ -13,10 +10,7 @@
 
     <div id="header-title">
       <v-avatar size="24">
-        <v-img
-          alt="App Icon"
-          src="@/assets/icon.png"
-        />
+        <v-img alt="App Icon" src="@/assets/icon.png" />
       </v-avatar>
 
       <span class="ml-2">AdvS-Client v{{ version }}</span>
@@ -98,7 +92,7 @@ export default defineComponent({
       const appVersion = await window.glxApi.invoke('get-version');
 
       if (!appVersion) {
-        console.error('Failed to retrieve app version information')
+        console.error('Failed to retrieve app version information');
         return;
       }
 

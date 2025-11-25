@@ -11,9 +11,9 @@
 </template>
 
 <script lang="ts" setup>
-import SearchDialog from '@/components/searchDialog.vue';
-import NavDrawerMain from '@/components/navigationDrawer/main.vue';
 import NavDrawerExtendedHistory from '@/components/navigationDrawer/extendedHistory.vue';
+import NavDrawerMain from '@/components/navigationDrawer/main.vue';
+import SearchDialog from '@/components/searchDialog.vue';
 import Toolbar from '@/components/toolbar.vue';
 import router from '@/router';
 import { useShowStore } from '@/store/show';

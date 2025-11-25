@@ -4,7 +4,9 @@
       <v-col>
         <h1
           style="text-wrap: balance"
-          :data-alternative-title="currentShow?.show_meta?.alternativeTitles || ''"
+          :data-alternative-title="
+            currentShow?.show_meta?.alternativeTitles || ''
+          "
         >
           {{ currentShow?.show_name }}
         </h1>
@@ -22,33 +24,20 @@
             />
           </template>
 
-          <v-list
-            class="py-0"
-            density="compact"
-            slim
-          >
-            <v-list-item
-              prepend-icon="mdi-refresh"
-              @click="setShow($props.id)"
-            >
+          <v-list class="py-0" density="compact" slim>
+            <v-list-item prepend-icon="mdi-refresh" @click="setShow($props.id)">
               Re-fetch Show
             </v-list-item>
 
             <v-divider />
 
-            <v-list-item
-              prepend-icon="mdi-refresh"
-              @click="refreshHosters"
-            >
+            <v-list-item prepend-icon="mdi-refresh" @click="refreshHosters">
               Re-fetch Hosters
             </v-list-item>
 
             <v-divider />
 
-            <v-list-item
-              prepend-icon="mdi-refresh"
-              @click="toggleIframe"
-            >
+            <v-list-item prepend-icon="mdi-refresh" @click="toggleIframe">
               {{ showIframe ? 'Hide' : 'Show' }} Iframe
             </v-list-item>
 
@@ -70,10 +59,7 @@
         {{ currentShow?.show_start_year }} -
         {{ currentShow?.show_end_year ?? 'Heute' }}
       </v-col>
-      <v-col
-        v-if="currentShow?.show_meta?.imdbId"
-        cols="auto"
-      >
+      <v-col v-if="currentShow?.show_meta?.imdbId" cols="auto">
         <ExternalLink
           :url="`https://imdb.com/title/${currentShow?.show_meta.imdbId}`"
         >
@@ -95,10 +81,7 @@
       @next-episode="nextEpisode"
     />
 
-    <div
-      ref="iframe-wrapper"
-      class="iframe-wrapper w-100 h-100"
-    />
+    <div ref="iframe-wrapper" class="iframe-wrapper w-100 h-100" />
 
     <VideoPlayerV2
       v-if="playerOptions.sources"
@@ -110,15 +93,15 @@
 </template>
 
 <script lang="ts">
-import WatchNav from '@/components/watchNav.vue';
-import { mapActions, mapState, mapWritableState } from 'pinia';
 import ExternalLink from '@/components/externalLink.vue';
-import type { Episode, EpisodeHoster, ScraperLink, Show } from '@/lib/electron';
-import { useShowStore } from '@/store/show';
 import type { VideoPlayerOptions } from '@/components/videoPlayerV2/index.vue';
 import VideoPlayerV2 from '@/components/videoPlayerV2/index.vue';
+import WatchNav from '@/components/watchNav.vue';
+import type { Episode, EpisodeHoster, ScraperLink, Show } from '@/lib/electron';
 import { splitEpisodeTitle } from '@/lib/utils';
-import type {ComponentInstance} from "vue";
+import { useShowStore } from '@/store/show';
+import { mapActions, mapState, mapWritableState } from 'pinia';
+import type { ComponentInstance } from 'vue';
 
 export default {
   name: 'Watch',
@@ -158,7 +141,7 @@ export default {
 
       if (this.currentShow)
         this.playerOptions.showName = this.currentShow.show_name;
-        this.playerOptions.nextEpisodeTitle = this.nextEpisodeTitle;
+      this.playerOptions.nextEpisodeTitle = this.nextEpisodeTitle;
 
       const episodeParam = this.$route.params.episode;
 
@@ -205,14 +188,15 @@ export default {
       this.playerOptions.nextEpisodeTitle = this.nextEpisodeTitle;
 
       // Start playback on manual next-interaction
-      const videoPlayerChildComponent = this.$refs.videoPlayer as ComponentInstance<typeof VideoPlayerV2>
+      const videoPlayerChildComponent = this.$refs
+        .videoPlayer as ComponentInstance<typeof VideoPlayerV2>;
       if (!videoPlayerChildComponent.autoplay) {
-        videoPlayerChildComponent.autoplay = true
-        videoPlayerChildComponent.toggleAutoplay()
+        videoPlayerChildComponent.autoplay = true;
+        videoPlayerChildComponent.toggleAutoplay();
         setTimeout(() => {
-          videoPlayerChildComponent.autoplay = false
-          videoPlayerChildComponent.toggleAutoplay()
-        }, 1000 * 2)
+          videoPlayerChildComponent.autoplay = false;
+          videoPlayerChildComponent.toggleAutoplay();
+        }, 1000 * 2);
       }
 
       await this.fetchEpisodeHosters();
@@ -224,7 +208,9 @@ export default {
       );
 
       // Check if next episode exists in current season
-      const nextEpisode = seasonEpisodes.find((ep) => Number(ep.episode_number) === episodeNum);
+      const nextEpisode = seasonEpisodes.find(
+        (ep) => Number(ep.episode_number) === episodeNum
+      );
 
       if (nextEpisode) {
         return nextEpisode;
@@ -338,9 +324,12 @@ export default {
       return this.getEpisodeTitle(this.currentEpisode as Episode);
     },
     nextEpisodeTitle() {
-      const nextEpisode = this.findNextEpisode(Number(this.selections.season), Number(this.selections.episode)+1);
+      const nextEpisode = this.findNextEpisode(
+        Number(this.selections.season),
+        Number(this.selections.episode) + 1
+      );
 
-      if (!nextEpisode) return "Keine weitere Episode gefunden";
+      if (!nextEpisode) return 'Keine weitere Episode gefunden';
 
       return this.getEpisodeTitle(nextEpisode);
     },

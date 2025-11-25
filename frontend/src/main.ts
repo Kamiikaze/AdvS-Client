@@ -11,9 +11,9 @@ import { registerPlugins } from '@/plugins';
 import App from './App.vue';
 
 // Composables
-import { createApp } from 'vue';
-import { createPinia } from 'pinia';
 import type { GLXElectronAPI } from '@grandlinex/e-kernel-ui';
+import { createPinia } from 'pinia';
+import { createApp } from 'vue';
 
 declare global {
   interface Window {

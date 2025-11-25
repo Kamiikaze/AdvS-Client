@@ -10,11 +10,7 @@
       <v-card-title class="d-flex flex-row align-center">
         Tastenkombinationen
         <v-spacer />
-        <v-btn
-          icon="mdi-close"
-          variant="text"
-          @click="$emit('hide')"
-        />
+        <v-btn icon="mdi-close" variant="text" @click="$emit('hide')" />
       </v-card-title>
 
       <v-divider />

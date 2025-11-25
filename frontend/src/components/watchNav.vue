@@ -37,14 +37,8 @@
     </v-row>
 
     <!-- Episode List -->
-    <v-row
-      :key="getSeasonEpisodes.length"
-      align="center"
-    >
-      <div
-        ref="episodeContainer"
-        class="episode-list-wrapper"
-      >
+    <v-row :key="getSeasonEpisodes.length" align="center">
+      <div ref="episodeContainer" class="episode-list-wrapper">
         <v-slide-group
           v-model="getEpisodeIndex"
           class="episode-list pa-4"
@@ -68,10 +62,7 @@
     </v-row>
 
     <!-- Episode Titel & Description -->
-    <v-card
-      v-if="episodes.length > 0"
-      class="my-6"
-    >
+    <v-card v-if="episodes.length > 0" class="my-6">
       <v-card-title>
         {{ getEpisodeTitles.german }}
         <span class="d-block text-subtitle-2 font-weight-thin text-disabled">{{
@@ -86,18 +77,19 @@
           class="text-disabled d-block mt-1"
           href="#"
           @click.prevent="showMore = !showMore"
-        >[{{ showMore ? 'weninger' : 'mehr' }} Anzeigen]</a>
+          >[{{ showMore ? 'weninger' : 'mehr' }} Anzeigen]</a
+        >
       </v-card-text>
     </v-card>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, type PropType } from 'vue';
 import { type Episode } from '@/lib/electron';
-import { mapActions, mapState } from 'pinia';
-import { useShowStore } from '@/store/show';
 import { splitEpisodeTitle } from '@/lib/utils';
+import { useShowStore } from '@/store/show';
+import { mapActions, mapState } from 'pinia';
+import { defineComponent, type PropType } from 'vue';
 
 export default defineComponent({
   props: {
@@ -132,7 +124,7 @@ export default defineComponent({
     },
     updateCurrentEpisode(seasonChanged?: boolean) {
       if (seasonChanged) {
-        this.selections.episode = "1";
+        this.selections.episode = '1';
       }
 
       useShowStore().$patch((state) => {

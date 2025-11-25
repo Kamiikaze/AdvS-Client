@@ -4,11 +4,7 @@
     @mouseenter="showSlider = true"
     @mouseleave="showSlider = false"
   >
-    <v-tooltip
-      :text="`${volume.toFixed()} %`"
-      location="top"
-      offset="20px"
-    >
+    <v-tooltip :text="`${volume.toFixed()} %`" location="top" offset="20px">
       <template #activator="{ props }">
         <v-btn
           :icon
@@ -35,9 +31,9 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
-import { mapState } from 'pinia';
 import { useAppStore } from '@/store/app';
+import { mapState } from 'pinia';
+import { defineComponent } from 'vue';
 
 export default defineComponent({
   name: 'VolumeControl',

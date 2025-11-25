@@ -1,5 +1,5 @@
-import type { Route, Router } from 'vue-router';
 import type { Ref } from 'vue';
+import type { Route, Router } from 'vue-router';
 
 declare module '@vue/runtime-core' {
   interface ComponentCustomProperties {

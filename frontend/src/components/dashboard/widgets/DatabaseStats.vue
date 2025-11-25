@@ -26,8 +26,8 @@
 </template>
 
 <script lang="ts">
-import { mapState } from 'pinia';
 import { useShowStore } from '@/store/show';
+import { mapState } from 'pinia';
 
 export default {
   name: 'DatabaseStats',

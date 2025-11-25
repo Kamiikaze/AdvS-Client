@@ -1,10 +1,7 @@
 <template>
   <v-container class="player-wrapper pa-0 mb-4">
     <div class="player-overlay">
-      <div
-        ref="player-controls-top"
-        class="player-controls-top px-2 py-2"
-      >
+      <div ref="player-controls-top" class="player-controls-top px-2 py-2">
         <v-spacer />
 
         <span class="video-title">{{ options.videoTitle }}</span>
@@ -19,11 +16,7 @@
           offset-x="4"
           offset-y="7"
         >
-          <v-icon
-            icon="mdi-power-sleep"
-            size="24"
-            color="#c7b764"
-          />
+          <v-icon icon="mdi-power-sleep" size="24" color="#c7b764" />
         </v-badge>
 
         <v-btn
@@ -34,22 +27,13 @@
           @click="toggleSettings"
         />
 
-        <div
-          ref="player-volume-hint"
-          class="player-volume-hint"
-        >
+        <div ref="player-volume-hint" class="player-volume-hint">
           {{ parseFloat((volume * 100).toFixed(2)) }} %
         </div>
       </div>
 
-      <div
-        ref="player-controls-bottom"
-        class="player-controls-bottom"
-      >
-        <div
-          ref="player-progress"
-          class="player-progress mx-2"
-        >
+      <div ref="player-controls-bottom" class="player-controls-bottom">
+        <div ref="player-progress" class="player-progress mx-2">
           <v-progress-linear
             :model-value="currentTime"
             :max="duration"
@@ -62,10 +46,7 @@
             @mouseenter="toggleProgressTooltip(true)"
             @mouseleave="toggleProgressTooltip(false)"
           />
-          <div
-            id="player-progress-tooltip"
-            ref="player-progress-tooltip"
-          >
+          <div id="player-progress-tooltip" ref="player-progress-tooltip">
             Hover Time
           </div>
         </div>
@@ -77,21 +58,15 @@
           />
           <PlayerButton
             icon="mdi-skip-next"
-            @click="$emit('nextEpisode'), player.pause()"
+            @click="($emit('nextEpisode'), player.pause())"
           />
-          <VolumeControl
-            ref="volumeControl"
-            @volume-change="updateVolume"
-          />
+          <VolumeControl ref="volumeControl" @volume-change="updateVolume" />
           <div class="player-time mx-2">
             <span>{{ timeDisplay.current }}</span> /
             <span>{{ timeDisplay.duration }}</span>
           </div>
           <v-spacer />
-          <PlayerButton
-            icon="mdi-cast"
-            disabled
-          />
+          <PlayerButton icon="mdi-cast" disabled />
           <PlayerButton
             :icon="
               isPiP
@@ -107,10 +82,7 @@
         </div>
       </div>
 
-      <div
-        ref="player-settings-sidebar"
-        class="player-settings-sidebar"
-      >
+      <div ref="player-settings-sidebar" class="player-settings-sidebar">
         <v-list>
           <v-list-item density="compact">
             Settings
@@ -150,15 +122,8 @@
               />
             </template>
           </v-list-item>
-          <v-list-item
-            v-if="sleeptimer.enabled"
-            density="compact"
-          >
-            <v-tabs
-              v-model="sleeptimer.duration"
-              density="compact"
-              grow
-            >
+          <v-list-item v-if="sleeptimer.enabled" density="compact">
+            <v-tabs v-model="sleeptimer.duration" density="compact" grow>
               <v-tab
                 :key="15"
                 :value="15"
@@ -212,10 +177,7 @@
         @hide="showKeybinds = false"
       />
 
-      <div
-        v-if="sleeptimer.show"
-        class="player-sleeptimer-hint"
-      >
+      <div v-if="sleeptimer.show" class="player-sleeptimer-hint">
         {{ sleeptimer.text }}
         <v-btn
           v-if="sleeptimer.duration"
@@ -246,24 +208,17 @@
             size="34"
             width="2"
           >
-            <template #default>
-              {{ remaining.toFixed() }}s
-            </template>
+            <template #default> {{ remaining.toFixed() }}s </template>
           </v-progress-circular>
-          <v-icon
-            v-else
-            icon="mdi-play"
-            variant="text"
-            size="30"
-          />
+          <v-icon v-else icon="mdi-play" variant="text" size="30" />
         </template>
       </v-list-item>
 
       <v-list-item
         v-show="
           lastPosition > 10 &&
-            currentTime < 10 &&
-            (lastPosition / duration) * 100 < 95
+          currentTime < 10 &&
+          (lastPosition / duration) * 100 < 95
         "
         ref="player-continue-playback"
         class="player-continue-playback"
@@ -294,20 +249,20 @@
 </template>
 
 <script lang="ts">
+import { useAppStore } from '@/store/app';
+import { useShowStore } from '@/store/show';
+import { mapActions, mapState } from 'pinia';
+import type { MediaPIPChangeEvent } from 'vidstack';
+import 'vidstack/bundle';
+import type { MediaPlayerElement } from 'vidstack/elements';
 import {
   type ComponentPublicInstance,
   defineComponent,
   type PropType,
 } from 'vue';
-import VolumeControl from './controls/Volume.vue';
 import PlayerButton from './controls/Button.vue';
+import VolumeControl from './controls/Volume.vue';
 import ShortcutsOverview from './shortcutsOverview.vue';
-import 'vidstack/bundle';
-import type { MediaPlayerElement } from 'vidstack/elements';
-import { mapActions, mapState } from 'pinia';
-import { useAppStore } from '@/store/app';
-import type { MediaPIPChangeEvent } from 'vidstack';
-import { useShowStore } from '@/store/show';
 
 export interface VideoPlayerOptions {
   controls: boolean;
@@ -323,7 +278,10 @@ export default defineComponent({
   components: { ShortcutsOverview, PlayerButton, VolumeControl },
   emits: {
     nextEpisode: (episodeNumber?: number) => {
-      return episodeNumber === undefined || (Number.isInteger(episodeNumber) && episodeNumber > 0);
+      return (
+        episodeNumber === undefined ||
+        (Number.isInteger(episodeNumber) && episodeNumber > 0)
+      );
     },
   },
   props: {
@@ -541,7 +499,7 @@ export default defineComponent({
         setTimeout(() => {
           this.sleeptimer.show = false;
           this.sleeptimer.text = null;
-          this.sleeptimer.enabled = false
+          this.sleeptimer.enabled = false;
         }, 2000);
       }
     },
@@ -563,23 +521,23 @@ export default defineComponent({
       // Prevent spacebar trigger when element is focused
       if (ev.detail === 0) return;
 
-      clearInterval(this.saveProgressIntervalId)
+      clearInterval(this.saveProgressIntervalId);
       this.elementRefs.nextUp.style.opacity = '0';
       this.elementRefs.nextUp.style.transform = 'translateX(100%)';
       this.player.pause();
       this.$emit('nextEpisode');
-      this.elementRefs.videoPlayer.focus()
+      this.elementRefs.videoPlayer.focus();
     },
     toggleFullscreen() {
       const fullscreenEl = document.querySelector('.player-wrapper');
       if (!fullscreenEl) return;
       if (!this.isFullscreen) {
         fullscreenEl.requestFullscreen();
-        fullscreenEl.classList.add('fullscreen-active')
+        fullscreenEl.classList.add('fullscreen-active');
         this.isFullscreen = true;
       } else {
         document.exitFullscreen();
-        fullscreenEl.classList.remove('fullscreen-active')
+        fullscreenEl.classList.remove('fullscreen-active');
         this.isFullscreen = false;
       }
     },
@@ -830,7 +788,7 @@ export default defineComponent({
           'progress',
           () => {
             const videoEl = this.elementRefs
-              .videoPlayer as any as MediaPlayerElement;
+              .videoPlayer as any as MediaPlayerElement; // eslint-disable-line @typescript-eslint/no-explicit-any
             this.buffered = Math.trunc(videoEl.state.bufferedEnd ?? 0);
           },
         ],
@@ -919,7 +877,7 @@ export default defineComponent({
     this.initPlayer();
 
     navigator.mediaSession.setActionHandler('nexttrack', () => {
-      this.player.pause()
+      this.player.pause();
       this.$emit('nextEpisode');
     });
 

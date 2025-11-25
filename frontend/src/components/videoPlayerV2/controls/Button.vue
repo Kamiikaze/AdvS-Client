@@ -1,8 +1,5 @@
 <template>
-  <v-btn
-    variant="plain"
-    size="30"
-  />
+  <v-btn variant="plain" size="30" />
 </template>
 
 <script lang="ts">

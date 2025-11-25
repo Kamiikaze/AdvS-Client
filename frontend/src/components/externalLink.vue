@@ -1,42 +1,23 @@
 <template>
-  <span
-    class="external-link"
-    @click="openExternalConfirm = true"
-  >
+  <span class="external-link" @click="openExternalConfirm = true">
     <slot />
     <sup v-if="!noText"><v-icon size="8"> mdi-open-in-new </v-icon></sup>
   </span>
-  <v-dialog
-    v-model="openExternalConfirm"
-    max-width="500px"
-  >
+  <v-dialog v-model="openExternalConfirm" max-width="500px">
     <v-card>
       <v-card-text>
-        Du bist dabei, einen externen Link zu öffnen:<br>
+        Du bist dabei, einen externen Link zu öffnen:<br />
         <v-code>{{ url }}</v-code>
-        <br><br>
+        <br /><br />
         Möchtest du fortfahren?
       </v-card-text>
       <v-card-actions>
-        <v-btn
-          color="success"
-          @click="openExternal()"
-        >
-          Öffnen
-        </v-btn>
-        <v-btn
-          color="warning"
-          @click="copyToClipboard()"
-        >
-          Kopieren
-        </v-btn>
+        <v-btn color="success" @click="openExternal()"> Öffnen </v-btn>
+        <v-btn color="warning" @click="copyToClipboard()"> Kopieren </v-btn>
 
         <v-spacer />
 
-        <v-btn
-          color="error"
-          @click="openExternalConfirm = false"
-        >
+        <v-btn color="error" @click="openExternalConfirm = false">
           Abbrechen
         </v-btn>
       </v-card-actions>

@@ -1,4 +1,3 @@
-import { acceptHMRUpdate, defineStore } from 'pinia';
 import {
   type Episode,
   type EpisodeHoster,
@@ -8,6 +7,7 @@ import {
   type WatchHistoryItem,
   type WatchHistoryListItem,
 } from '@/lib/electron';
+import { acceptHMRUpdate, defineStore } from 'pinia';
 
 interface ShowState {
   selections: {
@@ -88,7 +88,11 @@ export const useShowStore = defineStore('show', {
       const episodeDetails: GetEpisodeHosterResponse =
         await window.glxApi.invoke('get-episode-details', episode.e_id);
 
-      console.log('Adding EpisodeHosters', episode, episodeDetails.hosterList.length);
+      console.log(
+        'Adding EpisodeHosters',
+        episode,
+        episodeDetails.hosterList.length
+      );
 
       this.episodeHosters = episodeDetails.hosterList || [];
 
@@ -106,7 +110,7 @@ export const useShowStore = defineStore('show', {
 
         if (currDesc === newDescription) return;
 
-        console.log('Updating episode_description',newDescription);
+        console.log('Updating episode_description', newDescription);
         this.episodes[index].episode_description = newDescription;
       }
     },
@@ -114,19 +118,19 @@ export const useShowStore = defineStore('show', {
       this.watchHistory = await window.glxApi.invoke('get-watch-history');
     },
     async updateWatchHistory(currentTime: number, duration: number) {
-      const currEp = this.currentEpisode
+      const currEp = this.currentEpisode;
 
       if (!currEp) {
-        console.warn('No current episode available for watch history update')
+        console.warn('No current episode available for watch history update');
         return;
       }
 
-      const historyItem:WatchHistoryItem = {
+      const historyItem: WatchHistoryItem = {
         show_id: currEp.show_id,
         episode_id: currEp.e_id,
         progressSeconds: currentTime.toString(),
-        progressPercent: ((currentTime / duration) * 100).toString()
-      }
+        progressPercent: ((currentTime / duration) * 100).toString(),
+      };
 
       await window.glxApi.invoke('set-watch-history', historyItem);
     },

@@ -2,10 +2,7 @@
   <div id="dashboard">
     <v-container class="header">
       <v-row>
-        <v-col
-          sm="12"
-          md="4"
-        >
+        <v-col sm="12" md="4">
           <v-img
             alt="App Icon"
             src="@/assets/icon-transparent.png"
@@ -14,15 +11,8 @@
           />
         </v-col>
         <v-col class="d-flex text-no-wrap justify-center align-center">
-          <h1 style="color: #7c4dff">
-            Advanced Streaming
-          </h1>
-          <h2
-            class="mb-4"
-            style="color: #7e57c2"
-          >
-            Client
-          </h2>
+          <h1 style="color: #7c4dff">Advanced Streaming</h1>
+          <h2 class="mb-4" style="color: #7e57c2">Client</h2>
         </v-col>
       </v-row>
     </v-container>
@@ -102,13 +92,13 @@
 </template>
 
 <script lang="ts">
-import { type ComponentInstance, defineComponent } from 'vue';
-import { GridLayout, GridItem } from 'grid-layout-plus';
-import { mapState, mapActions } from 'pinia';
-import { useDashboardStore, type WidgetLayout } from '@/store/dashboard';
 import DatabaseStats from '@/components/dashboard/widgets/DatabaseStats.vue';
-import RecentlyAdded from './widgets/RecentlyAdded.vue';
+import { useDashboardStore, type WidgetLayout } from '@/store/dashboard';
+import { GridItem, GridLayout } from 'grid-layout-plus';
+import { mapActions, mapState } from 'pinia';
+import { type ComponentInstance, defineComponent } from 'vue';
 import LastSeen from './widgets/LastSeen.vue';
+import RecentlyAdded from './widgets/RecentlyAdded.vue';
 import WidgetWrapper from './WidgetWrapper.vue';
 
 export default defineComponent({

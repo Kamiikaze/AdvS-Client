@@ -21,15 +21,9 @@
         </template>
 
         <template #[`item.createdAt`]="{ item }">
-          <v-tooltip
-            :text="item.createdAt.toLocaleString()"
-            location="top"
-          >
+          <v-tooltip :text="item.createdAt.toLocaleString()" location="top">
             <template #activator="{ props }">
-              <v-list-item
-                v-bind="props"
-                class="pa-0"
-              >
+              <v-list-item v-bind="props" class="pa-0">
                 {{ dateFromNow(item.createdAt) }}
               </v-list-item>
             </template>
@@ -41,10 +35,12 @@
 </template>
 
 <script lang="ts">
-import { mapState } from 'pinia';
+import type { Show } from '@/lib/electron';
 import { useShowStore } from '@/store/show';
 import moment from 'moment';
+import { mapState } from 'pinia';
 import { defineComponent } from 'vue';
+import type { ItemSlotBase } from 'vuetify/lib/components/VDataTable/types';
 
 export default defineComponent({
   name: 'RecentlyAdded',
@@ -88,7 +84,8 @@ export default defineComponent({
         },
       });
     },
-    openShow(ev: any, val: any) {
+    openShow(ev: PointerEvent, val: ItemSlotBase<Show>) {
+      console.log('openshow', ev, val);
       this.$router.push(`/watch/${val.item.e_id}`);
     },
   },

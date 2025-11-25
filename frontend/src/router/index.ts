@@ -4,11 +4,13 @@
  * Automatic routes for `./src/pages/*.vue`
  */
 
+// Components
+import Dashboard from '@/pages/index.vue';
+import Settings from '@/pages/settings.vue';
+import Watch from '@/pages/watch.vue';
+
 // Composables
 import { createRouter, createWebHistory } from 'vue-router';
-import Dashboard from '@/pages/index.vue';
-import Watch from '@/pages/watch.vue';
-import Settings from '@/pages/settings.vue';
 
 const routes = [
   {
@@ -87,10 +89,11 @@ router.isReady().then(() => {
   localStorage.removeItem('vuetify:dynamic-reload');
 });
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 window.glxApi.on('tab-open', (event: any, data: any) =>
   router.isReady().then(() => {
     console.log('tab-open', event, data);
-  }),
+  })
 );
 
 export default router;

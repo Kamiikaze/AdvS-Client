@@ -1,8 +1,5 @@
 <template>
-  <div
-    v-if="lastSeenEpisode"
-    class="widget-content"
-  >
+  <div v-if="lastSeenEpisode" class="widget-content">
     <v-card-title>Zuletzt gesehen </v-card-title>
     <v-card-subtitle>
       {{ getRelativeTime(lastSeenEpisode.updatedAt) }}
@@ -36,9 +33,9 @@
 </template>
 
 <script lang="ts">
-import { mapState } from 'pinia';
-import { useShowStore } from '@/store/show';
 import { convertSecToMin, getRelativeTime } from '@/lib/utils';
+import { useShowStore } from '@/store/show';
+import { mapState } from 'pinia';
 
 export default {
   name: 'DatabaseStats',

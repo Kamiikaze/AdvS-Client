@@ -1,8 +1,5 @@
 <template>
-  <v-navigation-drawer
-    v-model="showExtendedDrawer.history"
-    temporary
-  >
+  <v-navigation-drawer v-model="showExtendedDrawer.history" temporary>
     <v-list class="pt-0">
       <v-list-item class="header">
         <span class="v-list-item-subtitle">Verlauf</span>
@@ -40,11 +37,7 @@
         Kein Verlauf gefunden
       </v-list-item>
 
-      <template
-        v-for="item in watchHistory"
-        v-else
-        :key="item.e_id"
-      >
+      <template v-for="item in watchHistory" v-else :key="item.e_id">
         <v-list-item
           class="histoy-item mb-0"
           :data-type="item.showType"
@@ -57,34 +50,28 @@
           </v-list-item-title>
           <v-list-item-subtitle class="ml-2">
             Staffel {{ item.seasonNum }} • Episode {{ item.episodeNum }} •
-            {{ getEpisodeProgress(item) }}<br>
-            <span class="lastWatched">Gesehen {{ getRelativeTime(item.updatedAt) }}</span>
+            {{ getEpisodeProgress(item) }}<br />
+            <span class="lastWatched"
+              >Gesehen {{ getRelativeTime(item.updatedAt) }}</span
+            >
           </v-list-item-subtitle>
           <template #append>
-            <v-btn
-              v-show="editMode"
-              icon="mdi-close"
-              size="x-small"
-              flat
-            />
+            <v-btn v-show="editMode" icon="mdi-close" size="x-small" flat />
           </template>
         </v-list-item>
 
-        <v-divider
-          class="history-divider"
-          inset
-        />
+        <v-divider class="history-divider" inset />
       </template>
     </v-list>
   </v-navigation-drawer>
 </template>
 <script lang="ts">
-import { defineComponent } from 'vue';
-import { mapActions, mapState, mapWritableState } from 'pinia';
-import { useAppStore } from '@/store/app';
-import { useShowStore } from '@/store/show';
 import type { WatchHistoryListItem } from '@/lib/electron';
 import { convertSecToMin, getRelativeTime } from '@/lib/utils';
+import { useAppStore } from '@/store/app';
+import { useShowStore } from '@/store/show';
+import { mapActions, mapState, mapWritableState } from 'pinia';
+import { defineComponent } from 'vue';
 
 export default defineComponent({
   name: 'NavDrawerExtended',

@@ -1,13 +1,13 @@
 // Plugins
-import Components from 'unplugin-vue-components/vite';
 import Vue from '@vitejs/plugin-vue';
-import Vuetify, { transformAssetUrls } from 'vite-plugin-vuetify';
 import ViteFonts from 'unplugin-fonts/vite';
+import Components from 'unplugin-vue-components/vite';
 import { vite as vidstack } from 'vidstack/plugins';
+import Vuetify, { transformAssetUrls } from 'vite-plugin-vuetify';
 
 // Utilities
-import { defineConfig } from 'vite';
 import { fileURLToPath, URL } from 'node:url';
+import { defineConfig } from 'vite';
 import pkg from './package.json';
 
 // https://vitejs.dev/config/

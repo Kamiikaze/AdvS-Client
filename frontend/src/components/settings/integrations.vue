@@ -3,9 +3,7 @@
     <v-card-title>Sync</v-card-title>
     <v-card-text>
       <v-row>
-        <v-col cols="4">
-          MyAnimeList
-        </v-col>
+        <v-col cols="4"> MyAnimeList </v-col>
         <v-col>
           <span v-if="connected">Verbunden</span>
           <span v-else>
@@ -13,14 +11,13 @@
               append-icon="mdi-open-in-new"
               color="primary"
               density="comfortable"
-            >Link now</v-btn>
+              >Link now</v-btn
+            >
           </span>
         </v-col>
       </v-row>
       <v-row>
-        <v-col cols="4">
-          TMDB
-        </v-col>
+        <v-col cols="4"> TMDB </v-col>
         <v-col>
           <span v-if="connected2">
             <span> Username </span>
@@ -37,16 +34,12 @@
       </v-row>
       <v-row>
         <v-col cols="4">
-          File Sync<br>
+          File Sync<br />
           (Will additionally save your watch history into a file, to sync with
           cloud storage)
         </v-col>
         <v-col>
-          <v-switch
-            v-model="connected3"
-            color="primary"
-            hide-details
-          />
+          <v-switch v-model="connected3" color="primary" hide-details />
           <v-text-field
             v-if="connected3"
             disabled

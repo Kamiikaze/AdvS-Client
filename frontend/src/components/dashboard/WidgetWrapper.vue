@@ -4,13 +4,8 @@
     class="widget-card"
     :class="{ 'edit-mode': isEditMode }"
   >
-    <div
-      v-if="isEditMode"
-      class="drag-handle"
-    >
-      <v-icon size="small">
-        mdi-drag
-      </v-icon>
+    <div v-if="isEditMode" class="drag-handle">
+      <v-icon size="small"> mdi-drag </v-icon>
     </div>
     <slot />
   </v-card>

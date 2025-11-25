@@ -19,19 +19,20 @@ const ignore = [
   '.gitea',
   '.idea',
   '.vscode',
+  '.eslintrc',
+  '.gitignore',
+  '.ncurc.json',
+  '.prettierrc',
+  '.eslintignore',
+
   '^/config',
   '^/src$',
   '^/img$',
   '^/frontend$',
   '^/scripts',
-  '.eslintrc',
-  '.gitignore',
-  '.ncurc.json',
-  '.prettierrc',
-  'Jenkinsfile',
+  '^/test',
+
   'tsconfig.json',
-  'test.ts',
-  'engine.bin'
 ];
 
 module.exports = {
@@ -56,6 +57,7 @@ module.exports = {
         description: 'A modern desktop streaming client built with Electron and Vue.js, designed to provide a seamless video streaming experience with advanced features and customization options.',
         setupIcon: './res/img/icon.ico',
         loadingGif: './res/img/loading.gif',
+        icon,
       }
     }
   ],

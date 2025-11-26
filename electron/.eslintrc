@@ -29,15 +29,22 @@
     "project": "./tsconfig.json"
   },
   "rules": {
-    "no-plusplus": "warn",
     "@typescript-eslint/no-explicit-any": "warn",
-    "no-restricted-syntax": "warn",
     "@typescript-eslint/naming-convention": "warn",
+    "@typescript-eslint/consistent-type-imports": [
+      "error",
+      {
+        "prefer": "type-imports",
+        "fixStyle": "separate-type-imports"
+      }
+    ],
+    "no-plusplus": "warn",
+    "no-restricted-syntax": "warn",
     "no-underscore-dangle": "warn",
     "no-await-in-loop": "off",
+    "no-restricted-properties": "warn",
     "class-methods-use-this": "warn",
     "linebreak-style": "off",
-    "no-restricted-properties": "warn",
     "import/extensions": [
       "warn",
       "ignorePackages",

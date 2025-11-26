@@ -13,6 +13,7 @@
     "startServe": "npm --prefix ./frontend run start",
     "recompile": "electron-rebuild",
     "lint": "eslint ./src",
+    "lint:fix": "eslint ./src --fix",
     "test": "ts-node ./src/test.ts",
     "startDevDebug": "electron-forge start --enable-logging --inspect-electron",
     "package": "npm run recompile && cross-env BUILD=production npm run buildprep && electron-forge package",

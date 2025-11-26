@@ -1,8 +1,9 @@
-import { BaseAction, ICoreAnyModule, XActionEvent } from '@grandlinex/e-kernel';
-import MainDB from '../db/MainDB';
+import type { ICoreAnyModule, XActionEvent } from '@grandlinex/e-kernel';
+import { BaseAction } from '@grandlinex/e-kernel';
+import type MainDB from '../db/MainDB';
 import scraperWindow from '../../../window/scraperWindow';
-import { ScraperLink } from '../lib';
-import MainClient from '../client/MainClient';
+import type { ScraperLink } from '../lib';
+import type MainClient from '../client/MainClient';
 
 export default class GetStreamUrl extends BaseAction<MainDB, MainClient> {
   constructor(mod: ICoreAnyModule) {

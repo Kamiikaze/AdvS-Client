@@ -1,9 +1,9 @@
 import { BrowserWindow } from 'electron';
-import { BaseElement, IKernel } from '@grandlinex/e-kernel';
+import type { BaseElement, IKernel } from '@grandlinex/e-kernel';
 import { randomUUID } from 'crypto';
 import axiosGet from '../util/routedRequest';
-import EpisodeHosters from '../modules/main/db/entities/EpisodeHosters';
-import { ScraperLink } from '../modules/main/lib';
+import type EpisodeHosters from '../modules/main/db/entities/EpisodeHosters';
+import type { ScraperLink } from '../modules/main/lib';
 import injectScripts from '../util/injectScripts';
 
 export default async function scraperWindow(

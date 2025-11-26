@@ -1,6 +1,8 @@
-import { BaseAction, ICoreAnyModule, XActionEvent } from '@grandlinex/e-kernel';
-import MainDB from '../db/MainDB';
-import WatchHistory, { WatchHistoryItem } from '../db/entities/WatchHistory';
+import type { ICoreAnyModule, XActionEvent } from '@grandlinex/e-kernel';
+import { BaseAction } from '@grandlinex/e-kernel';
+import type MainDB from '../db/MainDB';
+import type { WatchHistoryItem } from '../db/entities/WatchHistory';
+import WatchHistory from '../db/entities/WatchHistory';
 
 export default class SetWatchHistory extends BaseAction<MainDB> {
   constructor(mod: ICoreAnyModule) {

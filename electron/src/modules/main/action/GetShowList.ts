@@ -1,5 +1,6 @@
-import { BaseAction, ICoreAnyModule } from '@grandlinex/e-kernel';
-import MainDB from '../db/MainDB';
+import type { ICoreAnyModule } from '@grandlinex/e-kernel';
+import { BaseAction } from '@grandlinex/e-kernel';
+import type MainDB from '../db/MainDB';
 
 export default class GetShowList extends BaseAction<MainDB> {
   constructor(mod: ICoreAnyModule) {

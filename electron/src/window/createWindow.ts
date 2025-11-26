@@ -1,6 +1,8 @@
-import { app, BrowserWindow, Rectangle, screen } from 'electron';
-import { IKernel, isDev, KernelWindowName } from '@grandlinex/e-kernel';
-import SQLCon from '@grandlinex/bundle-sqlight';
+import type { Rectangle } from 'electron';
+import { app, BrowserWindow, screen } from 'electron';
+import type { IKernel } from '@grandlinex/e-kernel';
+import { isDev, KernelWindowName } from '@grandlinex/e-kernel';
+import type SQLCon from '@grandlinex/bundle-sqlight';
 import urlWhitelist from '../util/urlWhitelist';
 
 interface WindowConfig {

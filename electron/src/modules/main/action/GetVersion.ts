@@ -1,6 +1,7 @@
-import { BaseAction, ICoreAnyModule } from '@grandlinex/e-kernel';
+import type { ICoreAnyModule } from '@grandlinex/e-kernel';
+import { BaseAction } from '@grandlinex/e-kernel';
 import { app } from 'electron';
-import MainDB from '../db/MainDB';
+import type MainDB from '../db/MainDB';
 import { getLatestVeresion, VersionMatcher } from '../../../util/UpdateChecker';
 
 export default class GetVersion extends BaseAction<MainDB> {

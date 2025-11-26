@@ -1,7 +1,7 @@
 import { app, dialog } from 'electron';
 import { spawn } from 'node:child_process';
 import path from 'node:path';
-import { CoreLogChannel } from '@grandlinex/e-kernel';
+import type { CoreLogChannel } from '@grandlinex/e-kernel';
 import fs from 'node:fs';
 import downStream from './downloader';
 import axiosGet from './routedRequest';

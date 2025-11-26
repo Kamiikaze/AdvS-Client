@@ -1,5 +1,6 @@
 import dns from 'node:dns';
-import axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
+import type { AxiosRequestConfig, AxiosResponse } from 'axios';
+import axios from 'axios';
 
 async function customLookup(hostname: string, options: any, callback: any) {
   // Create a new DNS resolver instance with Google DNS servers

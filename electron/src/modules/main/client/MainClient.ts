@@ -1,19 +1,20 @@
-import {
-  BaseClient,
+import type {
   IBaseKernelModule,
   IKernel,
-  KernelWindowName,
+  InMemCache,
 } from '@grandlinex/e-kernel';
+import { BaseClient, KernelWindowName } from '@grandlinex/e-kernel';
 import * as njsParser from 'node-html-parser';
-import { HTMLElement as njsParserReturn } from 'node-html-parser';
-import MainDB from '../db/MainDB';
-import ShowList from '../db/entities/ShowList';
-import Episodes, { Episode } from '../db/entities/Episodes';
-import EpisodeHosters, { HosterLanguage } from '../db/entities/EpisodeHosters';
+import type { HTMLElement as njsParserReturn } from 'node-html-parser';
+import type MainDB from '../db/MainDB';
+import type ShowList from '../db/entities/ShowList';
+import type { Episode } from '../db/entities/Episodes';
+import type Episodes from '../db/entities/Episodes';
+import type { HosterLanguage } from '../db/entities/EpisodeHosters';
+import EpisodeHosters from '../db/entities/EpisodeHosters';
 import axiosGet from '../../../util/routedRequest';
-import WatchHistory, {
-  WatchHistoryListItem,
-} from '../db/entities/WatchHistory';
+import type { WatchHistoryListItem } from '../db/entities/WatchHistory';
+import type WatchHistory from '../db/entities/WatchHistory';
 
 export interface FetchedShow {
   seasons: string[];
@@ -24,7 +25,7 @@ export interface FetchedShow {
 }
 
 export default class MainClient extends BaseClient<IKernel, MainDB> {
-  constructor(mod: IBaseKernelModule<MainDB, any, any>) {
+  constructor(mod: IBaseKernelModule<MainDB, MainClient, InMemCache>) {
     super('main', mod);
   }
 

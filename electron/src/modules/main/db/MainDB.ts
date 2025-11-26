@@ -1,5 +1,5 @@
 import SQLCon from '@grandlinex/bundle-sqlight';
-import { CoreEntityWrapper, ICoreAnyModule } from '@grandlinex/e-kernel';
+import type { CoreEntityWrapper, ICoreAnyModule } from '@grandlinex/e-kernel';
 import ShowList from './entities/ShowList';
 import Episodes from './entities/Episodes';
 import EpisodeHosters from './entities/EpisodeHosters';

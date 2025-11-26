@@ -1,6 +1,6 @@
+import type { IKernel } from '@grandlinex/e-kernel';
 import {
   BaseKernelModule,
-  IKernel,
   InMemCache,
   StoreGlobal,
 } from '@grandlinex/e-kernel';

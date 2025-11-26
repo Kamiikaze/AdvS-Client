@@ -1,6 +1,7 @@
-import { BaseAction, ICoreAnyModule, XActionEvent } from '@grandlinex/e-kernel';
-import MainDB from '../db/MainDB';
-import MainClient from '../client/MainClient';
+import type { ICoreAnyModule, XActionEvent } from '@grandlinex/e-kernel';
+import { BaseAction } from '@grandlinex/e-kernel';
+import type MainDB from '../db/MainDB';
+import type MainClient from '../client/MainClient';
 
 export default class GetEpisodeDetails extends BaseAction<MainDB, MainClient> {
   constructor(mod: ICoreAnyModule) {

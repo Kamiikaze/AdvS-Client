@@ -1,27 +1,37 @@
-import {
-  BaseAction,
+import type {
   IBaseKernelModule,
-  OsRelease,
-  StoreGlobal,
+  InMemCache,
   XActionEvent,
 } from '@grandlinex/e-kernel';
+import { OsRelease, StoreGlobal, BaseAction } from '@grandlinex/e-kernel';
 import { app, shell } from 'electron';
 import * as path from 'path';
+import type MainDB from '../db/MainDB';
+import type MainClient from '../client/MainClient';
+
+function validArgs(args: unknown): args is [string, string] {
+  return (
+    Array.isArray(args) &&
+    args.length === 2 &&
+    typeof args[0] === 'string' &&
+    typeof args[1] === 'string'
+  );
+}
 
 export default class DesktopShortCut extends BaseAction {
-  constructor(module: IBaseKernelModule<any, any, any>) {
+  constructor(module: IBaseKernelModule<MainDB, MainClient, InMemCache>) {
     super('create-shortcut', module);
     this.handler = this.handler.bind(this);
   }
 
-  async handler({ args }: XActionEvent<string[]>): Promise<boolean> {
+  async handler({ args }: XActionEvent<unknown>): Promise<boolean> {
+    if (!validArgs(args)) {
+      return false;
+    }
     this.log(args);
     const store = this.getConfigStore();
     const [link, name] = args;
-    if (
-      typeof link !== 'string' ||
-      store.get(StoreGlobal.GLOBAL_OS) !== OsRelease.WIN32
-    ) {
+    if (store.get(StoreGlobal.GLOBAL_OS) !== OsRelease.WIN32) {
       return false;
     }
 

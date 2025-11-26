@@ -1,10 +1,7 @@
-import {
-  CoreTriggerService,
-  ICoreAnyModule,
-  IKernel,
-} from '@grandlinex/e-kernel';
-import MainDB from '../db/MainDB';
-import MainClient from '../client/MainClient';
+import type { ICoreAnyModule, IKernel } from '@grandlinex/e-kernel';
+import { CoreTriggerService } from '@grandlinex/e-kernel';
+import type MainDB from '../db/MainDB';
+import type MainClient from '../client/MainClient';
 import ShowList from '../db/entities/ShowList';
 
 export default class ShowListUpdater extends CoreTriggerService<

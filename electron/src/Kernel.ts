@@ -157,7 +157,7 @@ export default class Kernel extends ElectronKernel {
       main = this.getMainWindow();
       let count = 0;
       while (main?.webContents.isLoading() && count < 10) {
-        count++;
+        count += 1;
         await XUtil.sleep(1000);
       }
     }

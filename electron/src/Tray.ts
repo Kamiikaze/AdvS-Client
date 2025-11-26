@@ -1,5 +1,6 @@
 import { app, Menu, Tray } from 'electron';
-import { ElectronGlobals, IKernel } from '@grandlinex/e-kernel';
+import type { IKernel } from '@grandlinex/e-kernel';
+import { ElectronGlobals } from '@grandlinex/e-kernel';
 import createWindow from './window/createWindow';
 
 export default function InitTray(kernel: IKernel) {
@@ -19,6 +20,16 @@ export default function InitTray(kernel: IKernel) {
         },
       },
       {
+        label: 'Schließen',
+        type: 'normal',
+        click: () => {
+          process.exit(0);
+        },
+      },
+      {
+        type: 'separator',
+      },
+      {
         label: 'Dev Tools',
         type: 'normal',
         click: () => {
@@ -26,10 +37,10 @@ export default function InitTray(kernel: IKernel) {
         },
       },
       {
-        label: 'Schließen',
+        label: 'Reload',
         type: 'normal',
         click: () => {
-          process.exit(0);
+          kernel.getMainWindow()?.reload();
         },
       },
     ];

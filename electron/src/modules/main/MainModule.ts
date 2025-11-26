@@ -8,7 +8,7 @@ import { ElectronBlocker } from '@ghostery/adblocker-electron';
 import fetch from 'cross-fetch';
 import path from 'node:path';
 import { app, session } from 'electron';
-import fs from 'node:fs';
+import { promises as fs } from 'node:fs';
 import GetShowList from './action/GetShowList';
 import MainDB from './db/MainDB';
 import ShowListUpdater from './services/showListUpdater';
@@ -59,8 +59,8 @@ export default class MainModule extends BaseKernelModule<
     const data = store.get(StoreGlobal.GLOBAL_PATH_DATA)!;
     const blocker = await ElectronBlocker.fromPrebuiltAdsAndTracking(fetch, {
       path: path.join(data, 'engine.bin'),
-      read: async (...args) => fs.readFileSync(...args),
-      write: async (...args) => fs.writeFileSync(...args),
+      read: async (...args) => (await fs.readFile(...args)) as any,
+      write: async (...args) => fs.writeFile(...args),
     });
     blocker.enableBlockingInSession(session.defaultSession);
     this.log('ElectronBlocker: Enabled');

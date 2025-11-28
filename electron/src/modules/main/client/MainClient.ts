@@ -1,4 +1,5 @@
 import type {
+  CoreModule,
   IBaseKernelModule,
   IKernel,
   InMemCache,
@@ -15,6 +16,7 @@ import EpisodeHosters from '../db/entities/EpisodeHosters';
 import { axiosGet } from '../../../util/routedRequest';
 import type { WatchHistoryListItem } from '../db/entities/WatchHistory';
 import type WatchHistory from '../db/entities/WatchHistory';
+import type LinkedAccounts from '../db/entities/LinkedAccounts';
 
 export interface FetchedShow {
   seasons: string[];
@@ -288,5 +290,23 @@ export default class MainClient extends BaseClient<IKernel, MainDB> {
     );
 
     return result;
+  }
+
+  async getAccountToken(acc: LinkedAccounts) {
+    if (!acc.token) return null;
+    const cc = this.getKernel().getCryptoClient()!;
+    return cc.keyStoreLoad(acc.token);
+  }
+
+  async setAccountToken(acc: LinkedAccounts, token: string) {
+    const db = this.getModule().getDb();
+    const cc = this.getKernel().getCryptoClient()!;
+    if (acc.token) {
+      const mod = this.getKernel().getCoreModule() as CoreModule;
+      const modDB = mod.getDb();
+      await modDB.deleteKey(acc.token);
+    }
+    const ks = await cc.keyStoreSave(token);
+    return db.linkedAccounts.updateObject(acc.e_id, { token: ks });
   }
 }

@@ -21,6 +21,7 @@ import DesktopShortCut from './action/DesktopShortCut';
 import SetWatchHistory from './action/SetWatchHistory';
 import GetWatchHistory from './action/GetWatchHistory';
 import checkUpdate from '../../util/UpdateChecker';
+import StoProvider from './class/StoProvider';
 
 export default class MainModule extends BaseKernelModule<
   MainDB,
@@ -81,5 +82,8 @@ export default class MainModule extends BaseKernelModule<
 
   async final() {
     await this.getKernel().triggerEvent('show-list-updater');
+
+    const test = new StoProvider(this);
+    test.startLink();
   }
 }

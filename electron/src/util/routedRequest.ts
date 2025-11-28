@@ -20,12 +20,10 @@ async function customLookup(hostname: string, options: any, callback: any) {
   });
 }
 
-export default async function axiosGet(
-  url: string,
-  config?: AxiosRequestConfig,
-) {
+export async function axiosGet(url: string, config?: AxiosRequestConfig) {
   let response: AxiosResponse;
 
+  // ToDo: Set actual Chrome User Agent
   console.log('axiosGet', url);
   try {
     response = await axios.get(url, {
@@ -35,6 +33,28 @@ export default async function axiosGet(
     console.log('axiosGet res.status', response.status);
   } catch (error) {
     console.error('axiosGet error', url, error);
+    return null;
+  }
+  return response;
+}
+
+export async function axiosPost(
+  url: string,
+  payload: any,
+  config?: AxiosRequestConfig,
+) {
+  let response: AxiosResponse;
+
+  // ToDo: Set actual Chrome User Agent
+  console.log('axiosPost', url, payload);
+  try {
+    response = await axios.post(url, payload, {
+      lookup: (hostname, options, cb) => customLookup(hostname, options, cb),
+      ...config,
+    });
+    console.log('axiosPost res.status', response.status);
+  } catch (error) {
+    console.error('axiosPost error', url, error);
     return null;
   }
   return response;

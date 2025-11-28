@@ -12,7 +12,7 @@ import type { Episode } from '../db/entities/Episodes';
 import type Episodes from '../db/entities/Episodes';
 import type { HosterLanguage } from '../db/entities/EpisodeHosters';
 import EpisodeHosters from '../db/entities/EpisodeHosters';
-import axiosGet from '../../../util/routedRequest';
+import { axiosGet } from '../../../util/routedRequest';
 import type { WatchHistoryListItem } from '../db/entities/WatchHistory';
 import type WatchHistory from '../db/entities/WatchHistory';
 

@@ -1,5 +1,7 @@
 import Path from 'path';
 import ElectronKernel, {
+  CoreCryptoClient,
+  CoreModule,
   ElectronGlobals,
   isDev,
   KernelWindowName,
@@ -69,6 +71,17 @@ export default class Kernel extends ElectronKernel {
 
     this.openNewWindow = this.openNewWindow.bind(this);
     this.setPreload = this.setPreload.bind(this);
+
+    this.setCoreModule(
+      new CoreModule(this, (mod) => new SQLCon(mod, '0', true)),
+    );
+
+    this.setCryptoClient(
+      new CoreCryptoClient(
+        this,
+        CoreCryptoClient.fromPW('someVeryLongAndNotUsedPassword'),
+      ),
+    );
 
     this.getModule().setDb(new SQLCon(this.getModule(), '0', true));
     const store = this.getConfigStore();

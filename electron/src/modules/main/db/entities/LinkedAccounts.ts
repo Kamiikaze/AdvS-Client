@@ -1,5 +1,14 @@
 import { Column, CoreEntity, Entity, EProperties } from '@grandlinex/e-kernel';
 
+export interface LinkedAccount {
+  e_id: string;
+  provider: string;
+  token: string;
+  status: string;
+  meta: Record<string, any>;
+  updatedAt: string;
+}
+
 export enum AccountStatus {
   SYNCED,
   NOT_SYNCED,
@@ -23,11 +32,6 @@ export default class LinkedAccounts extends CoreEntity {
   @Column({
     dataType: 'int',
   })
-  updated: number;
-
-  @Column({
-    dataType: 'int',
-  })
   status: AccountStatus;
 
   @Column({
@@ -35,12 +39,17 @@ export default class LinkedAccounts extends CoreEntity {
   })
   meta: Record<string, any>;
 
+  @Column({
+    dataType: 'int',
+  })
+  updatedAt: number;
+
   constructor(props?: EProperties<LinkedAccounts>) {
     super();
     this.provider = props?.provider ?? '';
     this.token = props?.token ?? null;
-    this.updated = props?.updated ?? Date.now();
     this.meta = props?.meta ?? {};
     this.status = props?.status ?? AccountStatus.NOT_SYNCED;
+    this.updatedAt = props?.updatedAt ?? Date.now();
   }
 }

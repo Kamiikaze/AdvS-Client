@@ -49,7 +49,7 @@ export default abstract class BaseProvider extends BaseElement<
     await this.client.setAccountToken(acc, token);
     await this.db.linkedAccounts.updateObject(acc.e_id, {
       status: AccountStatus.SYNCED,
-      updated: Date.now(),
+      updatedAt: Date.now(),
     });
   }
 

@@ -130,10 +130,10 @@ export default class MainClient extends BaseClient<IKernel, MainDB> {
               season_number: season,
               episode_number: el.textContent.trim(),
               episode_name: seasonBody
-                .querySelectorAll('.seasonEpisodesList tbody tr')
-                [
-                  Number(el.textContent.trim()) - 1
-                ].children[1].innerText.trim(),
+                .querySelectorAll(
+                  '.seasonEpisodesList tbody tr .seasonEpisodeTitle',
+                )
+                [Number(el.textContent.trim()) - 1].innerText.trim(),
               episode_description: null,
               createdAt: new Date(),
             };

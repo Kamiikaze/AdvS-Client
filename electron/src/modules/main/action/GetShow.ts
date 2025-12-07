@@ -72,6 +72,7 @@ export default class GetShow extends BaseAction<MainDB, MainClient> {
             episode_number: episode.episode_number,
             episode_name: episode.episode_name,
             episode_description: null,
+            episode_meta: {},
             createdAt: new Date(),
           }),
         );

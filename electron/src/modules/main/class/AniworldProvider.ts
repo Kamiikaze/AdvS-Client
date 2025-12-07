@@ -4,7 +4,6 @@ import { randomUUID } from 'crypto';
 import BaseProvider from './BaseProvider';
 import type MainDB from '../db/MainDB';
 import type MainClient from '../client/MainClient';
-import { AccountStatus } from '../db/entities/LinkedAccounts';
 import { axiosGet, axiosPost } from '../../../util/routedRequest';
 
 const AniworldProviderConf = {

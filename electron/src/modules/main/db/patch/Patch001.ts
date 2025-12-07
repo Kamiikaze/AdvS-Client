@@ -9,20 +9,28 @@ export default class Patch001 extends CoreDBUpdate<SQLCon> {
   }
 
   async performe(): Promise<boolean> {
-    const la = this.getDb().getEntityWrapper<LinkedAccounts>('LinkedAccounts')!;
+    const db = this.getDb();
+    const la = db.getEntityWrapper<LinkedAccounts>('LinkedAccounts')!;
     const init = await la.init();
 
     for (const pr of providerlist) {
       await la.createObject(
         new LinkedAccounts({
-          status: AccountStatus.NOT_SYNCED,
-          updated: Date.now(),
-          meta: {},
           provider: pr.name,
           token: null,
+          meta: {},
+          status: AccountStatus.NOT_SYNCED,
+          updatedAt: Date.now(),
         }),
       );
     }
+
+    await db.execScripts([
+      {
+        exec: `ALTER TABLE episodes ADD episode_meta TEXT NOT NULL DEFAULT '{}'`,
+        param: [],
+      },
+    ]);
 
     return init;
   }

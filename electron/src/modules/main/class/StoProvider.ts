@@ -7,11 +7,11 @@ const StoProviderConf = {
   baseURL: 'https://s.to',
   loginURL: 'https://s.to/login',
   sessionKey: 'PHPSESSID',
-  providerName: 's.to',
+  providerName: 'sto',
 };
 
 export default class StoProvider extends AniworldProvider {
   constructor(mod: IBaseKernelModule<MainDB, MainClient, InMemCache>) {
-    super(mod, 's.to', StoProviderConf);
+    super(mod, 'sto', StoProviderConf);
   }
 }

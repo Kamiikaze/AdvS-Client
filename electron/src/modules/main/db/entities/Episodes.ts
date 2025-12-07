@@ -6,7 +6,7 @@ export interface Episode {
   episode_number: string;
   episode_name: string;
   episode_description: string | null;
-  episode_meta: EpisodeMeta | object;
+  episode_meta: EpisodeMeta;
   createdAt: Date;
 }
 interface EpisodeMeta {

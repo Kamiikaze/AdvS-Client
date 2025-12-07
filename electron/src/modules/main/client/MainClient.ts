@@ -136,7 +136,7 @@ export default class MainClient extends BaseClient<IKernel, MainDB> {
                 [Number(el.textContent.trim()) - 1].innerText.trim(),
               episode_description: null,
               episode_meta: {
-                externalEpId: el.getAttribute('data-episode-id'),
+                externalEpId: el.getAttribute('data-episode-id')!,
               },
               createdAt: new Date(),
             };

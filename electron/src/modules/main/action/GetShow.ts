@@ -50,9 +50,10 @@ export default class GetShow extends BaseAction<MainDB, MainClient> {
         episode_number: episode.episode_number,
       });
 
+      // Update Entry
       if (dbEpisode) {
+        // Update episode_name
         if (dbEpisode.episode_name !== episode.episode_name) {
-          // update
           this.log(
             'Updating episode name',
             dbEpisode.episode_name,
@@ -62,8 +63,19 @@ export default class GetShow extends BaseAction<MainDB, MainClient> {
             episode_name: episode.episode_name,
           });
         }
+
+        // Update episode_meta
+        if (!('externalEpId' in dbEpisode.episode_meta)) {
+          this.log(
+            'Updating episode meta externalEpId',
+            episode.episode_meta.externalEpId,
+          );
+          await db.episodes.updateObject(dbEpisode.e_id, {
+            episode_meta: { externalEpId: episode.episode_meta.externalEpId },
+          });
+        }
       } else {
-        // create
+        // Create Entry
         this.log('Adding Episode', episode);
         await db.episodes.createObject(
           new Episodes({
@@ -72,7 +84,7 @@ export default class GetShow extends BaseAction<MainDB, MainClient> {
             episode_number: episode.episode_number,
             episode_name: episode.episode_name,
             episode_description: null,
-            episode_meta: {},
+            episode_meta: episode.episode_meta,
             createdAt: new Date(),
           }),
         );

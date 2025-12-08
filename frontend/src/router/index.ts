@@ -91,8 +91,44 @@ router.isReady().then(() => {
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 window.glxApi.on('tab-open', (event: any, data: any) =>
-  router.isReady().then(() => {
+  router.isReady().then(async () => {
     console.log('tab-open', event, data);
+    const requestUrl = data.path.split('/');
+    console.log(requestUrl);
+    const path = requestUrl[1];
+
+    if (path == 'watch') {
+      const requestType = (data.search as Map<string, string>).get('type');
+
+      if (requestType == 'raw') {
+        const [, , showId, episodeId] = requestUrl;
+        let urlBuilder = '/watch';
+        urlBuilder += `/` + showId;
+        if (episodeId) urlBuilder += `/` + episodeId;
+
+        router.push(urlBuilder);
+      }
+
+      // if (requestType == 'slug') {
+      //   const [, , slug, season, episode] = requestUrl;
+      //   const show = useShowStore().shows.find((s) => (s.show_slug = slug));
+      //
+      //   if (!show) return;
+      //
+      //   let urlBuilder = '/watch';
+      //   urlBuilder += `/` + show.e_id;
+      //
+      //   if (season && episode) {
+      //     await useShowStore().fetchShowDetails(show.e_id);
+      //     const reqEp = useShowStore().episodes.find(
+      //       (e) => e.season_number == season && e.episode_number == episode
+      //     );
+      //     reqEp ? (urlBuilder += `/ ` + reqEp.e_id) : (urlBuilder += '');
+      //   }
+      //
+      //   router.push(urlBuilder);
+      // }
+    }
   })
 );
 

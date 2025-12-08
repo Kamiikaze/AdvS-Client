@@ -94,6 +94,7 @@ export const useShowStore = defineStore('show', {
         episodeDetails.hosterList.length
       );
 
+      this.episodeHosters = [];
       this.episodeHosters = episodeDetails.hosterList || [];
 
       if (episodeDetails.episodeDescription) {

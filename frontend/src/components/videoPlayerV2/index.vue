@@ -247,6 +247,7 @@
 
 <script lang="ts">
 import type { Episode, Show } from '@/lib/electron';
+import type { DiscordConfig } from '@/lib/types';
 import { useAppStore } from '@/store/app';
 import { useShowStore } from '@/store/show';
 import { mapActions, mapState } from 'pinia';
@@ -341,7 +342,6 @@ export default defineComponent({
   }),
   methods: {
     ...mapActions(useShowStore, ['updateWatchHistory']),
-    ...mapState(useShowStore, ['currentShow', 'currentEpisode']),
     ...mapState(useAppStore, ['linkedAccounts']),
     initPlayer() {
       this.player = this.elementRefs.videoPlayer;
@@ -729,8 +729,8 @@ export default defineComponent({
               if (this.currentTime > 120 && !this.externalUpdateDone) {
                 this.externalUpdateDone = true;
 
-                const show = this.currentShow() as Show;
-                const ep = this.currentEpisode() as Episode;
+                const show = this.currentShow as Show;
+                const ep = this.currentEpisode as Episode;
                 const provider = show.show_type == 'anime' ? 'aniworld' : 'sto';
 
                 const isLinked = () => {
@@ -769,6 +769,7 @@ export default defineComponent({
             this.updateMediaSession();
             this.lastPosition = this.getLastVideoPosition();
             this.externalUpdateDone = false;
+            this.updateDiscordActivity();
           },
         ],
 
@@ -882,8 +883,30 @@ export default defineComponent({
         // ],
       });
     },
+    async updateDiscordActivity() {
+      const loadConfig = localStorage.getItem('discord-rpc');
+      if (!loadConfig) return;
+
+      const config = JSON.parse(loadConfig) as DiscordConfig;
+
+      await window.glxApi.invoke('set-discord-rpc', {
+        state: config.state,
+        activity: {
+          details: config.display.show
+            ? `Watching | ` + this.$props.options.showName
+            : null,
+          detailsUrl: 'https://github.com/Kamiikaze/AdvS-Client',
+          state: config.display.episode ? this.$props.options.videoTitle : null,
+          stateUrl: `advs://watch/${this.currentEpisode?.show_id}/${this.currentEpisode?.e_id}`,
+          largeImageKey: 'app-icon', // Must match asset name in Discord Developer Portal
+          largeImageText: 'AdvS Client - by Kamikaze',
+          largeImageUrl: 'https://github.com/Kamiikaze/AdvS-Client',
+        },
+      });
+    },
   },
   computed: {
+    ...mapState(useShowStore, ['currentShow', 'currentEpisode']),
     ...mapState(useAppStore, ['showSearch']),
     timeDisplay() {
       return {
@@ -938,6 +961,7 @@ export default defineComponent({
       );
       this.eventListeners = [];
     }
+    window.glxApi.invoke('set-discord-rpc', { state: true });
 
     // Clear timeouts/intervals
     clearTimeout(this.hideControlsTimeout);

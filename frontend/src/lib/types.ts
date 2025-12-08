@@ -7,3 +7,8 @@ export type Anchor =
   | 'center center'
   | `${Tblock} ${Tinline | 'center'}`
   | `${Tinline} ${Tblock | 'center'}`;
+
+export interface DiscordConfig {
+  state: boolean;
+  display: { show: boolean; episode: boolean };
+}

@@ -84,6 +84,7 @@ export default class MainModule extends BaseKernelModule<
     });
 
     if (!this.getKernel().getDevMode()) {
+      this.getClient().updatePreloadMsg('Checking for Updates...');
       await checkUpdate(
         this,
         app.getVersion(),

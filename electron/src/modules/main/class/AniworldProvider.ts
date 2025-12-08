@@ -29,6 +29,22 @@ export default class AniworldProvider extends BaseProvider {
   ) {
     super(name, mod);
     this.conf = conf || AniworldProviderConf;
+
+    this.init();
+  }
+
+  async init() {
+    const db = this.getModule().getDb();
+    const client = this.getModule().getClient();
+
+    const linkedAccount = (await db.linkedAccounts.findObj({
+      provider: this.getName().split(':')[1],
+    }))!;
+    const token = await client.getAccountToken(linkedAccount);
+
+    if (token) {
+      await this.setToken(token);
+    }
   }
 
   async setToken(token: string): Promise<void> {
@@ -144,11 +160,20 @@ export default class AniworldProvider extends BaseProvider {
     });
   }
 
-  private async setEpisodeStatus(externalId: string) {
-    const result = await axiosPost(
-      this.conf.baseURL + this.endpoints.setEpisodeStatus,
-      externalId,
-    );
+  async setEpisodeStatus(externalId: string) {
+    const apiCall = () => {
+      return axiosPost(
+        this.conf.baseURL + this.endpoints.setEpisodeStatus,
+        `episode=${externalId}`,
+        {
+          headers: {
+            Cookie: `${this.conf.sessionKey}=${this.token}`,
+            'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
+          },
+        },
+      );
+    };
+    const result = await apiCall();
 
     if (!result || !result.data) {
       this.error('Failed to set episode status', result);
@@ -156,10 +181,10 @@ export default class AniworldProvider extends BaseProvider {
     }
 
     if (result.data?.status) {
-      this.log('Episode status set successfully');
+      this.log('Episode status set successfully', result.data.status);
     } else {
-      this.warn('Already watched. Recalling func to set as seen again.');
-      await this.setEpisodeStatus(externalId);
+      this.warn('Already watched. Recalling apiCall to set as seen again.');
+      await apiCall();
     }
   }
 }

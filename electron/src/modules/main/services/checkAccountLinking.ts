@@ -43,9 +43,7 @@ export default class CheckAccountLinking extends CoreTriggerService<
             return;
         }
 
-        const token = (await client.getAccountToken(account))!;
-        await provider.setToken(token);
-
+        await provider.init();
         const linkStatus = await provider.testConnection();
 
         if (!linkStatus) {

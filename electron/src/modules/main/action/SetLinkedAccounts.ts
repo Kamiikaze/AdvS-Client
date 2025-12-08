@@ -4,7 +4,6 @@ import type MainDB from '../db/MainDB';
 import { AccountStatus } from '../db/entities/LinkedAccounts';
 import StoProvider from '../class/StoProvider';
 import AniworldProvider from '../class/AniworldProvider';
-import BaseProvider from '../class/BaseProvider';
 
 export default class SetLinkedAccount extends BaseAction<MainDB> {
   constructor(mod: ICoreAnyModule) {

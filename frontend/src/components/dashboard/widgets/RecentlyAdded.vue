@@ -20,6 +20,10 @@
           {{ index + 1 }}
         </template>
 
+        <template #[`item.show_type`]="{ item }">
+          {{ item.show_type === 'anime' ? 'Anime' : 'Serie' }}
+        </template>
+
         <template #[`item.createdAt`]="{ item }">
           <v-tooltip :text="item.createdAt.toLocaleString()" location="top">
             <template #activator="{ props }">
@@ -47,6 +51,7 @@ export default defineComponent({
   data: () => ({
     headers: [
       { title: 'Index', key: 'index', width: 0 },
+      { title: 'show_type', key: 'show_type', width: 50 },
       { title: 'show_name', key: 'show_name' },
       { title: 'Created', key: 'createdAt', width: 150 },
     ],
@@ -111,7 +116,7 @@ export default defineComponent({
   color: white;
   text-decoration: none;
 }
-#recent-table .list-item td:nth-child(2):hover {
+#recent-table .list-item td:nth-child(3):hover {
   text-decoration: underline;
 }
 

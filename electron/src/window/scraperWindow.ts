@@ -37,10 +37,9 @@ export default async function scraperWindow(
       // Regex to match common media file extensions
       const mediaPattern = /\.(mp4|webm|m4a|mkv|avi|m3u8)/i;
 
-      if (
-        !details.url.includes('devtools://') &&
-        mediaPattern.test(details.url)
-      ) {
+      const fileUrl = details.url.split('?')[0];
+
+      if (!details.url.includes('devtools://') && mediaPattern.test(fileUrl)) {
         console.log('Media File Requested:', details.url, details);
         clearTimeout(scrapeTimeoutId);
         kernel.getWindowManager().close(windowId);

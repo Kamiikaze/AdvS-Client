@@ -104,7 +104,7 @@ window.glxApi.on('tab-open', (event: any, data: any) =>
         const [, , showId, episodeId] = requestUrl;
         let urlBuilder = '/watch';
         urlBuilder += `/` + showId;
-        episodeId ? (urlBuilder += `/` + episodeId) : (urlBuilder += '');
+        if (episodeId) urlBuilder += `/` + episodeId;
 
         router.push(urlBuilder);
       }

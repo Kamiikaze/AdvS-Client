@@ -54,6 +54,7 @@ export default class CheckAccountLinking extends CoreTriggerService<
     );
 
     this.log('Done checking links');
+    client.updatePreloadMsg('Complete.');
   }
 
   stop(): Promise<undefined> {

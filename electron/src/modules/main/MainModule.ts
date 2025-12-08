@@ -65,6 +65,8 @@ export default class MainModule extends BaseKernelModule<
   }
 
   async start() {
+    this.getClient().updatePreloadMsg('Starting...');
+
     const store = this.getKernel().getConfigStore();
     const data = store.get(StoreGlobal.GLOBAL_PATH_DATA)!;
     const blocker = await ElectronBlocker.fromPrebuiltAdsAndTracking(fetch, {
@@ -92,5 +94,7 @@ export default class MainModule extends BaseKernelModule<
   async final() {
     await this.getKernel().triggerEvent('show-list-updater');
     await this.getKernel().triggerEvent('check-account-linking');
+
+    this.getClient().updatePreloadMsg('Launching App...');
   }
 }

@@ -18,7 +18,7 @@ export default class ShowListUpdater extends CoreTriggerService<
     const client = this.getModule().getClient();
     const db = this.getModule().getDb();
     await db.setConfig('show_list_update', new Date().toISOString());
-    client.updatePreloadMsg('Starting...');
+    client.updatePreloadMsg('Starting ShowListUpdater...');
 
     client.updatePreloadMsg('Fetching Animes...');
     const animes = await client.fetchShowList('anime');
@@ -60,7 +60,6 @@ export default class ShowListUpdater extends CoreTriggerService<
       }
     }
     client.updatePreloadMsg('Complete.');
-    client.updatePreloadMsg('Launching App...');
     this.log('Done');
   }
 

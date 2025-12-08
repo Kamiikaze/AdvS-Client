@@ -147,10 +147,13 @@ export default class AniworldProvider extends BaseProvider {
       });
 
       // Set timeout
-      timeoutId = setTimeout(() => {
-        this.error('Login timeout reached. No response received!');
-        resolveOnce(false);
-      }, 1000 * 60);
+      timeoutId = setTimeout(
+        () => {
+          this.error('Login timeout reached. No response received!');
+          resolveOnce(false);
+        },
+        1000 * 60 * 3,
+      );
 
       // Load URL
       window.loadURL(this.conf.loginURL).catch((error) => {

@@ -16,10 +16,12 @@ import NavDrawerMain from '@/components/navigationDrawer/main.vue';
 import SearchDialog from '@/components/searchDialog.vue';
 import Toolbar from '@/components/toolbar.vue';
 import router from '@/router';
+import { useAppStore } from '@/store/app';
 import { useShowStore } from '@/store/show';
 
 useShowStore().fetchShows();
 useShowStore().fetchWatchHistory();
+useAppStore().fetchLinkedAccounts();
 
 router.push({ name: 'dashboard' });
 

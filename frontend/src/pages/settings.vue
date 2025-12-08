@@ -1,12 +1,11 @@
 <template>
   <v-container>
-    <v-alert class="mb-4" type="warning"> Noch in Arbeit! </v-alert>
     <v-row>
-      <v-col>
+      <v-col cols="6">
         <SettingsGeneral disabled />
       </v-col>
-      <v-col>
-        <SettingsIntegrations disabled />
+      <v-col cols="6">
+        <SettingsIntegrations />
       </v-col>
     </v-row>
   </v-container>

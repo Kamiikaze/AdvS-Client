@@ -68,3 +68,19 @@ export interface WatchHistoryListItem extends WatchHistoryItem {
   seasonNum: number;
   episodeNum: number;
 }
+
+export enum LinkedAccountStatus {
+  SYNCED,
+  NOT_SYNCED,
+  ERROR,
+  DISABLED,
+}
+
+export interface LinkedAccount {
+  e_id: string;
+  provider: string;
+  token: string;
+  status: LinkedAccountStatus;
+  meta: Record<string, any>;
+  updatedAt: string;
+}

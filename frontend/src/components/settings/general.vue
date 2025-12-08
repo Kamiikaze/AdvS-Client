@@ -1,6 +1,12 @@
 <template>
   <v-card>
+    <v-alert class="mb-4" type="warning" variant="text">
+      Noch in Arbeit!
+    </v-alert>
     <v-card-title>Allgemein</v-card-title>
+    <v-card-subtitle class="text-wrap"
+      >Allgemeine Benutzereinstellungen für die Anwendung</v-card-subtitle
+    >
     <v-card-text>
       <v-row>
         <v-col> Bevorzugte Sprache </v-col>

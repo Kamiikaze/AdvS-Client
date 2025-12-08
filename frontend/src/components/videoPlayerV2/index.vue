@@ -961,7 +961,7 @@ export default defineComponent({
       );
       this.eventListeners = [];
     }
-    window.glxApi.invoke('set-discord-rpc', true);
+    window.glxApi.invoke('set-discord-rpc', { state: true });
 
     // Clear timeouts/intervals
     clearTimeout(this.hideControlsTimeout);

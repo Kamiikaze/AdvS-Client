@@ -56,10 +56,7 @@
             :icon="isPlaying ? 'mdi-pause' : 'mdi-play'"
             @click="playPause"
           />
-          <PlayerButton
-            icon="mdi-skip-next"
-            @click="($emit('nextEpisode'), player.pause())"
-          />
+          <PlayerButton icon="mdi-skip-next" @click="nextUpAction" />
           <VolumeControl ref="volumeControl" @volume-change="updateVolume" />
           <div class="player-time mx-2">
             <span>{{ timeDisplay.current }}</span> /
@@ -652,6 +649,8 @@ export default defineComponent({
           break;
         case 'KeyN':
           event.preventDefault();
+          clearInterval(this.saveProgressIntervalId);
+          this.player.pause();
           this.$emit('nextEpisode');
           break;
       }
@@ -715,6 +714,7 @@ export default defineComponent({
                       this.player.duration,
                       this.remaining
                     );
+                    clearInterval(this.saveProgressIntervalId);
                     this.player.pause();
                     this.$emit('nextEpisode');
                   }
@@ -910,6 +910,7 @@ export default defineComponent({
 
     navigator.mediaSession.setActionHandler('nexttrack', () => {
       this.player.pause();
+      clearInterval(this.saveProgressIntervalId);
       this.$emit('nextEpisode');
     });
 

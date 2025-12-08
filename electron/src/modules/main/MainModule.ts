@@ -25,6 +25,7 @@ import GetLinkedAccounts from './action/GetLinkedAccounts';
 import SetLinkedAccount from './action/SetLinkedAccounts';
 import CheckAccountLinking from './services/checkAccountLinking';
 import SetExternalEpisodeState from './action/SetExternalEpisodeState';
+import SetDiscordRPC from './action/SetDiscordRPC';
 
 export default class MainModule extends BaseKernelModule<
   MainDB,
@@ -46,8 +47,9 @@ export default class MainModule extends BaseKernelModule<
 
       new GetLinkedAccounts(this),
       new SetLinkedAccount(this),
-
       new SetExternalEpisodeState(this),
+
+      new SetDiscordRPC(this),
 
       new GetVersion(this),
       new DesktopShortCut(this),

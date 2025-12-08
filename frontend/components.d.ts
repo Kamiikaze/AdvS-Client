@@ -10,6 +10,7 @@ declare module 'vue' {
     Button: typeof import('./src/components/videoPlayerV2/controls/Button.vue')['default']
     Dashboard: typeof import('./src/components/dashboard/index.vue')['default']
     DatabaseStats: typeof import('./src/components/dashboard/widgets/DatabaseStats.vue')['default']
+    Discord: typeof import('./src/components/settings/discord.vue')['default']
     ExtendedHistory: typeof import('./src/components/navigationDrawer/extendedHistory.vue')['default']
     ExternalLink: typeof import('./src/components/externalLink.vue')['default']
     General: typeof import('./src/components/settings/general.vue')['default']

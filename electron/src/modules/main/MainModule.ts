@@ -23,6 +23,7 @@ import GetWatchHistory from './action/GetWatchHistory';
 import checkUpdate from '../../util/UpdateChecker';
 import StoProvider from './class/StoProvider';
 import GetLinkedAccounts from './action/GetLinkedAccounts';
+import SetLinkedAccount from './action/SetLinkedAccounts';
 
 export default class MainModule extends BaseKernelModule<
   MainDB,
@@ -41,7 +42,9 @@ export default class MainModule extends BaseKernelModule<
 
       new GetWatchHistory(this),
       new SetWatchHistory(this),
+
       new GetLinkedAccounts(this),
+      new SetLinkedAccount(this),
 
       new GetVersion(this),
       new DesktopShortCut(this),

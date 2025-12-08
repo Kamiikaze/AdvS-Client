@@ -399,10 +399,12 @@ export default defineComponent({
       localStorage.setItem('video-player-volume', JSON.stringify(volume));
 
       const volumeHint = this.elementRefs.volumeHint;
+      volumeHint.style.display = 'block';
       volumeHint.style.opacity = '1';
 
       clearTimeout(this.hideVolumeHintTimieout);
       this.hideVolumeHintTimieout = window.setTimeout(() => {
+        volumeHint.style.display = 'none';
         volumeHint.style.opacity = '0';
       }, 1000);
     },
@@ -983,7 +985,8 @@ export default defineComponent({
   background: #000000;
   background: linear-gradient(
     180deg,
-    rgba(0, 0, 0, 0.7) 0%,
+    rgba(0, 0, 0, 0.8) 0%,
+    rgba(0, 0, 0, 0.1) 80%,
     rgba(0, 0, 0, 0) 100%
   );
   z-index: 20;
@@ -1006,6 +1009,7 @@ export default defineComponent({
   top: 100px;
   left: 0;
   right: 0;
+  display: none;
   width: fit-content;
   background-color: rgba(0, 0, 0, 0.3);
   padding: 2px 4px;
@@ -1013,7 +1017,9 @@ export default defineComponent({
   border-radius: 2px;
   z-index: 10;
   opacity: 0;
-  transition: opacity 0.3s;
+  transition:
+    opacity 0.3s ease-in-out 0.1s,
+    display 0.3s ease-in-out;
 }
 
 .player-sleeptimer-hint {
@@ -1030,10 +1036,11 @@ export default defineComponent({
   flex-wrap: nowrap;
   width: 100%;
   min-height: 40px;
-  background: #000000;
+  background: #000;
   background: linear-gradient(
     0deg,
-    rgba(0, 0, 0, 0.7) 0%,
+    rgba(0, 0, 0, 0.8) 0%,
+    rgba(0, 0, 0, 0.2) 80%,
     rgba(0, 0, 0, 0) 100%
   );
   z-index: 20;
@@ -1044,6 +1051,10 @@ export default defineComponent({
 /* noinspection CssUnusedSymbol */
 .player-progress .v-progress-linear {
   border-radius: 2px;
+}
+.player-progress .v-progress-linear__background,
+.player-progress .v-progress-linear__buffer {
+  opacity: 0.3;
 }
 
 #player-progress-tooltip {

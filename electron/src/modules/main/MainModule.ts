@@ -21,9 +21,9 @@ import DesktopShortCut from './action/DesktopShortCut';
 import SetWatchHistory from './action/SetWatchHistory';
 import GetWatchHistory from './action/GetWatchHistory';
 import checkUpdate from '../../util/UpdateChecker';
-import StoProvider from './class/StoProvider';
 import GetLinkedAccounts from './action/GetLinkedAccounts';
 import SetLinkedAccount from './action/SetLinkedAccounts';
+import CheckAccountLinking from './services/checkAccountLinking';
 
 export default class MainModule extends BaseKernelModule<
   MainDB,
@@ -52,6 +52,7 @@ export default class MainModule extends BaseKernelModule<
 
     // Services
     this.addService(new ShowListUpdater(this));
+    this.addService(new CheckAccountLinking(this));
   }
 
   async initModule(): Promise<void> {
@@ -87,8 +88,6 @@ export default class MainModule extends BaseKernelModule<
 
   async final() {
     await this.getKernel().triggerEvent('show-list-updater');
-
-    const test = new StoProvider(this);
-    test.startLink();
+    await this.getKernel().triggerEvent('check-account-linking');
   }
 }

@@ -139,8 +139,9 @@ export default {
       this.currentShow = null as Show | null;
       await this.fetchShowDetails(showId);
 
-      if (this.currentShow)
+      if (this.currentShow) {
         this.playerOptions.showName = this.currentShow.show_name;
+      }
       this.playerOptions.nextEpisodeTitle = this.nextEpisodeTitle;
 
       const episodeParam = this.$route.params.episode;

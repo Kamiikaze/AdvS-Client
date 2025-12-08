@@ -134,6 +134,7 @@ export default defineComponent({
         );
         console.log('getEpisode', getEpisode);
         state.currentEpisode = getEpisode;
+        this.fetchEpisodeHosters();
       });
     },
     checkContainerWidth() {

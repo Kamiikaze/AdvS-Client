@@ -249,6 +249,7 @@
 </template>
 
 <script lang="ts">
+import type { Episode } from '@/lib/electron';
 import { useAppStore } from '@/store/app';
 import { useShowStore } from '@/store/show';
 import { mapActions, mapState } from 'pinia';
@@ -303,6 +304,7 @@ export default defineComponent({
     isPiP: false,
     autoplay: false,
     autoPlayCountdown: 100,
+    externalUpdateDone: false,
     sleeptimer: {
       enabled: false,
       duration: 0,
@@ -342,6 +344,7 @@ export default defineComponent({
   }),
   methods: {
     ...mapActions(useShowStore, ['updateWatchHistory']),
+    ...mapState(useShowStore, ['currentEpisode']),
     initPlayer() {
       this.player = this.elementRefs.videoPlayer;
 
@@ -718,6 +721,17 @@ export default defineComponent({
                   this.controlsPersistent = false;
                 }
               }
+
+              // Update external WatchState
+              if (this.currentTime > 120 && !this.externalUpdateDone) {
+                console.log('update external episode state');
+                this.externalUpdateDone = true;
+                window.glxApi.invoke('set-external-epsiode-state', {
+                  providerName: 'aniworld',
+                  episodeId: (this.currentEpisode() as Episode).episode_meta
+                    .externalEpId,
+                });
+              }
             }
           },
         ],
@@ -726,6 +740,7 @@ export default defineComponent({
           this.player,
           'can-play',
           () => {
+            console.log('can-play');
             const autoPlaySetting = JSON.parse(
               localStorage.getItem('video-player-autoplay') ?? 'false'
             );
@@ -735,6 +750,7 @@ export default defineComponent({
             }
             this.updateMediaSession();
             this.lastPosition = this.getLastVideoPosition();
+            this.externalUpdateDone = false;
           },
         ],
 

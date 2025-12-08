@@ -53,48 +53,95 @@ export default class AniworldProvider extends BaseProvider {
     return status === 200 && data?.error !== 1;
   }
 
-  async startLink(): Promise<void> {
-    const window = this.getKernel()
-      .getWindowManager()
-      .create(`${this.providerName}-link`, (iwp) => {
-        return new BrowserWindow({
-          ...iwp,
-          webPreferences: {
-            session: session.fromPartition(randomUUID()),
-          },
+  async startLink(): Promise<boolean> {
+    return new Promise((resolve, reject) => {
+      const window = this.getKernel()
+        .getWindowManager()
+        .create(`${this.providerName}-link`, (iwp) => {
+          return new BrowserWindow({
+            ...iwp,
+            width: 990,
+            webPreferences: {
+              session: session.fromPartition(randomUUID()),
+            },
+          });
         });
+
+      let timeoutId: NodeJS.Timeout;
+      let resolved = false;
+
+      // Helper to resolve once
+      const resolveOnce = (success: boolean) => {
+        if (resolved) return;
+        resolved = true;
+
+        clearTimeout(timeoutId);
+
+        if (success) {
+          resolve(success);
+        } else {
+          reject(success);
+        }
+
+        window.close();
+      };
+
+      window.webContents.setWindowOpenHandler(() => {
+        return { action: 'deny' }; // blockt alle neuen Fenster
       });
 
-    window.webContents.setWindowOpenHandler(() => {
-      return { action: 'deny' }; // blockt alle neuen Fenster
-    });
-    window.webContents.session.webRequest.onSendHeaders((details) => {
-      if (details.url.includes(this.conf.baseURL)) {
-        // this.log(details);
-        if (details.requestHeaders.Cookie) {
-          const cookies = details.requestHeaders.Cookie.split(';').map((e) =>
-            e.trim().split('='),
-          );
-          const season = cookies.find(([key]) => key === this.conf.sessionKey);
-          const isLogin = cookies.some(([key]) => key === 'rememberLogin');
-          if (season && isLogin) {
-            this.log(`Got ${this.providerName} session cookie:`, season[1]);
-            [, this.token] = season;
-            this.testConnection().then((e) => {
-              if (e) {
-                this.warn('Token work');
-                this.saveToken(season[1]);
-              } else {
-                this.warn("Token doesn't work");
-              }
-            });
+      window.webContents.session.webRequest.onSendHeaders((details) => {
+        if (details.url.includes(this.conf.baseURL)) {
+          if (details.requestHeaders.Cookie) {
+            const cookies = details.requestHeaders.Cookie.split(';').map((e) =>
+              e.trim().split('='),
+            );
+            const season = cookies.find(
+              ([key]) => key === this.conf.sessionKey,
+            );
+            const isLogin = cookies.some(([key]) => key === 'rememberLogin');
 
-            window.close();
+            if (season && isLogin) {
+              this.log(`Got ${this.providerName} session cookie:`, season[1]);
+              [, this.token] = season;
+
+              this.testConnection()
+                .then((isValid) => {
+                  if (isValid) {
+                    this.warn('Token work');
+                    this.saveToken(season[1]);
+                    resolveOnce(true);
+                  }
+
+                  this.warn("Token doesn't work");
+                  resolveOnce(false);
+                })
+                .catch((error) => {
+                  this.error('Token test failed:', error);
+                  resolveOnce(false);
+                });
+            }
           }
         }
-      }
+      });
+
+      // Handle manual window closure by user
+      window.on('close', () => {
+        resolveOnce(false);
+      });
+
+      // Set timeout
+      timeoutId = setTimeout(() => {
+        this.error('Login timeout reached. No response received!');
+        resolveOnce(false);
+      }, 1000 * 60);
+
+      // Load URL
+      window.loadURL(this.conf.loginURL).catch((error) => {
+        this.error('Failed to load login URL:', error);
+        resolveOnce(false);
+      });
     });
-    await window.loadURL(this.conf.loginURL);
   }
 
   private async setEpisodeStatus(externalId: string) {

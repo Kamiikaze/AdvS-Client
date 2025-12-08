@@ -36,7 +36,7 @@ export default abstract class BaseProvider extends BaseElement<
   /**
    * Start the link/connection with user interaction
    */
-  abstract startLink(): Promise<void>;
+  abstract startLink(): Promise<boolean>;
 
   async saveToken(token: string): Promise<void> {
     const acc = await this.db.linkedAccounts.findObj({

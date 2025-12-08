@@ -4,7 +4,7 @@ import path from 'node:path';
 import type { CoreLogChannel } from '@grandlinex/e-kernel';
 import fs from 'node:fs';
 import downStream from './downloader';
-import axiosGet from './routedRequest';
+import { axiosGet } from './routedRequest';
 
 export function VersionMatcher(
   oldVersion: string,

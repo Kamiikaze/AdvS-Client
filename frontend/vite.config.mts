@@ -22,6 +22,8 @@ export default defineConfig({
           if (id.includes('node_modules')) {
             if (id.includes('vuetify')) return 'vendor-vuetify';
             if (id.includes('vidstack')) return 'vendor-vidstack';
+            // Keep @vexip-ui and grid-layout-plus together
+            if (id.includes('@vexip-ui') || id.includes('grid-layout-plus')) return 'vendor-grid';
             if (id.includes('vue')) return 'vendor-vue';
             if (id.includes('pinia')) return 'vendor-vue';
             if (id.includes('vue-router')) return 'vendor-vue';

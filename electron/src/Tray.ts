@@ -20,13 +20,6 @@ export default function InitTray(kernel: IKernel) {
         },
       },
       {
-        label: 'Schließen',
-        type: 'normal',
-        click: () => {
-          process.exit(0);
-        },
-      },
-      {
         type: 'separator',
       },
       {
@@ -41,6 +34,16 @@ export default function InitTray(kernel: IKernel) {
         type: 'normal',
         click: () => {
           kernel.getMainWindow()?.reload();
+        },
+      },
+      {
+        type: 'separator',
+      },
+      {
+        label: 'Schließen',
+        type: 'normal',
+        click: () => {
+          process.exit(0);
         },
       },
     ];

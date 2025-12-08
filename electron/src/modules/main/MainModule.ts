@@ -21,6 +21,10 @@ import DesktopShortCut from './action/DesktopShortCut';
 import SetWatchHistory from './action/SetWatchHistory';
 import GetWatchHistory from './action/GetWatchHistory';
 import checkUpdate from '../../util/UpdateChecker';
+import GetLinkedAccounts from './action/GetLinkedAccounts';
+import SetLinkedAccount from './action/SetLinkedAccounts';
+import CheckAccountLinking from './services/checkAccountLinking';
+import SetExternalEpisodeState from './action/SetExternalEpisodeState';
 
 export default class MainModule extends BaseKernelModule<
   MainDB,
@@ -40,12 +44,18 @@ export default class MainModule extends BaseKernelModule<
       new GetWatchHistory(this),
       new SetWatchHistory(this),
 
+      new GetLinkedAccounts(this),
+      new SetLinkedAccount(this),
+
+      new SetExternalEpisodeState(this),
+
       new GetVersion(this),
       new DesktopShortCut(this),
     );
 
     // Services
     this.addService(new ShowListUpdater(this));
+    this.addService(new CheckAccountLinking(this));
   }
 
   async initModule(): Promise<void> {
@@ -55,6 +65,8 @@ export default class MainModule extends BaseKernelModule<
   }
 
   async start() {
+    this.getClient().updatePreloadMsg('Starting...');
+
     const store = this.getKernel().getConfigStore();
     const data = store.get(StoreGlobal.GLOBAL_PATH_DATA)!;
     const blocker = await ElectronBlocker.fromPrebuiltAdsAndTracking(fetch, {
@@ -81,5 +93,8 @@ export default class MainModule extends BaseKernelModule<
 
   async final() {
     await this.getKernel().triggerEvent('show-list-updater');
+    await this.getKernel().triggerEvent('check-account-linking');
+
+    this.getClient().updatePreloadMsg('Launching App...');
   }
 }

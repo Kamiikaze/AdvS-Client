@@ -249,6 +249,7 @@
 </template>
 
 <script lang="ts">
+import type { Episode, Show } from '@/lib/electron';
 import { useAppStore } from '@/store/app';
 import { useShowStore } from '@/store/show';
 import { mapActions, mapState } from 'pinia';
@@ -303,6 +304,7 @@ export default defineComponent({
     isPiP: false,
     autoplay: false,
     autoPlayCountdown: 100,
+    externalUpdateDone: false,
     sleeptimer: {
       enabled: false,
       duration: 0,
@@ -342,6 +344,8 @@ export default defineComponent({
   }),
   methods: {
     ...mapActions(useShowStore, ['updateWatchHistory']),
+    ...mapState(useShowStore, ['currentShow', 'currentEpisode']),
+    ...mapState(useAppStore, ['linkedAccounts']),
     initPlayer() {
       this.player = this.elementRefs.videoPlayer;
 
@@ -718,6 +722,32 @@ export default defineComponent({
                   this.controlsPersistent = false;
                 }
               }
+
+              // Update external WatchState
+              if (this.currentTime > 120 && !this.externalUpdateDone) {
+                this.externalUpdateDone = true;
+
+                const show = this.currentShow() as Show;
+                const ep = this.currentEpisode() as Episode;
+                const provider = show.show_type == 'anime' ? 'aniworld' : 'sto';
+
+                const isLinked = () => {
+                  const linkedAccount = this.linkedAccounts().find(
+                    (la) => la.provider == provider
+                  )!;
+                  console.log(linkedAccount);
+                  return linkedAccount.status === 0;
+                };
+                console.log(isLinked());
+
+                if (isLinked()) {
+                  console.log('update external episode state');
+                  window.glxApi.invoke('set-external-epsiode-state', {
+                    providerName: provider,
+                    episodeId: ep.episode_meta.externalEpId,
+                  });
+                }
+              }
             }
           },
         ],
@@ -726,6 +756,7 @@ export default defineComponent({
           this.player,
           'can-play',
           () => {
+            console.log('can-play');
             const autoPlaySetting = JSON.parse(
               localStorage.getItem('video-player-autoplay') ?? 'false'
             );
@@ -735,6 +766,7 @@ export default defineComponent({
             }
             this.updateMediaSession();
             this.lastPosition = this.getLastVideoPosition();
+            this.externalUpdateDone = false;
           },
         ],
 

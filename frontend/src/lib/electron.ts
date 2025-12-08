@@ -25,7 +25,13 @@ export interface Episode {
   episode_number: string;
   episode_name: string;
   episode_description: string | null;
+  episode_meta: EpisodeMeta;
   createdAt: Date;
+}
+interface EpisodeMeta {
+  externalEpId: string;
+
+  [key: string]: any;
 }
 
 export interface EpisodeHoster {
@@ -67,4 +73,19 @@ export interface WatchHistoryListItem extends WatchHistoryItem {
   showType: string;
   seasonNum: number;
   episodeNum: number;
+}
+
+export interface LinkedAccount {
+  e_id: string;
+  provider: string;
+  token: string;
+  status: LinkedAccountStatus;
+  meta: Record<string, any>;
+  updatedAt: string;
+}
+export enum LinkedAccountStatus {
+  SYNCED,
+  NOT_SYNCED,
+  ERROR,
+  DISABLED,
 }

@@ -6,7 +6,13 @@ export interface Episode {
   episode_number: string;
   episode_name: string;
   episode_description: string | null;
+  episode_meta: EpisodeMeta;
   createdAt: Date;
+}
+interface EpisodeMeta {
+  externalEpId: string;
+
+  [key: string]: any;
 }
 
 @Entity('Episodes')
@@ -26,6 +32,9 @@ export default class Episodes extends CoreEntity {
   @Column({ dataType: 'string', canBeNull: true })
   episode_description: string | null;
 
+  @Column({ dataType: 'json' })
+  episode_meta: EpisodeMeta | object;
+
   @Column({ dataType: 'date' })
   createdAt: Date;
 
@@ -36,6 +45,7 @@ export default class Episodes extends CoreEntity {
     this.episode_number = prop?.episode_number ?? '';
     this.episode_name = prop?.episode_name ?? '';
     this.episode_description = prop?.episode_description ?? null;
+    this.episode_meta = prop?.episode_meta ?? {};
     this.createdAt = prop?.createdAt ?? new Date();
   }
 }

@@ -1,4 +1,5 @@
 import type { LinkedAccount } from '@/lib/electron';
+import { useShowStore } from '@/store/show';
 import { acceptHMRUpdate, defineStore } from 'pinia';
 
 export const useAppStore = defineStore('app', {
@@ -13,12 +14,16 @@ export const useAppStore = defineStore('app', {
   }),
   getters: {},
   actions: {
-    toggleDrawer(name: keyof typeof this.showExtendedDrawer) {
+    async toggleDrawer(name: keyof typeof this.showExtendedDrawer) {
       const wasOpen = this.showExtendedDrawer[name];
 
       for (const key in this.showExtendedDrawer) {
         this.showExtendedDrawer[key as keyof typeof this.showExtendedDrawer] =
           false;
+      }
+
+      if (name === 'history' && !wasOpen) {
+        await useShowStore().fetchWatchHistory();
       }
 
       this.showExtendedDrawer[name] = !wasOpen;

@@ -7,7 +7,7 @@ export function splitEpisodeTitle(episode: Episode): {
   german: string;
   english: string;
 } {
-  if (!episode) return { german: '', english: '' };
+  if (!episode || !episode.episode_name) return { german: '', english: '' };
 
   const title = episode.episode_name;
   const lastDashIndex = title.lastIndexOf(' - ');

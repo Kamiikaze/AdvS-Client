@@ -2,7 +2,6 @@
   <v-dialog
     id="search-dialog"
     v-model="showSearch"
-    max-width="60%"
     transition="dialog-top-transition"
     content-class="flex-start"
     @click:outside="((showSearch = false), clearSearch)"
@@ -42,11 +41,12 @@
               <v-list-item
                 v-for="item in filterSeries.slice(0, 20)"
                 :key="item.show_slug"
+                class="search-item"
                 :value="item.show_slug"
                 density="compact"
                 @click.prevent="openShow(item.e_id)"
               >
-                <span>{{ item.show_name }}</span>
+                {{ item.show_name }}
               </v-list-item>
             </v-list>
           </v-col>
@@ -58,6 +58,7 @@
               <v-list-item
                 v-for="item in filterAnimes.slice(0, 20)"
                 :key="item.show_slug"
+                class="search-item"
                 :value="item.show_slug"
                 density="compact"
                 @click.prevent="openShow(item.e_id)"
@@ -135,4 +136,30 @@ export default defineComponent({
 });
 </script>
 
-<style></style>
+<style lang="scss">
+#search-dialog {
+  .v-overlay__content {
+    min-width: 520px;
+    width: 60%;
+    max-width: 800px;
+  }
+
+  .search-item {
+    padding: 10px 0;
+
+    &:after {
+      content: '';
+      opacity: 1;
+      border: none;
+      border-radius: unset;
+      border-bottom: 1px inset grey;
+      width: 75%;
+      right: 0;
+      margin-left: auto;
+    }
+    &:last-child:after {
+      opacity: 0;
+    }
+  }
+}
+</style>

@@ -5,18 +5,19 @@ import type {
   InMemCache,
 } from '@grandlinex/e-kernel';
 import { BaseClient, KernelWindowName } from '@grandlinex/e-kernel';
-import * as njsParser from 'node-html-parser';
 import type { HTMLElement as njsParserReturn } from 'node-html-parser';
+import * as njsParser from 'node-html-parser';
 import type MainDB from '../db/MainDB';
 import type ShowList from '../db/entities/ShowList';
-import type { Episode } from '../db/entities/Episodes';
 import type Episodes from '../db/entities/Episodes';
+import type { Episode } from '../db/entities/Episodes';
 import type { HosterLanguage } from '../db/entities/EpisodeHosters';
 import EpisodeHosters from '../db/entities/EpisodeHosters';
 import { axiosGet } from '../../../util/routedRequest';
-import type { WatchHistoryListItem } from '../db/entities/WatchHistory';
 import type WatchHistory from '../db/entities/WatchHistory';
+import type { WatchHistoryListItem } from '../db/entities/WatchHistory';
 import type LinkedAccounts from '../db/entities/LinkedAccounts';
+import { ElementSelector } from '../static/elementSelectors';
 
 export interface FetchedShow {
   seasons: string[];
@@ -48,31 +49,27 @@ export default class MainClient extends BaseClient<IKernel, MainDB> {
     }
 
     const body: njsParserReturn = njsParser.parse(response.data);
-    this.log('body', type, body);
 
-    const genreSelector = '.genre';
-    const genreNameSelector = 'h3';
-    const titleSelector = 'li a';
+    const genres = body.querySelectorAll(ElementSelector.SHOW_LIST.GENRE.LIST);
 
-    const genres = body.querySelectorAll(genreSelector);
-    const mappedItems = genres
+    return genres
       .map((genre) => {
         const genreName = genre
-          .querySelector(genreNameSelector)!
+          .querySelector(ElementSelector.SHOW_LIST.GENRE.NAME)!
           .textContent?.trim();
-        return genre.querySelectorAll(titleSelector).map((el) => ({
-          name: el.textContent!.trim(),
-          genre: genreName,
-          type,
-          slug: el.getAttribute('href')!.replace(`/${type}/stream/`, ''),
-          meta: {
-            alternativeTitles: el.getAttribute('data-alternative-title'),
-          },
-        }));
+        return genre
+          .querySelectorAll(ElementSelector.SHOW_LIST.SHOW)
+          .map((el) => ({
+            name: el.textContent!.trim(),
+            genre: genreName,
+            type,
+            slug: el.getAttribute('href')!.replace(`/${type}/stream/`, ''),
+            meta: {
+              alternativeTitles: el.getAttribute('data-alternative-title'),
+            },
+          }));
       })
       .flat();
-    this.log('mappedItems', type, mappedItems.length);
-    return mappedItems;
   }
 
   async fetchShowDetails(show: ShowList): Promise<FetchedShow | null> {
@@ -84,7 +81,7 @@ export default class MainClient extends BaseClient<IKernel, MainDB> {
     const url = showType === 'anime' ? 'https://aniworld.to' : 'https://s.to';
 
     const response = await axiosGet(
-      `${url}/${showType}/stream/${showSlug}/staffel-1`,
+      `${url}/${showType}/stream/${showSlug}/staffel-1`
     );
     if (!response) {
       this.error('Failed to fetch show details');
@@ -113,11 +110,11 @@ export default class MainClient extends BaseClient<IKernel, MainDB> {
     await Promise.all(
       seasonList.map(async (season) => {
         const seasonPage = await axiosGet(
-          `${url}/${showType}/stream/${showSlug}/staffel-${season}`,
+          `${url}/${showType}/stream/${showSlug}/staffel-${season}`
         );
         if (!seasonPage) {
           this.error(
-            `Failed to fetch season ${season} for show ${showType} ${showSlug}`,
+            `Failed to fetch season ${season} for show ${showType} ${showSlug}`
           );
           return;
         }
@@ -131,7 +128,7 @@ export default class MainClient extends BaseClient<IKernel, MainDB> {
               episode_number: el.textContent.trim(),
               episode_name: seasonBody
                 .querySelectorAll(
-                  '.seasonEpisodesList tbody tr .seasonEpisodeTitle',
+                  '.seasonEpisodesList tbody tr .seasonEpisodeTitle'
                 )
                 [Number(el.textContent.trim()) - 1].innerText.trim(),
               episode_description: null,
@@ -143,7 +140,7 @@ export default class MainClient extends BaseClient<IKernel, MainDB> {
             return episode;
           });
         episodes.push(...episodesList);
-      }),
+      })
     );
 
     return {
@@ -181,14 +178,14 @@ export default class MainClient extends BaseClient<IKernel, MainDB> {
 
     const episodeDescription =
       body
-        .querySelector('.hosterSiteTitle .descriptionSpoiler')
+        .querySelector(ElementSelector.EPISODE.DESCRIPTION)
         ?.textContent.trim() || null;
     this.log('episodeDescription', episodeDescription);
 
     const hosterList = await this.fetchEpisodeHosters(
       body,
       episode.e_id,
-      showType,
+      showType
     );
 
     return {
@@ -198,33 +195,48 @@ export default class MainClient extends BaseClient<IKernel, MainDB> {
   }
 
   async fetchEpisodeHosters(body: njsParserReturn, epId: string, type: string) {
-    const hosterSelector = '.hosterSiteVideo ul li';
-    const hosters = body.querySelectorAll(hosterSelector);
-
     const episodeHosters: EpisodeHosters[] = [];
 
-    for (const host of hosters) {
+    const hosterElements = body.querySelectorAll(
+      ElementSelector.EPISODE.HOSTER.LIST
+    );
+
+    if (hosterElements.length === 0) {
+      this.warn('No Hosters found');
+      return null;
+    }
+
+    this.log('Hosters found', hosterElements.length);
+
+    const hosterPromises = Array.from(hosterElements).map(async (host) => {
       const linkId = host.getAttribute('data-link-id');
-      const name = host.querySelector('h4')?.textContent!.trim();
+      const name = host
+        .querySelector(ElementSelector.EPISODE.HOSTER.NAME)!
+        .textContent.trim();
       const language = host.getAttribute('data-lang-key') as HosterLanguage;
 
       if (linkId && name && language) {
-        episodeHosters.push(
-          new EpisodeHosters({
-            episode_id: epId,
-            hoster_language: language,
-            hoster_label: name,
-            hoster_key: name.toLowerCase(),
-            hoster_redirect: `${MainClient.getBaseUrl(
-              type,
-            )}/redirect/${linkId}`,
-            createdAt: new Date(),
-            hoster_resolved: null,
-            resolvedAt: null,
-          }),
-        );
+        const redirectUrl = `${MainClient.getBaseUrl(type)}/redirect/${linkId}`;
+
+        return new EpisodeHosters({
+          episode_id: epId,
+          hoster_language: language,
+          hoster_label: name,
+          hoster_key: name.toLowerCase(),
+          hoster_redirect: redirectUrl,
+          createdAt: new Date(),
+          hoster_resolved: null,
+          resolvedAt: null,
+        });
       }
-    }
+
+      return null;
+    });
+
+    const results = await Promise.all(hosterPromises);
+    episodeHosters.push(
+      ...results.filter((item): item is EpisodeHosters => item !== null)
+    );
 
     return episodeHosters;
   }
@@ -289,7 +301,7 @@ export default class MainClient extends BaseClient<IKernel, MainDB> {
             episodeNum: Number(currEp.episode_number),
           };
         }
-      }),
+      })
     );
 
     return result;

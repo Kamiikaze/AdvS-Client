@@ -20,7 +20,7 @@ export default class SetExternalEpisodeState extends BaseAction<
     providerName: string;
     episodeId: string;
   }>) {
-    this.log(`Action:${this.channel}`, args);
+    this.log(`action${this.channel}`, args);
 
     const db = this.getModule().getDb();
     const client = this.getModule().getClient();

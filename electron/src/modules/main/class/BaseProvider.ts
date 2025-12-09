@@ -25,7 +25,7 @@ export default abstract class BaseProvider extends BaseElement<
 
   protected constructor(
     providerName: string,
-    mod: IBaseKernelModule<MainDB, MainClient, InMemCache>,
+    mod: IBaseKernelModule<MainDB, MainClient, InMemCache>
   ) {
     super(`provider:${providerName}`, mod);
     this.db = mod.getDb();

@@ -15,8 +15,10 @@ export default class ShowListUpdater extends CoreTriggerService<
 
   async start(): Promise<void> {
     this.log('show-list-updater started');
+
     const client = this.getModule().getClient();
     const db = this.getModule().getDb();
+
     await db.setConfig('show_list_update', new Date().toISOString());
     client.updatePreloadMsg('Starting ShowListUpdater...');
 
@@ -35,7 +37,7 @@ export default class ShowListUpdater extends CoreTriggerService<
     // eslint-disable-next-line no-restricted-syntax
     for (const [index, show] of showList.entries()) {
       client.updatePreloadMsg(
-        `Updating Show ${index + 1} / ${showList.length}`,
+        `Updating Show ${index + 1} / ${showList.length}`
       );
 
       const exists = await db.showList.findObj({
@@ -55,7 +57,7 @@ export default class ShowListUpdater extends CoreTriggerService<
             show_meta: show.meta,
             createdAt: new Date(),
             updatedAt: null,
-          }),
+          })
         );
       }
     }

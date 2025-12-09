@@ -11,7 +11,7 @@ export default class GetShow extends BaseAction<MainDB, MainClient> {
   }
 
   async handler({ args: showId }: XActionEvent<string>) {
-    this.log(`Action:${this.channel}`, showId);
+    this.log(`action${this.channel}`, showId);
 
     const client = this.getModule().getClient();
     const db = this.getModule().getDb();
@@ -58,7 +58,7 @@ export default class GetShow extends BaseAction<MainDB, MainClient> {
           this.log(
             'Updating episode name',
             dbEpisode.episode_name,
-            episode.episode_name,
+            episode.episode_name
           );
           await db.episodes.updateObject(dbEpisode.e_id, {
             episode_name: episode.episode_name,
@@ -69,7 +69,7 @@ export default class GetShow extends BaseAction<MainDB, MainClient> {
         if (!('externalEpId' in dbEpisode.episode_meta)) {
           this.log(
             'Updating episode meta externalEpId',
-            episode.episode_meta.externalEpId,
+            episode.episode_meta.externalEpId
           );
           await db.episodes.updateObject(dbEpisode.e_id, {
             episode_meta: { externalEpId: episode.episode_meta.externalEpId },
@@ -87,7 +87,7 @@ export default class GetShow extends BaseAction<MainDB, MainClient> {
             episode_description: null,
             episode_meta: episode.episode_meta,
             createdAt: new Date(),
-          }),
+          })
         );
       }
     }

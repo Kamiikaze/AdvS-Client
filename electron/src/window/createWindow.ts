@@ -97,7 +97,7 @@ export default async function createWindow(kernel: IKernel) {
     kernel.log(
       'Windows out of bounds. Resetting position.',
       config.bounds,
-      displays[0].bounds,
+      displays[0].bounds
     );
     window.setBounds({
       x: 0,

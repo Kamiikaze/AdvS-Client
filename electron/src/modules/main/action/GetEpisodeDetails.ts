@@ -10,76 +10,88 @@ export default class GetEpisodeDetails extends BaseAction<MainDB, MainClient> {
   }
 
   async handler({ args: episodeId }: XActionEvent<string>) {
-    this.log(`Action:${this.channel}`, episodeId);
+    this.log(`action${this.channel}`, episodeId);
 
-    const client = this.getModule().getClient();
     const db = this.getModule().getDb();
+    const client = this.getModule().getClient();
 
     const dbEpisode = await db.episodes.getObjById(episodeId);
 
     if (!dbEpisode) {
-      this.error('Episode not found', episodeId);
-      return [];
+      this.error('Episode not found in database', episodeId);
+      return null;
     }
 
-    // check if episode has already hosters
+    // Check if episode has already hosters
     const episodeHosterList = await db.episodeHosters.getObjList({
       search: {
         episode_id: dbEpisode.e_id,
       },
     });
 
-    // ToDO: Fetch Details if hosterlist is present. need to update fetchEpisodeDetails
-
     if (episodeHosterList.length > 0) {
-      this.log('Episode already has hosters', episodeHosterList[0].createdAt);
-      // return { episodeDescription: null, hosterList: episodeHosterList };
+      this.log(
+        'Episode already has hosters',
+        episodeHosterList.length,
+        episodeHosterList[0].createdAt
+      );
     }
 
-    // fetch episode details
+    // Fetch episode details
     const fetchedEpisodeDetails = await client.fetchEpisodeDetails(dbEpisode);
 
+    if (!fetchedEpisodeDetails) {
+      this.error('Fetch returned no data');
+      return null;
+    }
+
+    // Compare hosters of db.hosterList and fetchedEpisodeDetails.hosterList
+    // If redirect URL has changed, update URL
     if (
-      !fetchedEpisodeDetails ||
-      fetchedEpisodeDetails.hosterList.length === 0
+      fetchedEpisodeDetails.hosterList &&
+      fetchedEpisodeDetails.hosterList?.length > 0
     ) {
-      this.log('No hosters found');
-      return [];
-    }
+      await Promise.all(
+        fetchedEpisodeDetails.hosterList.map(async (newHoster) => {
+          const existingHoster = episodeHosterList.find(
+            (dbHost) =>
+              dbHost.hoster_key === newHoster.hoster_key &&
+              dbHost.hoster_language === newHoster.hoster_language
+          );
 
-    // compare hosters of episodeHosterList and fetchedEpisodeDetails.hosterList if url has changed and then update url
-    // eslint-disable-next-line no-restricted-syntax
-    for (const newHoster of fetchedEpisodeDetails.hosterList) {
-      const existingHoster = episodeHosterList.find(
-        (h) =>
-          h.hoster_key === newHoster.hoster_key &&
-          h.hoster_language === newHoster.hoster_language,
+          if (existingHoster) {
+            if (existingHoster.hoster_redirect !== newHoster.hoster_redirect) {
+              this.log(
+                `Updating hoster URL for ${newHoster.hoster_label} (${newHoster.hoster_language})`
+              );
+              this.log(
+                `${existingHoster.hoster_redirect} => ${newHoster.hoster_redirect}`
+              );
+              await db.episodeHosters
+                .updateObject(existingHoster.e_id, {
+                  hoster_redirect: newHoster.hoster_redirect,
+                })
+                .catch((err) => {
+                  this.error('Error updating hoster URL', err);
+                });
+            } else {
+              this.log('Hoster URL not changed');
+            }
+          } else {
+            this.log(
+              `Adding new hoster ${newHoster.hoster_label} (${newHoster.hoster_language})`
+            );
+            await db.episodeHosters.createObject(newHoster);
+          }
+        })
       );
-      if (existingHoster) {
-        if (existingHoster.hoster_redirect !== newHoster.hoster_redirect) {
-          this.log(
-            `Updating hoster URL for ${newHoster.hoster_label} (${newHoster.hoster_language})`,
-          );
-          this.log(
-            `${existingHoster.hoster_redirect} => ${newHoster.hoster_redirect}`,
-          );
-          await db.episodeHosters
-            .updateObject(existingHoster.e_id, {
-              hoster_redirect: newHoster.hoster_redirect,
-            })
-            .catch((err) => {
-              this.error('Error updating hoster URL', err);
-            });
-        }
-      } else {
-        this.log(
-          `Adding new hoster ${newHoster.hoster_label} (${newHoster.hoster_language})`,
-        );
-        await db.episodeHosters.createObject(newHoster);
-      }
     }
 
-    if (!dbEpisode.episode_description) {
+    // Update episode description if not set or has changed
+    if (
+      !dbEpisode.episode_description ||
+      dbEpisode.episode_description !== fetchedEpisodeDetails.episodeDescription
+    ) {
       this.log('Updating episode description');
       await db.episodes.updateObject(episodeId, {
         episode_description: fetchedEpisodeDetails.episodeDescription,

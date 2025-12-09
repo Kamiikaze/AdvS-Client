@@ -25,7 +25,7 @@ export default class AniworldProvider extends BaseProvider {
   constructor(
     mod: IBaseKernelModule<MainDB, MainClient, InMemCache>,
     name = 'aniworld',
-    conf?: typeof AniworldProviderConf,
+    conf?: typeof AniworldProviderConf
   ) {
     super(name, mod);
     this.conf = conf || AniworldProviderConf;
@@ -62,7 +62,7 @@ export default class AniworldProvider extends BaseProvider {
         headers: {
           Cookie: `${this.conf.sessionKey}=${this.token}`,
         },
-      },
+      }
     );
     if (!req) return false;
     const { status, data } = req;
@@ -110,10 +110,10 @@ export default class AniworldProvider extends BaseProvider {
         if (details.url.includes(this.conf.baseURL)) {
           if (details.requestHeaders.Cookie) {
             const cookies = details.requestHeaders.Cookie.split(';').map((e) =>
-              e.trim().split('='),
+              e.trim().split('=')
             );
             const season = cookies.find(
-              ([key]) => key === this.conf.sessionKey,
+              ([key]) => key === this.conf.sessionKey
             );
             const isLogin = cookies.some(([key]) => key === 'rememberLogin');
 
@@ -152,7 +152,7 @@ export default class AniworldProvider extends BaseProvider {
           this.error('Login timeout reached. No response received!');
           resolveOnce(false);
         },
-        1000 * 60 * 3,
+        1000 * 60 * 3
       );
 
       // Load URL
@@ -173,7 +173,7 @@ export default class AniworldProvider extends BaseProvider {
             Cookie: `${this.conf.sessionKey}=${this.token}`,
             'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
           },
-        },
+        }
       );
     };
     const result = await apiCall();

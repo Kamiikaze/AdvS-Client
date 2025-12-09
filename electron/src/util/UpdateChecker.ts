@@ -6,9 +6,11 @@ import fs from 'node:fs';
 import downStream from './downloader';
 import { axiosGet } from './routedRequest';
 
+/* eslint-disable no-console */
+
 export function VersionMatcher(
   oldVersion: string,
-  newVersion: string,
+  newVersion: string
 ): boolean {
   const versionRegex = /^\d+.\d+.\d+$/;
 
@@ -33,7 +35,7 @@ export function VersionMatcher(
 
 export async function getLatestVeresion() {
   const latestRelease = await axiosGet(
-    'https://api.github.com/repos/Kamiikaze/AdvS-Client/releases/latest',
+    'https://api.github.com/repos/Kamiikaze/AdvS-Client/releases/latest'
   );
 
   if (!latestRelease || !latestRelease.data) {
@@ -48,10 +50,10 @@ export default async function checkUpdate(
   logger: CoreLogChannel,
   currentVersion: string,
   downloadPath: string,
-  fileName: string,
+  fileName: string
 ) {
   const latestRelease = await axiosGet(
-    'https://api.github.com/repos/Kamiikaze/AdvS-Client/releases/latest',
+    'https://api.github.com/repos/Kamiikaze/AdvS-Client/releases/latest'
   );
 
   if (!latestRelease || !latestRelease.data) {
@@ -63,7 +65,7 @@ export default async function checkUpdate(
 
   const isNewVersionAvailable = VersionMatcher(
     currentVersion,
-    latestRelease.data.tag_name,
+    latestRelease.data.tag_name
   );
 
   if (!isNewVersionAvailable) {
@@ -83,7 +85,7 @@ export default async function checkUpdate(
 
   if (confirm.response === 0) {
     const releasesDownloadUrl = new URL(
-      latestRelease.data.assets[0].browser_download_url,
+      latestRelease.data.assets[0].browser_download_url
     );
 
     try {
@@ -94,7 +96,7 @@ export default async function checkUpdate(
     } catch (error) {
       logger.error(
         'No old updater found or failed to delete old download file:',
-        error,
+        error
       );
     }
 
@@ -106,7 +108,7 @@ export default async function checkUpdate(
         Accept: 'application/octet-stream',
       },
       downloadPath,
-      fileName,
+      fileName
     );
 
     logger.log('Downloaded setup file', setupFile);

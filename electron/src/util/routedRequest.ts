@@ -2,6 +2,9 @@ import dns from 'node:dns';
 import type { AxiosRequestConfig, AxiosResponse } from 'axios';
 import axios from 'axios';
 
+/* eslint-disable no-console */
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 async function customLookup(hostname: string, options: any, callback: any) {
   // Create a new DNS resolver instance with Google DNS servers
   const resolver = new dns.Resolver();
@@ -30,9 +33,10 @@ export async function axiosGet(url: string, config?: AxiosRequestConfig) {
       lookup: (hostname, options, cb) => customLookup(hostname, options, cb),
       ...config,
     });
-    console.log('axiosGet res.status', response.status);
+
+    console.log('axiosGet', 'response.status', response.status);
   } catch (error) {
-    console.error('axiosGet error', url, error);
+    console.error('axiosGet', 'error', error);
     return null;
   }
   return response;
@@ -40,8 +44,8 @@ export async function axiosGet(url: string, config?: AxiosRequestConfig) {
 
 export async function axiosPost(
   url: string,
-  payload: any,
-  config?: AxiosRequestConfig,
+  payload?: any, // eslint-disable-line @typescript-eslint/no-explicit-any
+  config?: AxiosRequestConfig
 ) {
   let response: AxiosResponse;
 
@@ -52,9 +56,10 @@ export async function axiosPost(
       lookup: (hostname, options, cb) => customLookup(hostname, options, cb),
       ...config,
     });
-    console.log('axiosPost res.status', response.status);
+
+    console.log('axiosPost', 'response.status', response.status);
   } catch (error) {
-    console.error('axiosPost error', url, error);
+    console.error('axiosPost', 'error', error);
     return null;
   }
   return response;

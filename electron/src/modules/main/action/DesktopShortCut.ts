@@ -37,7 +37,7 @@ export default class DesktopShortCut extends BaseAction {
 
     const linkPath = path.join(
       app.getPath('desktop'),
-      `${name || 'Unknown-Shortcut'}.lnk`,
+      `${name || 'Unknown-Shortcut'}.lnk`
     );
 
     try {

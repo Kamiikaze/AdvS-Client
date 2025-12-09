@@ -50,7 +50,7 @@ export default class CheckAccountLinking extends CoreTriggerService<
           client.updatePreloadMsg(`Requesting re-link for ${account.provider}`);
           await provider.startLink();
         }
-      }),
+      })
     );
 
     this.log('Done checking links');

@@ -52,7 +52,7 @@ export default class MainModule extends BaseKernelModule<
       new SetDiscordRPC(this),
 
       new GetVersion(this),
-      new DesktopShortCut(this),
+      new DesktopShortCut(this)
     );
 
     // Services
@@ -89,7 +89,7 @@ export default class MainModule extends BaseKernelModule<
         this,
         app.getVersion(),
         store.get(StoreGlobal.GLOBAL_PATH_TEMP)!,
-        'update.exe',
+        'update.exe'
       );
     }
   }

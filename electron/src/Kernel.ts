@@ -73,14 +73,14 @@ export default class Kernel extends ElectronKernel {
     this.setPreload = this.setPreload.bind(this);
 
     this.setCoreModule(
-      new CoreModule(this, (mod) => new SQLCon(mod, '0', true)),
+      new CoreModule(this, (mod) => new SQLCon(mod, '0', true))
     );
 
     this.setCryptoClient(
       new CoreCryptoClient(
         this,
-        CoreCryptoClient.fromPW('someVeryLongAndNotUsedPassword'),
-      ),
+        CoreCryptoClient.fromPW('someVeryLongAndNotUsedPassword')
+      )
     );
 
     this.getModule().setDb(new SQLCon(this.getModule(), '0', true));

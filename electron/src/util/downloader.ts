@@ -4,11 +4,13 @@ import https from 'https';
 import http from 'http';
 import { URL } from 'url';
 
+/* eslint-disable no-console */
+
 export default async function downStream(
   downloadUrl: string,
   headers: Record<string, string>,
   folderPath: string,
-  fileName?: string,
+  fileName?: string
 ): Promise<{ name: string; size: number; type: string } | null> {
   return new Promise((resolve) => {
     try {
@@ -26,7 +28,7 @@ export default async function downStream(
               res.headers.location,
               headers,
               folderPath,
-              fileName,
+              fileName
             ).then(resolve);
             return;
           }

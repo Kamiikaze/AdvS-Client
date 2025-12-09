@@ -8,7 +8,7 @@ import injectScripts from '../util/injectScripts';
 
 export default async function scraperWindow(
   episodeHost: EpisodeHosters,
-  element: BaseElement<IKernel>,
+  element: BaseElement<IKernel>
 ): Promise<ScraperLink | null> {
   const windowId = `SCRAPER-${randomUUID()}`;
   const kernel = element.getKernel();
@@ -72,7 +72,7 @@ export default async function scraperWindow(
       // Log the result
       if (execResult.exists) {
         console.log(
-          `Video clicked. Is video paused? ${execResult.paused}. Current time: ${execResult.currentTime}s`,
+          `Video clicked. Is video paused? ${execResult.paused}. Current time: ${execResult.currentTime}s`
         );
       } else {
         console.log('No <video> tag found on the page.');

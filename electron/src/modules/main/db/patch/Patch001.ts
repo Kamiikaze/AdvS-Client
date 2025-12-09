@@ -21,7 +21,7 @@ export default class Patch001 extends CoreDBUpdate<SQLCon> {
           meta: {},
           status: AccountStatus.NOT_SYNCED,
           updatedAt: Date.now(),
-        }),
+        })
       );
     }
 

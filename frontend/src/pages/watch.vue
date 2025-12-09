@@ -163,8 +163,10 @@ export default {
       await this.fetchEpisodeHosters();
       this.updateWindowTitle();
     },
-    refreshHosters() {
     async refreshHosters() {
+      const videoPlayerChildComponent = this.$refs
+        .videoPlayer as ComponentInstance<typeof VideoPlayerV2>;
+      videoPlayerChildComponent.player.pause();
       this.clearResolvedCache = true;
       await this.fetchEpisodeHosters();
     },

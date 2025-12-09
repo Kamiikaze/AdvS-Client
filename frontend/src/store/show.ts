@@ -1,7 +1,7 @@
 import {
   type Episode,
   type EpisodeHoster,
-  type GetEpisodeHosterResponse,
+  type GetEpisodeDetailsResponse,
   type HosterLanguage,
   type Show,
   type WatchHistoryItem,
@@ -78,38 +78,50 @@ export const useShowStore = defineStore('show', {
       }
     },
     async fetchEpisodeHosters() {
+      console.log('fetchEpisodeHosters');
+
       const episode: Episode = this.getEpisodeByNumber(
         this.selections.season,
         this.selections.episode
       );
 
-      if (!episode) return;
+      if (!episode) {
+        console.error('Episode not found');
+        return;
+      }
 
-      const episodeDetails: GetEpisodeHosterResponse =
+      const episodeDetails: GetEpisodeDetailsResponse | null =
         await window.glxApi.invoke('get-episode-details', episode.e_id);
 
-      console.log(
-        'Adding EpisodeHosters',
-        episode,
-        episodeDetails.hosterList.length
-      );
+      if (!episodeDetails) {
+        console.warn('No data recieved. Check log for errors.');
+        return;
+      }
 
-      this.episodeHosters = [];
-      this.episodeHosters = episodeDetails.hosterList || [];
+      if (episodeDetails.hosterList) {
+        console.log(
+          'Adding EpisodeHosters',
+          episode.e_id,
+          episodeDetails.hosterList.length
+        );
+
+        this.episodeHosters = [];
+        this.episodeHosters = episodeDetails.hosterList;
+      }
 
       if (episodeDetails.episodeDescription) {
         this.updateEpisodeDescription(
-          episode,
+          episode.e_id,
           episodeDetails.episodeDescription
         );
       }
     },
-    updateEpisodeDescription(episode: Episode, newDescription: string) {
-      const index = this.episodes.findIndex((e) => e.e_id == episode.e_id);
+    updateEpisodeDescription(episodeId: string, newDescription: string) {
+      const index = this.episodes.findIndex((e) => e.e_id == episodeId);
       if (index !== -1) {
-        const currDesc = this.episodes[index].episode_description;
+        const currDescription = this.episodes[index].episode_description;
 
-        if (currDesc === newDescription) return;
+        if (currDescription === newDescription) return;
 
         console.log('Updating episode_description', newDescription);
         this.episodes[index].episode_description = newDescription;

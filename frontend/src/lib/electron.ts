@@ -51,9 +51,9 @@ export interface HosterLanguage {
   value: string;
 }
 
-export interface GetEpisodeHosterResponse {
+export interface GetEpisodeDetailsResponse {
   episodeDescription: string | null;
-  hosterList: EpisodeHoster[];
+  hosterList: EpisodeHoster[] | null;
 }
 
 export type ScraperLink = { redirect: string; mediaLink: string | null };

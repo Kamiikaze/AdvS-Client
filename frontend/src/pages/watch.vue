@@ -164,8 +164,9 @@ export default {
       this.updateWindowTitle();
     },
     refreshHosters() {
+    async refreshHosters() {
       this.clearResolvedCache = true;
-      this.fetchEpisodeHosters();
+      await this.fetchEpisodeHosters();
     },
     updateWindowTitle() {
       document.title = `S${this.selections.season}E${this.selections.episode} - ${this.currentShow?.show_name} | AdvS`;

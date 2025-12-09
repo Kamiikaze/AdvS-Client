@@ -118,9 +118,9 @@ export default defineComponent({
     toIndex(n: string) {
       return Number(n) - 1;
     },
-    nextEpisode(val: number) {
+    async nextEpisode(val: number) {
       this.selections.episode = (val + 1).toString();
-      this.fetchEpisodeHosters();
+      await this.fetchEpisodeHosters();
     },
     updateCurrentEpisode(seasonChanged?: boolean) {
       if (seasonChanged) {

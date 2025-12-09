@@ -111,19 +111,18 @@ export default defineComponent({
 });
 </script>
 
-<style>
+<style lang="scss">
 #recent-table .list-item {
-  color: white;
-  text-decoration: none;
-}
-#recent-table .list-item td:nth-child(3):hover {
-  text-decoration: underline;
-}
+  &:hover td {
+    text-decoration: underline;
+  }
 
-#recent-table .list-item:nth-child(odd) {
-  background-color: #46239c !important;
-}
-#recent-table .list-item:nth-child(even) {
-  background-color: #5221bc;
+  &:nth-child(odd) {
+    background-color: rgb(var(--v-theme-purple-light));
+  }
+
+  &:nth-child(even) {
+    background-color: rgb(var(--v-theme-purple-lighter));
+  }
 }
 </style>

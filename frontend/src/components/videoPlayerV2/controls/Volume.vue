@@ -21,7 +21,7 @@
           width="100px"
           min="0"
           max="100"
-          color="purple"
+          color="purple-dark"
           thumb-size="15px"
           step="1"
         />

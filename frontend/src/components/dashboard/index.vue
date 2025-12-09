@@ -27,7 +27,7 @@
           @click="updateTableChildComponent"
         >
           <v-btn
-            :color="isEditMode ? 'success' : 'rgb(100, 59, 201)'"
+            :color="isEditMode ? 'success' : 'purple-lighter'"
             :prepend-icon="isEditMode ? 'mdi-check' : 'mdi-pencil'"
             @click="toggleEditMode"
           >

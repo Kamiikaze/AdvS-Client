@@ -1,6 +1,6 @@
 <template>
   <v-card
-    color="#643bc9"
+    color="purple-dark"
     class="widget-card"
     :class="{ 'edit-mode': isEditMode }"
   >
@@ -25,7 +25,7 @@ export default defineComponent({
 });
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 .widget-card {
   height: 100%;
   display: flex;
@@ -35,7 +35,7 @@ export default defineComponent({
 }
 
 .widget-card.edit-mode {
-  border: 2px dashed rgba(124, 77, 255, 0.5);
+  border: 2px dashed rgba(255, 255, 255, 0.5);
 }
 
 .drag-handle {

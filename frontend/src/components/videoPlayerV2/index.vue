@@ -38,8 +38,7 @@
             :model-value="currentTime"
             :max="duration"
             :buffer-value="buffered"
-            bg-color="purple"
-            color="purple"
+            color="purple-dark"
             height="10px"
             @click="goTo"
             @mousemove="goToTooltip"
@@ -971,7 +970,7 @@ export default defineComponent({
 });
 </script>
 
-<style>
+<style lang="scss">
 .player-wrapper {
   position: relative;
   width: 100%;
@@ -982,7 +981,7 @@ export default defineComponent({
 
 #media-player {
   cursor: pointer;
-  background-color: black;
+  background-color: #000;
 }
 
 .player-overlay {
@@ -994,7 +993,7 @@ export default defineComponent({
 }
 /* noinspection CssUnusedSymbol */
 .player-overlay .v-btn--icon:hover {
-  background-color: hsl(291.24deg 63.72% 42.16% / 24%);
+  background-color: rgba(var(--v-theme-pink-light), 0.25);
 }
 
 .player-controls-top {
@@ -1006,7 +1005,7 @@ export default defineComponent({
   align-items: center;
   width: 100%;
   min-height: 60px;
-  background: #000000;
+  background: #000;
   background: linear-gradient(
     180deg,
     rgba(0, 0, 0, 0.8) 0%,
@@ -1084,9 +1083,9 @@ export default defineComponent({
 #player-progress-tooltip {
   position: absolute;
   top: -30px;
-  background-color: black;
+  background-color: #000;
   width: fit-content;
-  color: white;
+  color: #fff;
   padding: 2px 5px;
   border-radius: 3px;
   font-size: 12px;

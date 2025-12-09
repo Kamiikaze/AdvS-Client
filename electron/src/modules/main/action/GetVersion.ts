@@ -10,8 +10,9 @@ export default class GetVersion extends BaseAction<MainDB> {
     this.handler = this.handler.bind(this);
   }
 
-  // eslint-disable-next-line class-methods-use-this
   async handler() {
+    this.log(`Action:${this.channel}`);
+
     const latestVersion = await getLatestVeresion();
     const updateAvailable = VersionMatcher(app.getVersion(), latestVersion);
 

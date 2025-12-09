@@ -10,6 +10,8 @@ export default class GetWatchHistory extends BaseAction<MainDB, MainClient> {
   }
 
   async handler() {
+    this.log(`Action:${this.channel}`);
+
     const client = this.getModule().getClient();
     const db = this.getModule().getDb();
 

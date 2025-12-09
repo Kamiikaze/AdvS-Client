@@ -10,7 +10,8 @@ export default class GetEpisodeDetails extends BaseAction<MainDB, MainClient> {
   }
 
   async handler({ args: episodeId }: XActionEvent<string>) {
-    this.log('GetEpisodeDetails', episodeId);
+    this.log(`Action:${this.channel}`, episodeId);
+
     const client = this.getModule().getClient();
     const db = this.getModule().getDb();
 

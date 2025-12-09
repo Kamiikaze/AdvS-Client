@@ -17,8 +17,9 @@ export default class GetStreamUrl extends BaseAction<MainDB, MainClient> {
     episodeHosterId: string;
     refreshCache: boolean;
   }>): Promise<ScraperLink | null> {
+    this.log(`Action:${this.channel}`, args);
+
     const db = this.getModule().getDb();
-    this.log('GetStreamUrl', args);
     const episodeHoster = await this.getModule()
       .getDb()
       .episodeHosters.getObjById(args.episodeHosterId);

@@ -22,6 +22,7 @@ declare module 'vue' {
     RouterView: typeof import('vue-router')['RouterView']
     SearchDialog: typeof import('./src/components/searchDialog.vue')['default']
     ShortcutsOverview: typeof import('./src/components/videoPlayerV2/shortcutsOverview.vue')['default']
+    Spinner: typeof import('./src/components/spinner.vue')['default']
     Toolbar: typeof import('./src/components/toolbar.vue')['default']
     VideoPlayerV2: typeof import('./src/components/videoPlayerV2/index.vue')['default']
     Volume: typeof import('./src/components/videoPlayerV2/controls/Volume.vue')['default']

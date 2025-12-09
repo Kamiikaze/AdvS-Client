@@ -174,6 +174,10 @@ export default {
       document.title = `S${this.selections.season}E${this.selections.episode} - ${this.currentShow?.show_name} | AdvS`;
     },
     async nextEpisode(episodeNum?: number) {
+      const videoPlayerChildComponent = this.$refs
+        .videoPlayer as ComponentInstance<typeof VideoPlayerV2>;
+      videoPlayerChildComponent.isLoading.player = true;
+
       const nextEpisodeNum = episodeNum ?? Number(this.selections.episode) + 1;
 
       const nextPossibleEpisode = this.findNextEpisode(
@@ -192,8 +196,6 @@ export default {
       this.playerOptions.nextEpisodeTitle = this.nextEpisodeTitle;
 
       // Start playback on manual next-interaction
-      const videoPlayerChildComponent = this.$refs
-        .videoPlayer as ComponentInstance<typeof VideoPlayerV2>;
       if (!videoPlayerChildComponent.autoplay) {
         videoPlayerChildComponent.autoplay = true;
         videoPlayerChildComponent.toggleAutoplay();

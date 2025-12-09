@@ -239,12 +239,14 @@
         @click="playPause"
       >
         <media-provider />
+        <Spinner v-if="isLoading.player" />
       </media-player>
     </div>
   </v-container>
 </template>
 
 <script lang="ts">
+import Spinner from '@/components/spinner.vue';
 import type { Episode, Show } from '@/lib/electron';
 import type { DiscordConfig } from '@/lib/types';
 import { useAppStore } from '@/store/app';
@@ -273,7 +275,7 @@ export interface VideoPlayerOptions {
 
 export default defineComponent({
   name: 'VideoPlayerV2',
-  components: { ShortcutsOverview, PlayerButton, VolumeControl },
+  components: { Spinner, ShortcutsOverview, PlayerButton, VolumeControl },
   emits: {
     nextEpisode: (episodeNumber?: number) => {
       return (
@@ -290,6 +292,9 @@ export default defineComponent({
   },
   data: () => ({
     player: {} as HTMLVideoElement,
+    isLoading: {
+      player: true,
+    },
     isPlaying: false,
     currentTime: 0,
     duration: 0,
@@ -765,9 +770,10 @@ export default defineComponent({
               this.autoplay = autoPlaySetting;
               this.player.play();
             }
-            this.updateMediaSession();
+            this.isLoading.player = false;
             this.lastPosition = this.getLastVideoPosition();
             this.externalUpdateDone = false;
+            this.updateMediaSession();
             this.updateDiscordActivity();
           },
         ],

@@ -8,6 +8,12 @@
 // @use 'vuetify/settings' with (
 //   $color-pack: false
 // );
+:root {
+  --v-layout-left: 56px;
+  --v-layout-right: 0px;
+  --v-layout-top: 32px;
+  --v-layout-bottom: 0px;
+}
 
 html, body, .main, .root, #root, #mount, #app {
   height: 100%;
@@ -27,7 +33,7 @@ html {
   margin-top: 32px;
 
   .v-overlay__scrim {
-    margin-top: 32px;
+    margin-top: var(--v-layout-top);
   }
 
   .v-card {

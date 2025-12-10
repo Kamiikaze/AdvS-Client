@@ -71,7 +71,7 @@
           </v-row>
         </div>
 
-        <div v-else>
+        <div v-if="search.length < 3 && history">
           <v-row>
             <v-col class="pb-0">
               <h3>Zuletzt gesucht:</h3>

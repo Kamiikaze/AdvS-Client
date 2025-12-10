@@ -11,7 +11,7 @@ export default class SetWatchHistory extends BaseAction<MainDB> {
   }
 
   async handler({ args: historyItem }: XActionEvent<WatchHistoryItem>) {
-    this.log(`action${this.channel}`, historyItem);
+    this.log(`action:${this.channel}`, historyItem);
 
     const db = this.getModule().getDb();
 

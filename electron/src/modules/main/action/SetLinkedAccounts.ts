@@ -17,7 +17,7 @@ export default class SetLinkedAccount extends BaseAction<MainDB> {
     id: string;
     action: 'link' | 'unlink';
   }>) {
-    this.log(`action${this.channel}`, args);
+    this.log(`action:${this.channel}`, args);
 
     const db = this.getModule().getDb();
 

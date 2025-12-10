@@ -9,7 +9,7 @@ export default class GetShowList extends BaseAction<MainDB> {
   }
 
   async handler() {
-    this.log(`action${this.channel}`);
+    this.log(`action:${this.channel}`);
 
     const db = this.getModule().getDb();
     return db.showList.getObjList({

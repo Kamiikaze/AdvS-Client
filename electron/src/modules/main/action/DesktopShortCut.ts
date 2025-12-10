@@ -25,6 +25,8 @@ export default class DesktopShortCut extends BaseAction {
   }
 
   async handler({ args }: XActionEvent<unknown>): Promise<boolean> {
+    this.log(`action:${this.channel}`, args);
+
     if (!validArgs(args)) {
       return false;
     }

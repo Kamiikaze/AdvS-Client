@@ -11,7 +11,7 @@ export default class GetVersion extends BaseAction<MainDB> {
   }
 
   async handler() {
-    this.log(`action${this.channel}`);
+    this.log(`action:${this.channel}`);
 
     const latestVersion = await getLatestVeresion();
     const updateAvailable = VersionMatcher(app.getVersion(), latestVersion);

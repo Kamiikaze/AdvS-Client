@@ -11,7 +11,7 @@ export default class GetShow extends BaseAction<MainDB, MainClient> {
   }
 
   async handler({ args: showId }: XActionEvent<string>) {
-    this.log(`action${this.channel}`, showId);
+    this.log(`action:${this.channel}`, showId);
 
     const client = this.getModule().getClient();
     const db = this.getModule().getDb();

@@ -16,7 +16,7 @@ export default class SetDiscordRPC extends BaseAction<MainDB> {
     state: boolean;
     activity?: SetActivity;
   }>) {
-    this.log(`action${this.channel}`, args);
+    this.log(`action:${this.channel}`, args);
 
     if (args.state) {
       this.log('Connecting DiscordRPC');

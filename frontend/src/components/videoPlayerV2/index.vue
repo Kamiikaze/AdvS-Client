@@ -238,8 +238,9 @@
         aspect-ratio="16/9"
         @click="playPause"
       >
-        <media-provider />
-        <Spinner v-if="isLoading.player" />
+        <media-provider>
+          <Spinner v-show="isLoading.player" />
+        </media-provider>
       </media-player>
     </div>
   </v-container>
@@ -737,17 +738,13 @@ export default defineComponent({
                 const ep = this.currentEpisode as Episode;
                 const provider = show.show_type == 'anime' ? 'aniworld' : 'sto';
 
-                const isLinked = () => {
-                  const linkedAccount = this.linkedAccounts().find(
-                    (la) => la.provider == provider
-                  )!;
-                  console.log(linkedAccount);
-                  return linkedAccount.status === 0;
-                };
-                console.log(isLinked());
+                const linkedAccount = this.linkedAccounts().find(
+                  (la) => la.provider == provider
+                )!;
+                const isLinked = linkedAccount.status === 0;
 
-                if (isLinked()) {
-                  console.log('update external episode state');
+                if (isLinked) {
+                  console.log('update external episode state', linkedAccount);
                   window.glxApi.invoke('set-external-epsiode-state', {
                     providerName: provider,
                     episodeId: ep.episode_meta.externalEpId,
@@ -783,6 +780,7 @@ export default defineComponent({
           'play',
           () => {
             this.isPlaying = true;
+            this.isLoading.player = false;
             this.player.volume = this.volume;
             this.hideControlsTimeout = window.setTimeout(() => {
               this.hideControlsHandler('hide');

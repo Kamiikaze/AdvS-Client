@@ -15,6 +15,7 @@
       </v-col>
       <v-col cols="auto">
         <v-select
+          v-show="uniqueLanguages.length > 0"
           v-model="selections.language"
           :items="uniqueLanguages"
           item-title="label"
@@ -26,6 +27,7 @@
       </v-col>
       <v-col cols="auto">
         <v-select
+          v-show="uniqueHosters.length > 0"
           v-model="selections.hoster"
           :items="uniqueHosters"
           item-title="label"
@@ -85,7 +87,7 @@
 </template>
 
 <script lang="ts">
-import { type Episode } from '@/lib/electron';
+import { type Episode, type HosterLanguage } from '@/lib/electron';
 import { splitEpisodeTitle } from '@/lib/utils';
 import { useShowStore } from '@/store/show';
 import { mapActions, mapState } from 'pinia';
@@ -164,7 +166,9 @@ export default defineComponent({
       );
     },
     uniqueHosters() {
-      if (this.uniqueLanguages.length === 0) return [];
+      if (this.uniqueLanguages.length === 0) {
+        return [];
+      }
       // find unique hosters by language
       const hosters = this.episodeHosters.filter(
         (hoster) => hoster.hoster_language === this.selections.language
@@ -237,13 +241,17 @@ export default defineComponent({
         this.checkContainerWidth();
       });
     },
-    uniqueLanguages() {
-      const isAvailable = this.uniqueLanguages.find(
-        (lang) => lang.value === this.selections.language
+    uniqueLanguages(val) {
+      const isAvailable = val.find(
+        (lang: HosterLanguage) => lang.value === this.selections.language
       );
 
-      if (!isAvailable) console.log('Selected Language is not available');
-      this.selections.language = this.uniqueLanguages[0].value;
+      if (!isAvailable) {
+        console.log('Selected Language is not available');
+      }
+      if (val.length === 0) return;
+
+      this.selections.language = val[0].value;
     },
   },
   mounted() {

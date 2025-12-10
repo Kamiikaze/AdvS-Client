@@ -166,7 +166,7 @@ export default {
     async refreshHosters() {
       const videoPlayerChildComponent = this.$refs
         .videoPlayer as ComponentInstance<typeof VideoPlayerV2>;
-      videoPlayerChildComponent.player.pause();
+      videoPlayerChildComponent?.player.pause();
       this.clearResolvedCache = true;
       await this.fetchEpisodeHosters();
     },
@@ -176,7 +176,11 @@ export default {
     async nextEpisode(episodeNum?: number) {
       const videoPlayerChildComponent = this.$refs
         .videoPlayer as ComponentInstance<typeof VideoPlayerV2>;
-      videoPlayerChildComponent.isLoading.player = true;
+
+      if (videoPlayerChildComponent) {
+        videoPlayerChildComponent.player.pause();
+        videoPlayerChildComponent.isLoading.player = true;
+      }
 
       const nextEpisodeNum = episodeNum ?? Number(this.selections.episode) + 1;
 
@@ -196,9 +200,10 @@ export default {
       this.playerOptions.nextEpisodeTitle = this.nextEpisodeTitle;
 
       // Start playback on manual next-interaction
-      if (!videoPlayerChildComponent.autoplay) {
+      if (videoPlayerChildComponent && !videoPlayerChildComponent.autoplay) {
         videoPlayerChildComponent.autoplay = true;
         videoPlayerChildComponent.toggleAutoplay();
+        videoPlayerChildComponent.player.play();
         setTimeout(() => {
           videoPlayerChildComponent.autoplay = false;
           videoPlayerChildComponent.toggleAutoplay();

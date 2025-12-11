@@ -1,7 +1,7 @@
 import { CoreDBUpdate } from '@grandlinex/e-kernel';
 import type SQLCon from '@grandlinex/bundle-sqlight';
 import LinkedAccounts, { AccountStatus } from '../entities/LinkedAccounts';
-import providerlist from '../../static/providerlist';
+import providerlist from '../../static/providerList';
 
 export default class Patch001 extends CoreDBUpdate<SQLCon> {
   constructor(db: SQLCon) {

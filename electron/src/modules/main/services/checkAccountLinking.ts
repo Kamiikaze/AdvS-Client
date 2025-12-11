@@ -2,8 +2,8 @@ import type { ICoreAnyModule, IKernel } from '@grandlinex/e-kernel';
 import { CoreTriggerService } from '@grandlinex/e-kernel';
 import type MainDB from '../db/MainDB';
 import type MainClient from '../client/MainClient';
-import AniworldProvider from '../class/AniworldProvider';
-import StoProvider from '../class/StoProvider';
+import { createProvider, type ProviderKey } from '../static/providerList';
+import { AccountStatus } from '../db/entities/LinkedAccounts';
 
 export default class CheckAccountLinking extends CoreTriggerService<
   IKernel,
@@ -16,45 +16,57 @@ export default class CheckAccountLinking extends CoreTriggerService<
 
   async start(): Promise<void> {
     this.log('check-account-linking started');
+
     const client = this.getModule().getClient();
     const db = this.getModule().getDb();
-
-    client.updatePreloadMsg('Checking linked Accounts...');
 
     const accounts = await db.linkedAccounts.getObjList();
     const linkedAccounts = accounts.filter((la) => la.status === 0);
 
     if (linkedAccounts.length === 0) {
-      this.log('No linked accounts.');
+      this.log('No accounts linked');
       return;
     }
+
+    client.updatePreloadMsg('Checking linked Accounts...');
+
     await Promise.all(
       linkedAccounts.map(async (account) => {
-        let provider;
-
-        switch (account.provider) {
-          case 'aniworld':
-            provider = new AniworldProvider(this.getModule());
-            break;
-          case 'sto':
-            provider = new StoProvider(this.getModule());
-            break;
-          default:
-            return;
-        }
-
+        const provider = createProvider(
+          account.provider as ProviderKey,
+          this.getModule()
+        );
         await provider.init();
+
+        this.log(`Testing connection for ${account.provider}`);
         const linkStatus = await provider.testConnection();
 
         if (!linkStatus) {
           client.updatePreloadMsg(`Requesting re-link for ${account.provider}`);
-          await provider.startLink();
+          try {
+            await provider.startLink();
+          } catch (err) {
+            this.error('Link failed', err);
+            client.updatePreloadMsg(
+              `Failed to sync account ${account.provider}`
+            );
+            await db.linkedAccounts.updateObject(account.e_id, {
+              status: AccountStatus.ERROR,
+            });
+          }
+        } else {
+          client.updatePreloadMsg(`Account ${account.provider} is synced`);
         }
+
+        this.log(`Finished check for ${account.provider} linking`);
+        client.updatePreloadMsg(
+          `Finished check for ${account.provider} linking`
+        );
       })
     );
 
-    this.log('Done checking links');
-    client.updatePreloadMsg('Complete.');
+    client.updatePreloadMsg('Complete');
+    this.log('Done');
   }
 
   stop(): Promise<undefined> {

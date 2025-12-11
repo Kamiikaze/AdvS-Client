@@ -5,10 +5,11 @@
 ![GitHub Downloads (all assets, all releases)](https://img.shields.io/github/downloads/Kamiikaze/advs-client/total)
 ![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/Kamiikaze/advs-client/release.yml)
 [![CodeFactor](https://www.codefactor.io/repository/github/kamiikaze/advs-client/badge)](https://www.codefactor.io/repository/github/kamiikaze/advs-client)
+![GitHub License](https://img.shields.io/github/license/kamiikaze/advs-client)
 
 [![wakatime](https://wakatime.com/badge/user/018c09d2-55f9-404d-ad2d-54bb17a0d7da/project/c688071a-705f-41ea-b1d8-d982d88cbb00.svg)](https://wakatime.com/badge/user/018c09d2-55f9-404d-ad2d-54bb17a0d7da/project/c688071a-705f-41ea-b1d8-d982d88cbb00)
-![GitHub License](https://img.shields.io/github/license/kamiikaze/advs-client)
-![GitHub Created At](https://img.shields.io/badge/created%20at-28.April%202025-red)
+![GitHub Published At](https://img.shields.io/badge/published%20at-10.%20November%202025-green)
+![GitHub Created At](https://img.shields.io/badge/created%20at-28.%20April%202025-red)
 </div>
 
 ---

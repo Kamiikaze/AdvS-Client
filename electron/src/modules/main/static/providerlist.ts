@@ -1,4 +1,4 @@
-import type { ICoreAnyModule, ICoreKernelModule } from '@grandlinex/e-kernel';
+import type { ICoreAnyModule } from '@grandlinex/e-kernel';
 import AniworldProvider from '../class/AniworldProvider';
 import StoProvider from '../class/StoProvider';
 

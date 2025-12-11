@@ -54,12 +54,18 @@
         </v-tooltip>
         <v-tooltip text="Einstellungen">
           <template #activator="{ props }">
-            <v-list-item
-              tabindex="4"
-              v-bind="props"
-              prepend-icon="mdi-cog"
-              to="/settings"
-            />
+            <v-list-item tabindex="4" v-bind="props" to="/settings">
+              <template #prepend>
+                <v-badge
+                  :model-value="invalidSettings > 0"
+                  :content="invalidSettings"
+                  color="red"
+                  floating
+                >
+                  <v-icon icon="mdi-cog"></v-icon>
+                </v-badge>
+              </template>
+            </v-list-item>
           </template>
         </v-tooltip>
       </v-list>
@@ -68,6 +74,7 @@
 </template>
 <script lang="ts">
 import ExternalLink from '@/components/externalLink.vue';
+import { LinkedAccountStatus } from '@/lib/electron';
 import { useAppStore } from '@/store/app';
 import { mapActions, mapState, mapWritableState } from 'pinia';
 import { defineComponent } from 'vue';
@@ -80,8 +87,19 @@ export default defineComponent({
     ...mapActions(useAppStore, ['toggleDrawer']),
   },
   computed: {
-    ...mapState(useAppStore, ['showExtendedDrawer']),
+    ...mapState(useAppStore, ['showExtendedDrawer', 'linkedAccounts']),
     ...mapWritableState(useAppStore, ['showSearch']),
+    invalidSettings() {
+      let count = 0;
+
+      this.linkedAccounts.forEach((la) => {
+        if (la.status == LinkedAccountStatus.ERROR) {
+          count += 1;
+        }
+      });
+
+      return count;
+    },
   },
 });
 </script>

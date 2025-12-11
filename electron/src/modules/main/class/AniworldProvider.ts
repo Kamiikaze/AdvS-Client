@@ -29,13 +29,13 @@ export default class AniworldProvider extends BaseProvider {
   ) {
     super(name, mod);
     this.conf = conf || AniworldProviderConf;
-
-    this.init();
   }
 
   async init() {
     const db = this.getModule().getDb();
     const client = this.getModule().getClient();
+
+    this.log('Init provider');
 
     const linkedAccount = (await db.linkedAccounts.findObj({
       provider: this.getName().split(':')[1],
@@ -44,7 +44,10 @@ export default class AniworldProvider extends BaseProvider {
 
     if (token) {
       await this.setToken(token);
+      this.log('Token set');
+      return;
     }
+    this.warn('No Token found');
   }
 
   async setToken(token: string): Promise<void> {
@@ -112,24 +115,24 @@ export default class AniworldProvider extends BaseProvider {
             const cookies = details.requestHeaders.Cookie.split(';').map((e) =>
               e.trim().split('=')
             );
-            const season = cookies.find(
+            const loginCookie = cookies.find(
               ([key]) => key === this.conf.sessionKey
             );
             const isLogin = cookies.some(([key]) => key === 'rememberLogin');
 
-            if (season && isLogin) {
-              this.log(`Got ${this.providerName} session cookie:`, season[1]);
-              [, this.token] = season;
+            if (loginCookie && isLogin) {
+              this.log('Got session cookie:', loginCookie[1]);
+              [, this.token] = loginCookie;
 
               this.testConnection()
                 .then((isValid) => {
                   if (isValid) {
-                    this.warn('Token work');
-                    this.saveToken(season[1]);
+                    this.log('Token valid');
+                    this.saveToken(loginCookie[1]);
                     resolveOnce(true);
                   }
 
-                  this.warn("Token doesn't work");
+                  this.warn('Token invalid');
                   resolveOnce(false);
                 })
                 .catch((error) => {
@@ -152,7 +155,7 @@ export default class AniworldProvider extends BaseProvider {
           this.error('Login timeout reached. No response received!');
           resolveOnce(false);
         },
-        1000 * 60 * 3
+        1000 * 60 * 5
       );
 
       // Load URL

@@ -73,19 +73,20 @@ export default class AniworldProvider extends BaseProvider {
   }
 
   async startLink(): Promise<boolean> {
-    return new Promise((resolve, reject) => {
-      const window = this.getKernel()
-        .getWindowManager()
-        .create(`${this.providerName}-link`, (iwp) => {
-          return new BrowserWindow({
-            ...iwp,
-            width: 990,
-            webPreferences: {
-              session: session.fromPartition(randomUUID()),
-            },
-          });
-        });
+    await session.defaultSession.clearStorageData({
+      origin: this.conf.baseURL,
+    });
 
+    const window = this.getKernel()
+      .getWindowManager()
+      .create(`${this.providerName}-link`, (iwp) => {
+        return new BrowserWindow({
+          ...iwp,
+          width: 990,
+        });
+      });
+
+    return new Promise((resolve, reject) => {
       let timeoutId: NodeJS.Timeout;
       let resolved = false;
 

@@ -70,18 +70,7 @@ export default class MainModule extends BaseKernelModule<
     this.getClient().updatePreloadMsg('Starting...');
 
     const store = this.getKernel().getConfigStore();
-    const data = store.get(StoreGlobal.GLOBAL_PATH_DATA)!;
-    const blocker = await ElectronBlocker.fromPrebuiltAdsAndTracking(fetch, {
-      path: path.join(data, 'engine.bin'),
-      read: async (...args) => (await fs.readFile(...args)) as any,
-      write: async (...args) => fs.writeFile(...args),
-    });
-    blocker.enableBlockingInSession(session.defaultSession);
-    this.log('ElectronBlocker: Enabled');
-
-    blocker.on('request-blocked', (request) => {
-      this.log(`ElectronBlocker: Blocked(${request.tabId})`, request.url);
-    });
+    await this.getClient().attachElectronBlocker(session.defaultSession);
 
     if (!this.getKernel().getDevMode()) {
       this.getClient().updatePreloadMsg('Checking for Updates...');

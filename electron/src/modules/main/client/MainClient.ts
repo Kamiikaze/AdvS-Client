@@ -1,12 +1,17 @@
-import type {
-  CoreModule,
-  IBaseKernelModule,
-  IKernel,
-  InMemCache,
+import {
+  type CoreModule,
+  type IBaseKernelModule,
+  type IKernel,
+  type InMemCache,
+  StoreGlobal,
 } from '@grandlinex/e-kernel';
 import { BaseClient, KernelWindowName } from '@grandlinex/e-kernel';
 import type { HTMLElement as njsParserReturn } from 'node-html-parser';
 import * as njsParser from 'node-html-parser';
+import { ElectronBlocker } from '@ghostery/adblocker-electron';
+import fetch from 'cross-fetch';
+import path from 'node:path';
+import { promises as fs } from 'fs';
 import type MainDB from '../db/MainDB';
 import type ShowList from '../db/entities/ShowList';
 import type Episodes from '../db/entities/Episodes';
@@ -30,6 +35,23 @@ export interface FetchedShow {
 export default class MainClient extends BaseClient<IKernel, MainDB> {
   constructor(mod: IBaseKernelModule<MainDB, MainClient, InMemCache>) {
     super('main', mod);
+  }
+
+  async attachElectronBlocker(eSession: Electron.Session) {
+    const store = this.getKernel().getConfigStore();
+    const data = store.get(StoreGlobal.GLOBAL_PATH_DATA)!;
+
+    const blocker = await ElectronBlocker.fromPrebuiltAdsAndTracking(fetch, {
+      path: path.join(data, 'engine.bin'),
+      read: async (...args) => (await fs.readFile(...args)) as any,
+      write: async (...args) => fs.writeFile(...args),
+    });
+    blocker.enableBlockingInSession(eSession);
+    this.log('ElectronBlocker: Enabled');
+
+    blocker.on('request-blocked', (request) => {
+      this.log(`ElectronBlocker: Blocked(${request.tabId})`, request.url);
+    });
   }
 
   static getBaseUrl(showType: string) {

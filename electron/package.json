@@ -1,6 +1,6 @@
 {
   "name": "advs-client_electron",
-  "version": "1.4.3",
+  "version": "1.4.4",
   "productName": "AdvS-Client",
   "main": "dist/run.js",
   "types": "dist/run.d.ts",

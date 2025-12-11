@@ -43,35 +43,41 @@ The application provides a unified interface to browse, search, and watch conten
 
 ## ✨ Features
 
-### 🎬 **Video Streaming**
+### 🎬 Video Streaming
 Advanced video player powered by Vidstack with support for multiple streaming formats. Watch your favorite shows with a smooth, responsive playback experience.
 
-### 📚 **Show Library Management**
+### 📚 Show Library Management
 Browse and manage your show library with an organized dashboard. The application maintains an up-to-date list of available content with automatic updates.
 
-### 📖 **Watch History**
+### 📖 Watch History
 Track your viewing progress automatically. Resume watching from where you left off with built-in watch history functionality.
 
-### 🛡️ **Ad-Blocking**
+### 🛡️ Ad-Blocking
 Integrated ad-blocking using Ghostery's Electron ad-blocker. Enjoy uninterrupted streaming with built-in protection against ads and trackers.
 
-### 🖥️ **System Tray Integration**
+### 🖥️ System Tray Integration
 Minimize to system tray for quick access. Control playback and access features directly from your taskbar.
 
-### 🔄 **Auto-Updates**
+### 🔄 Auto-Updates
 Automatic update checking ensures you always have the latest features and security improvements.
 
-### 🎨 **Modern UI**
+### 🎨 Modern UI
 Beautiful, responsive interface built with Vuetify 3. Enjoy a clean, material design experience with dark mode support.
 
-### ⚡ **High Performance**
+### ⚡ High Performance
 Built on Electron with optimized rendering and resource management for smooth performance even during intensive streaming.
 
-### 🔗 **Deep Linking**
+### 🔗 Deep Linking
 Support for `advs://` protocol for seamless integration with external applications and web browsers.
 
-### 🖼️ **Desktop Shortcuts**
+### 🖼️ Desktop Shortcuts
 Create desktop shortcuts for quick access to your favorite shows.
+
+### 🕹️ Discord Rich Presence
+Shows what you're currently watching as your Discord activity — configurable and fully integrated with Discord RPC.
+
+### 🔄 Sync Watch State
+Optionally sync your watch progress back to AniWorld.to and S.to, keeping everything in sync across platforms.
 
 ## 🛠️ Tech Stack
 
@@ -89,6 +95,7 @@ Create desktop shortcuts for quick access to your favorite shows.
 - **GrandLineX** - Modular kernel architecture
 - **SQLite** - Local database
 - **Ghostery Ad-Blocker** - Ad and tracker blocking
+- **Discord RPC** - Manages Discord Activity
 - **TypeScript** - Type-safe development
 
 ## 📋 Requirements
@@ -156,18 +163,32 @@ advs-client/
 ├── frontend/            # Vue.js frontend application
 │   ├── public/          # Static assets
 │   └── src/
+│       ├── assets/      # Resources (icons, etc.)
 │       ├── components/  # Vue components
+│       ├── lib/         # Utilities, Types
 │       ├── pages/       # Application pages
+│       ├── plugins/     # Vue plugins
+│       ├── router/      # Vue router
 │       ├── store/       # Pinia stores
-│       └── plugins/     # Vue plugins
-└── LICENSE.md
+│       └── styles/      # Stylesheets
+│
+├── CODE_OF_CONDUCT.md
+├── CONTRIBUTING.md
+├── LICENSE.md
 └── README.md
 ```
 
 ## 🔧 Configuration
 
 The application stores its configuration in the following locations:
-- **Windows:** `%APPDATA%/advs-client`
+
+### Windows
+
+| Files           | Path                         |
+| --------------- | ---------------------------- |
+| Installation    | `%LOCALAPPDATA%/AdvS-Client` |
+| Logs / Database | `%USERPROFILE%/AdvS-Client`  |
+| Browser         | `%APPDATA%/AdvS-Client`      |
 
 ## 🤝 Contributing
 

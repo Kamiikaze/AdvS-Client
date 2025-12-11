@@ -148,7 +148,7 @@ export default class Kernel extends ElectronKernel {
 
   async electronStart(): Promise<unknown> {
     await XUtil.sleep(2000);
-    this.getWindowManager().hide(KernelWindowName.PRELOAD);
+    this.getWindowManager().close(KernelWindowName.PRELOAD);
 
     await createWindow(this);
     return undefined;

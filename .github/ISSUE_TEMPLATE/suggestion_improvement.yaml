@@ -1,0 +1,41 @@
+name: Suggestion / Improvement
+description: Suggestion or Improvement of new/existing features
+title: "[Enhancement] <title>"
+labels: ["enhancement"]
+
+body:
+  - type: textarea
+    id: suggestion
+    attributes:
+      label: "What is your suggestion or improvement?"
+      description: "Describe the feature you want to add or improve."
+      placeholder: "Enter your suggestion here..."
+    validations:
+      required: true
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: "Is this related to a problem?"
+      description: "If applicable, describe the problem this suggestion addresses."
+      placeholder: "Describe the problem..."
+    validations:
+      required: false
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: "Alternatives considered"
+      description: "Describe any alternative solutions you considered."
+      placeholder: "Alternative solutions..."
+    validations:
+      required: false
+
+  - type: textarea
+    id: additional_context
+    attributes:
+      label: "Additional context"
+      description: "Add any other context, screenshots, or notes about this suggestion."
+      placeholder: "Additional context..."
+    validations:
+      required: false

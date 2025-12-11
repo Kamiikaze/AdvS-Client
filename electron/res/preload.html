@@ -208,6 +208,7 @@
                 // First progress message
                 this.isProgressActive = true;
                 this.addNewMessage(message);
+                console.log('Msg:', message)
                 this.currentMessageStartTime = Date.now();
 
                 this.queue = this.queue.filter(item => !item.isProgress);
@@ -223,6 +224,7 @@
               this.queue.shift();
               this.isProgressActive = false;
               this.addNewMessage(message);
+              console.log('Msg:', message)
               this.currentMessageStartTime = Date.now();
 
               // Wait minimum display time

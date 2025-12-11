@@ -61,7 +61,7 @@ export default class ShowListUpdater extends CoreTriggerService<
         );
       }
     }
-    client.updatePreloadMsg('Complete.');
+    client.updatePreloadMsg('Complete');
     this.log('Done');
   }
 

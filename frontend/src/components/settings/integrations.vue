@@ -7,7 +7,7 @@
     >
     <v-card-text v-if="linkedAccounts.length > 0">
       <v-row v-for="la in linkedAccounts" :key="la.provider">
-        <v-col class="flex-row justify-start align-center" cols="6">
+        <v-col cols="5" class="d-flex flex-row justify-start align-center">
           <span
             class="status-indicator"
             :style="`--status-color: ${getLinkStatus(la.status).color}`"
@@ -15,22 +15,30 @@
             {{ getBeautifyedName(la.provider) }}</span
           >
         </v-col>
-        <v-col cols="6">
+
+        <v-col cols="7" class="d-flex flex-row justify-start align-center">
           <div v-if="LinkedAccountStatus().SYNCED == la.status">
-            <span class="text-green font-weight-bold">{{
-              getLinkStatus(la.status).message
-            }}</span>
-            <v-btn
-              class="ma-2"
-              color="red-lighten-1"
-              icon="mdi-logout"
-              variant="text"
-              density="compact"
-              @click="execProviderLinkAction(la, 'unlink')"
-            />
+            <span class="text-green font-weight-bold">
+              {{ getLinkStatus(la.status).message }}
+            </span>
+
+            <v-tooltip text="Verbindung trennen" location="top">
+              <template #activator="{ props }">
+                <v-btn
+                  v-bind="props"
+                  class="ma-2"
+                  color="red-lighten-1"
+                  icon="mdi-logout"
+                  variant="text"
+                  density="compact"
+                  @click="execProviderLinkAction(la, 'unlink')"
+                />
+              </template>
+            </v-tooltip>
           </div>
+
           <div v-else-if="LinkedAccountStatus().DISABLED == la.status">
-            <p>{{ getLinkStatus(la.status).message }}</p>
+            <p class="text-disabled">{{ getLinkStatus(la.status).message }}</p>
           </div>
 
           <div v-else>
@@ -119,6 +127,8 @@ export default defineComponent({
           status.message = 'Fehler';
           break;
         default:
+          status.color = 'grey';
+          status.message = 'Deaktiviert';
           break;
       }
       return status;
@@ -157,11 +167,6 @@ export default defineComponent({
 </script>
 
 <style scoped>
-.v-row .v-col:nth-child(1) {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-}
 .status-indicator {
   --status-color: green;
 }

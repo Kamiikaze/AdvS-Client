@@ -101,7 +101,7 @@ Optionally sync your watch progress back to AniWorld.to and S.to, keeping everyt
 ## 📋 Requirements
 
 - Node.js 22.x or higher
-- npm, yarn, pnpm, or bun package manager
+- npm package manager
 
 ## 🚀 Installation
 

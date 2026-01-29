@@ -12,7 +12,8 @@
   --v-layout-left: 56px;
   --v-layout-right: 0px;
   --v-layout-top: 32px;
-  --v-layout-bottom: 0px;
+  --v-layout-bottom: 32px;
+  --v-system-bar-height: 24px;
 }
 
 html, body, .main, .root, #root, #mount, #app {
@@ -20,17 +21,25 @@ html, body, .main, .root, #root, #mount, #app {
   width: 100%;
   padding: 0;
   margin: 0;
-  overflow: auto;
+  overflow: hidden;
 }
 html {
   overflow-y: hidden !important;
+  margin-top: var(--v-layout-top);
+  height: calc(100% - var(--v-layout-top));
+}
+main {
+  padding-top: 0 !important;
 }
 #app {
   overflow: auto;
 }
+.v-application__wrap {
+  min-height: calc(100vh - var(--v-layout-top));
+}
 
 .v-dialog:not(.fullscreen-active) {
-  margin-top: 32px;
+  margin-top: var(--v-layout-top);
 
   .v-overlay__scrim {
     margin-top: var(--v-layout-top);

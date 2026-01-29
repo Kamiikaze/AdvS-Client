@@ -1,6 +1,5 @@
 import type { IBaseKernelModule, InMemCache } from '@grandlinex/e-kernel';
 import { BrowserWindow, session } from 'electron';
-import { randomUUID } from 'crypto';
 import BaseProvider from './BaseProvider';
 import type MainDB from '../db/MainDB';
 import type MainClient from '../client/MainClient';

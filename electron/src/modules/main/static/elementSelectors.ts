@@ -1,10 +1,4 @@
-/**
- * Object containing CSS selectors for specific elements within a hoster site.
- *
- * @param {string} Episode_Description CSS selector targeting the element containing the episode description with potential spoilers.
- * @param {string} Episode_Hoster_List CSS selector targeting the list items within the hoster site's video list.
- */
-const BaseElementSelector = {
+export const AniworldElementSelector = {
   EPISODE: {
     DESCRIPTION: '.hosterSiteTitle .descriptionSpoiler',
     HOSTER: {
@@ -19,14 +13,39 @@ const BaseElementSelector = {
     },
     SHOW: 'li a',
   },
-};
-
-export const ElementSelector = BaseElementSelector;
-
-export const AniworldElementSelector = {
-  ...BaseElementSelector,
+  SHOW: {
+    SEASON_LIST: '#stream ul:nth-child(1) li a',
+    EPISODE_LIST: '#stream ul:nth-child(4) li a',
+    YEARS: '.series-title small span',
+    IMDB: 'a.imdb-link',
+    SEASON_PAGE: {
+      EPISODE_NAME: '.seasonEpisodesList tbody tr .seasonEpisodeTitle',
+    },
+  },
 };
 
 export const StoElementSelector = {
-  ...BaseElementSelector,
+  EPISODE: {
+    DESCRIPTION: '.text-body',
+    HOSTER: {
+      LIST: '#episode-links button',
+      NAME: 'h4',
+    },
+  },
+  SHOW_LIST: {
+    GENRE: {
+      LIST: 'h3',
+    },
+    SHOW: 'li a',
+  },
+  SHOW: {
+    SEASON_LIST: '#season-nav .nav-link',
+    EPISODE_LIST: '.episode-row',
+    META: 'p.text-muted',
+    SEASON_PAGE: {
+      EPISODE_NAME: '.episode-title-cell',
+      EPISODE_NUMBER: '.episode-number-cell',
+      EPISODE_ID: '.episode-eye',
+    },
+  },
 };

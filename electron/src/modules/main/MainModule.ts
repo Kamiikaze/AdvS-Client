@@ -4,11 +4,7 @@ import {
   InMemCache,
   StoreGlobal,
 } from '@grandlinex/e-kernel';
-import { ElectronBlocker } from '@ghostery/adblocker-electron';
-import fetch from 'cross-fetch';
-import path from 'node:path';
 import { app, session } from 'electron';
-import { promises as fs } from 'node:fs';
 import GetShowList from './action/GetShowList';
 import MainDB from './db/MainDB';
 import ShowListUpdater from './services/showListUpdater';

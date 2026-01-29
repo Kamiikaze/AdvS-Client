@@ -13,6 +13,7 @@ import { app, BrowserWindow } from 'electron';
 import installExtension, { VUEJS_DEVTOOLS } from 'electron-devtools-installer';
 import ELogger from '@grandlinex/bundle-elogger';
 import SQLCon from '@grandlinex/bundle-sqlight';
+import EManageModule from '@kamiikaze/bundle-emanager-electron-vue';
 import MainModule from './modules/main/MainModule';
 
 import InitTray from './Tray';
@@ -94,6 +95,8 @@ export default class Kernel extends ElectronKernel {
 
     this.addModule(new MainModule(this));
     InitTray(this);
+
+    this.addModule(new EManageModule(this, 'main'));
 
     app.whenReady().then(async () => {
       if (isDev()) {

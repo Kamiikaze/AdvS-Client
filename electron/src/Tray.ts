@@ -27,6 +27,10 @@ export default function InitTray(kernel: IKernel) {
         type: 'normal',
         click: () => {
           kernel.getMainWindow()?.webContents.openDevTools({ mode: 'bottom' });
+          kernel
+            .getWindowManager()
+            .get('emanager')
+            ?.webContents.openDevTools({ mode: 'bottom' });
         },
       },
       {

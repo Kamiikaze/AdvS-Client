@@ -5,12 +5,14 @@
     <NavDrawerMain />
     <NavDrawerExtendedHistory />
     <v-main>
+      <AppAlerts />
       <router-view />
     </v-main>
   </v-app>
 </template>
 
 <script lang="ts" setup>
+import AppAlerts from '@/components/appAlerts.vue';
 import NavDrawerExtendedHistory from '@/components/navigationDrawer/extendedHistory.vue';
 import NavDrawerMain from '@/components/navigationDrawer/main.vue';
 import SearchDialog from '@/components/searchDialog.vue';

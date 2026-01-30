@@ -94,6 +94,7 @@
 <script lang="ts">
 import DatabaseStats from '@/components/dashboard/widgets/DatabaseStats.vue';
 import { useDashboardStore, type WidgetLayout } from '@/store/dashboard';
+import { useShowStore } from '@/store/show';
 import { GridItem, GridLayout } from 'grid-layout-plus';
 import { mapActions, mapState } from 'pinia';
 import { type ComponentInstance, defineComponent } from 'vue';
@@ -158,6 +159,7 @@ export default defineComponent({
   },
   created() {
     this.loadLayout();
+    useShowStore().fetchWatchHistory();
   },
 });
 </script>

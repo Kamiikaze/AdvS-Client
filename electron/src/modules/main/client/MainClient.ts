@@ -401,40 +401,13 @@ export default class MainClient extends BaseClient<IKernel, MainDB> {
 
         if (!currShow || !currEp) return;
 
-        const existing = result.find((h) => h.show_id === curr.show_id);
-
-        if (!existing) {
-          result.push({
-            ...curr,
-            showName: currShow.show_name,
-            showType: currShow.show_type,
-            seasonNum: Number(currEp.season_number),
-            episodeNum: Number(currEp.episode_number),
-          });
-          return;
-        }
-
-        const existingEp = await db.episodes.findObj({
-          e_id: existing.episode_id,
+        result.push({
+          ...curr,
+          showName: currShow.show_name,
+          showType: currShow.show_type,
+          seasonNum: Number(currEp.season_number),
+          episodeNum: Number(currEp.episode_number),
         });
-
-        if (!existingEp) return;
-
-        if (
-          currEp.season_number > existingEp.season_number ||
-          (currEp.season_number === existingEp.season_number &&
-            currEp.episode_number > existingEp.episode_number)
-        ) {
-          // Replace existing with current since current is higher
-          const index = result.indexOf(existing);
-          result[index] = {
-            ...curr,
-            showName: currShow.show_name,
-            showType: currShow.show_type,
-            seasonNum: Number(currEp.season_number),
-            episodeNum: Number(currEp.episode_number),
-          };
-        }
       })
     );
 

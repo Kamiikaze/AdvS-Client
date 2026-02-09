@@ -1,5 +1,8 @@
 <template>
-  <v-container class="player-wrapper pa-0 mb-4">
+  <v-container
+    class="player-wrapper pa-0 mb-4"
+    :class="isFullscreen ? 'fullscreen-active' : ''"
+  >
     <div class="player-overlay">
       <div v-if="!controlsHidden" class="dim"></div>
 
@@ -552,11 +555,9 @@ export default defineComponent({
       if (!fullscreenEl) return;
       if (!this.isFullscreen) {
         fullscreenEl.requestFullscreen();
-        fullscreenEl.classList.add('fullscreen-active');
         this.isFullscreen = true;
       } else {
         document.exitFullscreen();
-        fullscreenEl.classList.remove('fullscreen-active');
         this.isFullscreen = false;
       }
     },

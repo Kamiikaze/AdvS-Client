@@ -4,7 +4,7 @@
     @mouseenter="showSlider = true"
     @mouseleave="showSlider = false"
   >
-    <v-tooltip :text="`${volume.toFixed()} %`" location="top" offset="20px">
+    <v-tooltip :text="`${volume.toFixed()} %`" location="top" offset="35px">
       <template #activator="{ props }">
         <v-btn
           :icon

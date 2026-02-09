@@ -19,6 +19,26 @@ export default class ShowListUpdater extends CoreTriggerService<
     const client = this.getModule().getClient();
     const db = this.getModule().getDb();
 
+    const lastRun = await db.getConfig('show_list_update');
+
+    if (lastRun.c_value) {
+      const lastRunMs = Date.parse(String(lastRun.c_value));
+      if (!Number.isNaN(lastRunMs)) {
+        const threeHoursMs = 3 * 60 * 60 * 1000;
+        const ageMs = Date.now() - lastRunMs;
+
+        if (ageMs >= 0 && ageMs < threeHoursMs) {
+          this.log(
+            `Skipping show-list-updater: last run was ${Math.round(
+              ageMs / (60 * 1000)
+            )} minutes ago (< 3h)`
+          );
+          client.updatePreloadMsg('Skipping ShowListUpdater');
+          return;
+        }
+      }
+    }
+
     await db.setConfig('show_list_update', new Date().toISOString());
     client.updatePreloadMsg('Starting ShowListUpdater...');
 

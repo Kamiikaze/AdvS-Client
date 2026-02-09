@@ -246,6 +246,7 @@
 import Spinner from '@/components/spinner.vue';
 import type { Episode, Show } from '@/lib/electron';
 import type { DiscordConfig } from '@/lib/types';
+import { convertSecToMin } from '@/lib/utils';
 import { useAppStore } from '@/store/app';
 import { useShowStore } from '@/store/show';
 import { mapActions, mapState } from 'pinia';
@@ -342,6 +343,7 @@ export default defineComponent({
     },
   }),
   methods: {
+    convertSecToMin,
     ...mapActions(useShowStore, ['updateWatchHistory']),
     ...mapState(useAppStore, ['linkedAccounts']),
     initPlayer() {
@@ -383,13 +385,6 @@ export default defineComponent({
       this.eventListeners.forEach(([target, type, handler]) =>
         target.addEventListener(type, handler)
       );
-    },
-    convertSecToMin(sec: number) {
-      // display 00:00
-      const minutes = Math.floor(sec / 60);
-      const seconds = Math.floor(sec % 60);
-
-      return `${minutes.toString().padStart(2, '0')}:${seconds < 10 ? '0' : ''}${seconds}`;
     },
     playPause() {
       this.player[this.player.paused ? 'play' : 'pause']();

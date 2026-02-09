@@ -77,8 +77,13 @@ export function getRelativeTime(date: Date) {
 
 // Displays 00:00
 export function convertSecToMin(sec: number) {
-  const minutes = Math.floor(sec / 60);
+  const hours = Math.floor(sec / 3600);
+  const minutes = Math.floor((sec % 3600) / 60);
   const seconds = Math.floor(sec % 60);
 
-  return `${minutes.toString().padStart(2, '0')}:${seconds < 10 ? '0' : ''}${seconds}`;
+  if (hours > 0) {
+    return `${hours}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+  }
+
+  return `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
 }

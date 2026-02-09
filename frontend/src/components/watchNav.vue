@@ -39,34 +39,61 @@
     </v-row>
 
     <!-- Episode List -->
-    <v-row :key="getSeasonEpisodes.length" align="center">
-      <div ref="episodeContainer" class="episode-list-wrapper">
-        <v-slide-group
-          v-model="getEpisodeIndex"
-          class="episode-list pa-4"
-          :show-arrows="shouldShowArrows"
+    <v-row align="center">
+      <v-col>
+        <div
+          ref="episodeContainer"
+          class="episode-list-wrapper"
+          :class="[
+            showLeftArrow ? 'showLeftArrow' : '',
+            showRightArrow ? 'showRightArrow' : '',
+          ]"
         >
-          <v-slide-group-item
-            v-for="(ep, index) in getSeasonEpisodes"
-            :key="ep.e_id"
-            :value="ep.episode_number"
-          >
-            <v-btn
-              :class="getEpisodeIndex == index ? 'episode-selected' : ''"
-              :rounded="false"
-              @click="$emit('nextEpisode', Number(ep.episode_number))"
+          <div class="episode-scroll-container">
+            <button
+              v-show="showLeftArrow"
+              class="scroll-arrow scroll-arrow-left"
+              @click="scrollLeft"
             >
-              {{ ep.episode_number }}
-            </v-btn>
-          </v-slide-group-item>
-        </v-slide-group>
-      </div>
+              <v-icon>mdi-chevron-left</v-icon>
+            </button>
+
+            <div
+              ref="episodeList"
+              class="episode-list"
+              @scroll="updateArrowVisibility"
+            >
+              <div
+                v-for="(ep, index) in getSeasonEpisodes"
+                :key="ep.e_id"
+                :ref="getEpisodeIndex === index ? 'activeButton' : undefined"
+                class="episode-item"
+              >
+                <v-btn
+                  :class="getEpisodeIndex === index ? 'episode-selected' : ''"
+                  @click="$emit('nextEpisode', Number(ep.episode_number))"
+                >
+                  {{ ep.episode_number }}
+                </v-btn>
+              </div>
+            </div>
+
+            <button
+              v-show="showRightArrow"
+              class="scroll-arrow scroll-arrow-right"
+              @click="scrollRight"
+            >
+              <v-icon>mdi-chevron-right</v-icon>
+            </button>
+          </div>
+        </div>
+      </v-col>
     </v-row>
 
     <!-- Episode Titel & Description -->
     <v-card v-if="episodes.length > 0" class="my-6">
       <div class="d-flex flex-row justify-space-between align-center">
-        <v-card-title>
+        <v-card-title class="text-wrap" style="max-width: calc(100% - 200px)">
           {{ getEpisodeTitles.german }}
           <span
             class="d-block text-subtitle-2 font-weight-thin text-disabled"
@@ -114,6 +141,8 @@ export default defineComponent({
   data: () => ({
     showMore: false,
     containerWidth: 0,
+    showLeftArrow: false,
+    showRightArrow: false,
   }),
   methods: {
     splitEpisodeTitle,
@@ -140,11 +169,52 @@ export default defineComponent({
         state.currentEpisode = getEpisode;
       });
     },
+    scrollToActiveEpisode() {
+      this.$nextTick(() => {
+        const activeButton = this.$refs.activeButton as HTMLElement[];
+        const episodeList = this.$refs.episodeList as HTMLElement;
+
+        if (activeButton && activeButton[0] && episodeList) {
+          const button = activeButton[0];
+
+          // Center the active button in the viewport
+          const scrollLeft =
+            button.offsetLeft -
+            episodeList.clientWidth / 2 +
+            button.clientWidth / 2;
+          episodeList.scrollTo({ left: scrollLeft, behavior: 'smooth' });
+          console.log(button, episodeList, scrollLeft);
+        }
+      });
+    },
+    scrollLeft() {
+      const episodeList = this.$refs.episodeList as HTMLElement;
+      if (episodeList) {
+        episodeList.scrollBy({ left: -200, behavior: 'smooth' });
+      }
+    },
+    scrollRight() {
+      const episodeList = this.$refs.episodeList as HTMLElement;
+      if (episodeList) {
+        episodeList.scrollBy({ left: 200, behavior: 'smooth' });
+      }
+    },
+    updateArrowVisibility() {
+      const episodeList = this.$refs.episodeList as HTMLElement;
+      if (episodeList) {
+        this.showLeftArrow = episodeList.scrollLeft > 0;
+        this.showRightArrow =
+          episodeList.scrollLeft <
+          episodeList.scrollWidth - episodeList.clientWidth - 1;
+      }
+    },
     checkContainerWidth() {
       this.$nextTick(() => {
         const container = this.$refs.episodeContainer as HTMLElement;
         if (container) {
           this.containerWidth = container.offsetWidth;
+          this.updateArrowVisibility();
+          this.scrollToActiveEpisode(); // Always scroll to active on resize
         }
       });
     },
@@ -230,6 +300,7 @@ export default defineComponent({
   watch: {
     'selections.episode'() {
       this.updateCurrentEpisode();
+      this.scrollToActiveEpisode();
     },
     'selections.season'(oldS, newS) {
       console.log(`Season changed from ${oldS} to ${newS}`);
@@ -241,6 +312,7 @@ export default defineComponent({
     getSeasonEpisodes() {
       this.$nextTick(() => {
         this.checkContainerWidth();
+        this.updateArrowVisibility();
       });
     },
     uniqueLanguages(val) {
@@ -272,25 +344,113 @@ export default defineComponent({
   max-width: 100%;
 }
 
-.episode-list button:first-child {
-  border-radius: 5px 0 0 5px !important;
+.episode-list-wrapper.scroll-arrow-left {
+  margin-left: 5px;
+  width: calc(100% - 5px);
 }
-.episode-list button:last-child {
-  border-radius: 0 5px 5px 0 !important;
+.episode-list-wrapper.scroll-arrow-right {
+  margin-right: 5px;
+  width: calc(100% - 5px);
+}
+.episode-list-wrapper.scroll-arrow-left.scroll-arrow-right {
+  width: calc(100% - 10px);
+}
+
+.episode-item {
+  position: relative;
+}
+
+.episode-item button {
+  border-radius: 0;
+}
+
+.episode-item:not(:last-child)::after {
+  content: '';
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  height: 60%;
+  width: 1px;
+  background-color: rgba(255, 255, 255, 0.12);
+  pointer-events: none;
+}
+
+.episode-item:first-child button {
+  border-radius: 5px 0 0 5px;
+}
+
+.episode-item:last-child button {
+  border-radius: 0 5px 5px 0;
+}
+
+.episode-scroll-container {
+  position: relative;
+  width: 100%;
+}
+
+.episode-list {
+  display: flex;
+  overflow-x: auto;
+  scroll-behavior: smooth;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  gap: 0;
+}
+
+.episode-list::-webkit-scrollbar {
+  display: none;
+}
+
+.scroll-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 10;
+  background: linear-gradient(
+    to right,
+    rgba(18, 18, 18, 0.95),
+    rgba(18, 18, 18, 0.7)
+  );
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  cursor: pointer;
+  padding: 1rem 0.75rem;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  backdrop-filter: blur(2px);
+}
+
+.scroll-arrow:hover {
+  background: rgba(100, 59, 201, 0.6);
+  border-color: rgba(100, 59, 201, 0.5);
+}
+
+.scroll-arrow-left {
+  left: -5px;
+  border-radius: 5px 0 0 5px;
+  background: linear-gradient(
+    to right,
+    rgba(18, 18, 18, 0.95),
+    rgba(18, 18, 18, 0.7),
+    transparent
+  );
+}
+
+.scroll-arrow-right {
+  right: -5px;
+  border-radius: 0 5px 5px 0;
+  background: linear-gradient(
+    to left,
+    rgba(18, 18, 18, 0.95),
+    rgba(18, 18, 18, 0.7),
+    transparent
+  );
 }
 
 .episode-selected {
-  position: sticky;
-  left: 0;
-  z-index: 999;
   background-color: #643bc9;
-}
-
-.ellipsis-wrapper {
-  max-width: calc(100% - 1rem);
-  text-overflow: ellipsis;
-  overflow: hidden;
-  white-space: nowrap;
-  display: block;
 }
 </style>

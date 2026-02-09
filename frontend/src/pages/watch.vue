@@ -128,6 +128,7 @@ export default {
     showIframe: false,
     showMenu: false,
     menuTarget: null,
+    isNext: false,
     playerOptions: <VideoPlayerOptions>{
       controls: false,
     },
@@ -174,6 +175,14 @@ export default {
       document.title = `S${this.selections.season}E${this.selections.episode} - ${this.currentShow?.show_name} | AdvS`;
     },
     async nextEpisode(episodeNum?: number) {
+      if (this.isNext) {
+        console.warn('Already getting next episode', this.isNext);
+        setTimeout(() => (this.isNext = false), 10 * 1000);
+        return;
+      } else {
+        this.isNext = true;
+      }
+
       const videoPlayerChildComponent = this.$refs
         .videoPlayer as ComponentInstance<typeof VideoPlayerV2>;
 
@@ -193,6 +202,7 @@ export default {
 
       if (!nextPossibleEpisode) {
         console.log('No next episode found');
+        setTimeout(() => (this.isNext = false), 2 * 1000);
         return;
       }
 
@@ -213,6 +223,8 @@ export default {
           videoPlayerChildComponent.toggleAutoplay();
         }, 1000 * 2);
       }
+
+      setTimeout(() => (this.isNext = false), 2 * 1000);
     },
     findNextEpisode(seasonNum: number, episodeNum: number): Episode | null {
       // Find current season episodes

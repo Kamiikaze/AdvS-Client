@@ -40,7 +40,7 @@ export default async function scraperWindow(
       const fileUrl = details.url.split('?')[0];
 
       if (!details.url.includes('devtools://') && mediaPattern.test(fileUrl)) {
-        console.log('Media File Requested:', details.url, details);
+        console.log('Media File Requested:', details.url, details.resourceType);
         clearTimeout(scrapeTimeoutId);
         kernel.getWindowManager().close(windowId);
         resolve({ redirect: requestUrl, mediaLink: details.url });

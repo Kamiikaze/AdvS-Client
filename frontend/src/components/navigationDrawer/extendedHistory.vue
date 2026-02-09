@@ -53,6 +53,7 @@
           nav
           :active="false"
           @click="openEpisode($event, item)"
+          @contextmenu="openCM($event, item)"
         >
           <v-list-item-title class="ml-2">
             {{ item.showName }}
@@ -127,8 +128,30 @@ export default defineComponent({
     refreshTimeout: null as NodeJS.Timeout | null,
   }),
   methods: {
-    getRelativeTime,
     ...mapActions(useShowStore, ['fetchWatchHistory']),
+    getRelativeTime,
+    openCM(e: MouseEvent, data: WatchHistoryListItem) {
+      console.log('open', data);
+      this.$openContextMenu(
+        e,
+        this.$options.name!,
+        [
+          {
+            type: 'copy',
+            text: 'e_id: ' + data.e_id,
+          },
+          {
+            type: 'copy',
+            text: 'show_id: ' + data.show_id,
+          },
+          {
+            type: 'copy',
+            text: 'episode_id: ' + data.episode_id,
+          },
+        ],
+        { closeOnContentClick: false }
+      );
+    },
     refreshHistory() {
       this.fetchWatchHistory();
 

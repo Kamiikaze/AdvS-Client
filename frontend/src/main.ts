@@ -6,6 +6,7 @@
 
 // Plugins
 import { registerPlugins } from '@/plugins';
+import contextMenu from '@/plugins/contextMenu';
 
 // Components
 import App from './App.vue';
@@ -21,7 +22,10 @@ declare global {
   }
 }
 
-const app = createApp(App).use(createPinia());
+const app = createApp(App);
+
+app.use(createPinia());
+app.use(contextMenu);
 
 registerPlugins(app);
 

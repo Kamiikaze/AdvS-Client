@@ -1,5 +1,5 @@
 <template>
-  <v-container>
+  <v-container @contextmenu="openCM">
     <v-row>
       <v-col>
         <h1
@@ -136,6 +136,27 @@ export default {
   methods: {
     ...mapState(useShowStore, ['availableLanguages']),
     ...mapActions(useShowStore, ['fetchShowDetails', 'fetchEpisodeHosters']),
+    openCM(e: MouseEvent) {
+      this.$openContextMenu(
+        e,
+        this.$options.name!,
+        [
+          {
+            type: 'copy',
+            text: 'show_id: ' + this.currentShow?.e_id,
+          },
+          {
+            type: 'copy',
+            text: 'episode_id: ' + this.currentEpisode?.e_id,
+          },
+          {
+            type: 'copy',
+            text: 'episodeHost_id: ' + this.selectedEpisodeHost.e_id,
+          },
+        ],
+        { closeOnContentClick: false }
+      );
+    },
     async setShow(showId: string) {
       this.currentShow = null as Show | null;
       await this.fetchShowDetails(showId);

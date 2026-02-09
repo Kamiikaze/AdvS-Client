@@ -1053,7 +1053,8 @@ export default defineComponent({
 
 .player-sleeptimer-hint {
   top: unset;
-  bottom: 100px;
+  bottom: 120px;
+  display: block;
   opacity: 1;
 }
 
@@ -1101,7 +1102,7 @@ export default defineComponent({
 
 .player-next-up {
   position: absolute;
-  bottom: 56px;
+  bottom: 70px;
   right: 0;
   background-color: rgba(0, 0, 0, 0.5);
   max-width: max(30%, 300px);
@@ -1128,7 +1129,7 @@ export default defineComponent({
 
 .player-continue-playback {
   position: absolute;
-  bottom: 56px;
+  bottom: 70px;
   right: 0;
   left: 0;
   background-color: rgba(0, 0, 0, 0.5);

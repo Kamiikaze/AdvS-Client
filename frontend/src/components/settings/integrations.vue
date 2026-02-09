@@ -1,6 +1,8 @@
 <template>
   <v-card>
-    <v-card-title>Synchronisieren</v-card-title>
+    <v-card-title
+      >Synchronisieren <span class="text-disabled">(Beta)</span></v-card-title
+    >
     <v-card-subtitle class="text-wrap"
       >Snychronisiere den Status deiner gesehenen Folgen mit anderen
       Providern.</v-card-subtitle

@@ -379,8 +379,9 @@ export default {
 
     this.$watch(
       () => this.selectedEpisodeHost,
-      async () => {
+      async (newHost, oldHost) => {
         if (!this.selectedEpisodeHost) return;
+        console.log('selectedEpisodeHost', oldHost, newHost);
 
         this.playerOptions.videoTitle = this.currentEpisodeTitle;
         this.playerOptions.storageName = this.currentEpisode?.e_id;
@@ -400,6 +401,11 @@ export default {
           this.playerOptions.sources = [
             { type: 'application/x-mpegURL', src: streamUrl.mediaLink },
           ];
+        } else {
+          console.warn('No stream found');
+          this.selectedEpisodeHost = oldHost;
+          this.selections.hoster = oldHost.hoster_key;
+          this.selections.language = oldHost.hoster_language;
         }
       },
       { deep: true }

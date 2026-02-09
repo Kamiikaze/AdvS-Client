@@ -226,14 +226,23 @@ export default class MainClient extends BaseClient<IKernel, MainDB> {
             const epId =
               showType === 'anime' ? el.getAttribute('data-episode-id')! : '';
 
+            const epName = seasonBody
+              .querySelectorAll(episodeNameSelector)
+              [Number(epNum) - 1].innerText.trim()
+              .replace('\n', ' - ');
+
+            this.log(
+              'epName',
+              epName,
+              epNum,
+              seasonBody.querySelectorAll(episodeNameSelector)
+            );
+
             const episode: Episode = {
               show_id: show.e_id,
               season_number: season,
               episode_number: epNum,
-              episode_name: seasonBody
-                .querySelectorAll(episodeNameSelector)
-                [Number(epNum) - 1].innerText.trim()
-                .replace('\n', ' - '),
+              episode_name: epName,
               episode_description: null,
               episode_meta: {
                 externalEpId: epId,

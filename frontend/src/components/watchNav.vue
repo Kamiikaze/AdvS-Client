@@ -151,10 +151,6 @@ export default defineComponent({
     toIndex(n: string) {
       return Number(n) - 1;
     },
-    async nextEpisode(val: number) {
-      this.selections.episode = (val + 1).toString();
-      await this.fetchEpisodeHosters();
-    },
     updateCurrentEpisode(seasonChanged?: boolean) {
       if (seasonChanged) {
         this.selections.episode = '1';

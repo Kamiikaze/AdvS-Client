@@ -178,7 +178,9 @@ export default {
         .videoPlayer as ComponentInstance<typeof VideoPlayerV2>;
 
       if (videoPlayerChildComponent) {
-        videoPlayerChildComponent.player.pause();
+        if (!videoPlayerChildComponent.player.paused) {
+          videoPlayerChildComponent.player.pause();
+        }
         videoPlayerChildComponent.isLoading.player = true;
       }
 
@@ -199,6 +201,8 @@ export default {
 
       this.playerOptions.nextEpisodeTitle = this.nextEpisodeTitle;
 
+      await this.fetchEpisodeHosters();
+
       // Start playback on manual next-interaction
       if (videoPlayerChildComponent && !videoPlayerChildComponent.autoplay) {
         videoPlayerChildComponent.autoplay = true;
@@ -209,8 +213,6 @@ export default {
           videoPlayerChildComponent.toggleAutoplay();
         }, 1000 * 2);
       }
-
-      await this.fetchEpisodeHosters();
     },
     findNextEpisode(seasonNum: number, episodeNum: number): Episode | null {
       // Find current season episodes

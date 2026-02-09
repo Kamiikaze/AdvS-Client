@@ -143,16 +143,13 @@ export default defineComponent({
     openEpisode(ev: KeyboardEvent | MouseEvent, wh: WatchHistoryListItem) {
       const clickedEl = ev.target as HTMLElement;
 
-      console.log('tag', clickedEl.tagName);
       if (clickedEl.tagName === 'I') {
         const index = this.showSubItems.indexOf(wh.e_id);
 
         if (index !== -1) {
-          console.log('remove');
           // remove if exists
           this.showSubItems.splice(index, 1);
         } else {
-          console.log('add');
           // insert if not exists
           this.showSubItems.push(wh.e_id);
         }

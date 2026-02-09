@@ -1,31 +1,15 @@
 <template>
   <v-container class="player-wrapper pa-0 mb-4">
     <div class="player-overlay">
+      <div v-if="!controlsHidden" class="dim"></div>
+
       <div ref="player-controls-top" class="player-controls-top px-2 py-2">
-        <v-spacer />
-
-        <span class="video-title">{{ options.videoTitle }}</span>
-
-        <v-spacer />
-
-        <v-badge
-          v-if="sleeptimer.enabled"
-          class="sleeptimer-badge ml-4"
-          location="top right"
-          :content="sleeptimer.current"
-          offset-x="4"
-          offset-y="7"
-        >
-          <v-icon icon="mdi-power-sleep" size="24" color="#c7b764" />
-        </v-badge>
-
-        <v-btn
-          class="ml-4"
-          icon="mdi-cog"
-          variant="plain"
-          size="30"
-          @click="toggleSettings"
-        />
+        <div class="video-title">
+          <span class="text-subtitle-2 text-disabled">{{
+            options.showName
+          }}</span>
+          <span>{{ options.videoTitle }}</span>
+        </div>
 
         <div ref="player-volume-hint" class="player-volume-hint">
           {{ parseFloat((volume * 100).toFixed(2)) }} %
@@ -35,11 +19,11 @@
       <div ref="player-controls-bottom" class="player-controls-bottom">
         <div ref="player-progress" class="player-progress mx-2">
           <v-progress-linear
+            color="purple-dark"
+            height="15px"
             :model-value="currentTime"
             :max="duration"
             :buffer-value="buffered"
-            color="purple-dark"
-            height="10px"
             @click="goTo"
             @mousemove="goToTooltip"
             @mouseenter="toggleProgressTooltip(true)"
@@ -55,14 +39,86 @@
             :icon="isPlaying ? 'mdi-pause' : 'mdi-play'"
             @click="playPause"
           />
-          <PlayerButton icon="mdi-skip-next" @click="nextUpAction" />
-          <VolumeControl ref="volumeControl" @volume-change="updateVolume" />
+          <PlayerButton
+            class="mr-4"
+            icon="mdi-skip-next"
+            @click="nextUpAction"
+          />
+
+          <VolumeControl
+            ref="volumeControl"
+            class="mr-4"
+            @volume-change="updateVolume"
+          />
+
           <div class="player-time mx-2">
             <span>{{ timeDisplay.current }}</span> /
             <span>{{ timeDisplay.duration }}</span>
           </div>
+
           <v-spacer />
-          <PlayerButton icon="mdi-cast" disabled />
+
+          <v-tooltip text="Autoplay" location="top" offset="35px">
+            <template #activator="{ props }">
+              <v-switch
+                v-bind="props"
+                v-model="autoplay"
+                class="autoplay-toggle mx-4"
+                color="rgb(var(--v-theme-purple-dark))"
+                density="compact"
+                false-icon="mdi-pause"
+                true-icon="mdi-play"
+                hide-details
+                @update:model-value="toggleAutoplay"
+              />
+            </template>
+          </v-tooltip>
+
+          <v-menu location="top center" offset="25px">
+            <template #activator="{ props }">
+              <v-badge
+                class="sleeptimer-badge mr-2 pa-1 v-btn v-btn--icon"
+                location="top right"
+                offset-x="4"
+                offset-y="4"
+                :content="sleeptimer.current > 0 ? sleeptimer.current : ''"
+                v-bind="props"
+              >
+                <v-icon
+                  icon="mdi-power-sleep"
+                  size="22"
+                  :color="sleeptimer.enabled ? '#c7b764' : 'grey'"
+                />
+              </v-badge>
+            </template>
+
+            <v-list density="compact">
+              <v-list-item @click="toggleSleeptimer(60)">
+                <v-list-item-title>60 Minuten</v-list-item-title>
+              </v-list-item>
+              <v-list-item @click="toggleSleeptimer(30)">
+                <v-list-item-title>30 Minuten</v-list-item-title>
+              </v-list-item>
+              <v-list-item @click="toggleSleeptimer(15)">
+                <v-list-item-title>15 Minuten</v-list-item-title>
+              </v-list-item>
+              <v-list-item @click="toggleSleeptimer(2)">
+                <v-list-item-title>2 Minuten</v-list-item-title>
+              </v-list-item>
+              <v-list-item @click="toggleSleeptimer(0)">
+                <v-list-item-title>Aus</v-list-item-title>
+              </v-list-item>
+            </v-list>
+          </v-menu>
+
+          <v-btn
+            class="mr-4"
+            icon="mdi-cog"
+            variant="plain"
+            size="30"
+            @click="toggleSettings"
+          />
+
           <PlayerButton
             :icon="
               isPiP
@@ -81,7 +137,7 @@
       <div ref="player-settings-sidebar" class="player-settings-sidebar">
         <v-list>
           <v-list-item density="compact">
-            Settings
+            Einstellungen
             <template #append>
               <v-btn
                 icon="mdi-close"
@@ -94,72 +150,11 @@
 
           <v-divider />
 
-          <v-list-item>
-            Autoplay
-            <template #append>
-              <v-switch
-                v-model="autoplay"
-                color="purple"
-                density="compact"
-                hide-details
-                @update:model-value="toggleAutoplay"
-              />
-            </template>
-          </v-list-item>
-          <v-list-item>
-            Sleeptimer
-            <template #append>
-              <v-switch
-                v-model="sleeptimer.enabled"
-                color="purple"
-                density="compact"
-                hide-details
-                @update:model-value="toggleSleeptimer(15)"
-              />
-            </template>
-          </v-list-item>
-          <v-list-item v-if="sleeptimer.enabled" density="compact">
-            <v-tabs v-model="sleeptimer.duration" density="compact" grow>
-              <v-tab
-                :key="15"
-                :value="15"
-                min-width="40px"
-                @click="toggleSleeptimer(15)"
-              >
-                15m
-              </v-tab>
-              <v-tab
-                :key="30"
-                :value="30"
-                min-width="40px"
-                @click="toggleSleeptimer(30)"
-              >
-                30m
-              </v-tab>
-              <v-tab
-                :key="60"
-                :value="60"
-                min-width="40px"
-                @click="toggleSleeptimer(60)"
-              >
-                1h
-              </v-tab>
-              <v-tab
-                :key="120"
-                :value="120"
-                min-width="40px"
-                @click="toggleSleeptimer(120)"
-              >
-                2h
-              </v-tab>
-            </v-tabs>
-          </v-list-item>
-
           <v-divider />
 
           <v-list-item
-            link
             prepend-icon="mdi-keyboard-outline"
+            link
             @click="showKeybinds = true"
           >
             Tastenkombinationen
@@ -173,11 +168,11 @@
         @hide="showKeybinds = false"
       />
 
-      <div v-if="sleeptimer.show" class="player-sleeptimer-hint">
+      <div v-show="sleeptimer.show" class="player-sleeptimer-hint">
         {{ sleeptimer.text }}
         <v-btn
           v-if="sleeptimer.duration"
-          class="mx-2 text-subtitle-2 text-disabled"
+          class="ml-4 mr-3 text-subtitle-2 text-disabled"
           variant="text"
           size="20"
           @click="toggleSleeptimer(15)"
@@ -218,6 +213,7 @@
         "
         ref="player-continue-playback"
         class="player-continue-playback"
+        :rounded="true"
         link
         @click="
           () => {
@@ -233,9 +229,9 @@
       <media-player
         id="media-player"
         ref="player"
+        aspect-ratio="16/9"
         :src="options.sources[0].src || ''"
         key-disabled
-        aspect-ratio="16/9"
         @click="playPause"
       >
         <media-provider>
@@ -466,53 +462,71 @@ export default defineComponent({
       );
     },
     toggleSleeptimer(duration: number) {
-      // pause after duration in minutes
       if (!this.player) return;
-      if (this.sleeptimer.enabled) {
-        console.log(`Setting sleeptimer for ${duration} minutes`);
 
-        this.sleeptimer.timer?.clear();
-        this.sleeptimer.timer = this.createSleeptimer(
-          () => {
-            console.log('Sleeptimer triggered, pausing playback');
-            clearInterval(this.sleeptimer.intervalId);
-            this.player.pause();
-            this.sleeptimer.text = `Good night! 🌙`;
-          },
-          (this.sleeptimer.current + duration) * 60 * 1000
-        );
-        this.sleeptimer.duration = this.sleeptimer.current + duration;
-
-        // update current every second
-        this.sleeptimer.intervalId = window.setInterval(() => {
-          if (this.sleeptimer.timer) {
-            const remainingMs = this.sleeptimer.timer.getRemaining();
-            const minutes = Math.floor(remainingMs / 60000);
-            const seconds = Math.floor((remainingMs % 60000) / 1000);
-
-            this.sleeptimer.show = minutes < 3;
-            this.sleeptimer.text = `⏲️ ${minutes}m ${seconds}s`;
-            this.sleeptimer.current = minutes;
-          }
-        }, 1000);
-      } else {
+      // Clear existing timer if duration is 0 OR if we're setting a new duration
+      if (duration === 0 || this.sleeptimer.enabled) {
         console.log('Clearing sleeptimer');
-        this.sleeptimer.text = `Sleeptimer off`;
-        this.sleeptimer.show = true;
 
         clearInterval(this.sleeptimer.intervalId);
         this.sleeptimer.timer?.clear();
         this.sleeptimer.timer = null;
-        this.sleeptimer.duration = 0;
-        this.sleeptimer.current = 0;
 
-        setTimeout(() => {
-          this.sleeptimer.show = false;
-          this.sleeptimer.text = null;
+        // If duration is 0, completely reset and show "off" message
+        if (duration === 0) {
+          this.sleeptimer.text = `Sleeptimer off`;
+          this.sleeptimer.show = true;
+          this.sleeptimer.duration = 0;
+          this.sleeptimer.current = 0;
           this.sleeptimer.enabled = false;
-        }, 2000);
+
+          setTimeout(() => {
+            this.sleeptimer.show = false;
+            this.sleeptimer.text = null;
+          }, 2 * 1000);
+
+          return;
+        }
       }
+
+      console.log(`Setting sleeptimer for ${duration} minutes`);
+
+      // Create new timer
+      this.sleeptimer.timer = this.createSleeptimer(
+        () => {
+          console.log('Sleeptimer triggered, pausing playback');
+          clearInterval(this.sleeptimer.intervalId);
+          this.player.pause();
+          this.sleeptimer.text = `Good night! 🌙`;
+          this.sleeptimer.show = true;
+          this.sleeptimer.enabled = false;
+
+          // Hide the message after a few seconds
+          setTimeout(() => {
+            this.sleeptimer.show = false;
+            this.sleeptimer.text = null;
+          }, 10 * 1000);
+        },
+        duration * 60 * 1000
+      );
+
+      this.sleeptimer.duration = duration;
+      this.sleeptimer.enabled = true;
+
+      // Update display every second
+      this.sleeptimer.intervalId = window.setInterval(() => {
+        if (this.sleeptimer.timer) {
+          const remainingMs = this.sleeptimer.timer.getRemaining();
+          const minutes = Math.floor(remainingMs / 60000);
+          const seconds = Math.floor((remainingMs % 60000) / 1000);
+
+          this.sleeptimer.show = minutes < 3;
+          this.sleeptimer.text = `⏲️ ${minutes}m ${seconds}s`;
+          this.sleeptimer.current = minutes; // This is just for display
+        }
+      }, 1000);
     },
+
     createSleeptimer(callback: () => void, delay: number) {
       const start = Date.now();
       const timerId = setTimeout(callback, delay);
@@ -790,20 +804,10 @@ export default defineComponent({
             this.updateMediaSession();
             navigator.mediaSession.playbackState = 'playing';
 
-            this.saveProgressIntervalId = window.setInterval(() => {
-              if (this.currentTime >= 120) {
-                const storageName =
-                  this.options.storageName ?? this.options.videoTitle;
-                localStorage.setItem(storageName, this.currentTime.toString());
-
-                this.updateWatchHistory(
-                  Math.trunc(this.currentTime),
-                  Math.trunc(this.duration)
-                );
-              } else {
-                console.log('Not saving below 2min');
-              }
-            }, 5000);
+            this.saveProgressIntervalId = window.setInterval(
+              () => this.savePlayerProgress(),
+              5000
+            );
           },
         ],
 
@@ -877,6 +881,19 @@ export default defineComponent({
       const storageName = this.options.storageName ?? this.options.videoTitle;
       const savedPosition = localStorage.getItem(storageName);
       return savedPosition ? parseFloat(savedPosition) : 0;
+    },
+    savePlayerProgress() {
+      if (this.currentTime >= 120) {
+        const storageName = this.options.storageName ?? this.options.videoTitle;
+        localStorage.setItem(storageName, this.currentTime.toString());
+
+        this.updateWatchHistory(
+          Math.trunc(this.currentTime),
+          Math.trunc(this.duration)
+        );
+      } else {
+        console.log('Not saving below 2min');
+      }
     },
     updateMediaSession() {
       navigator.mediaSession.metadata = new MediaMetadata({
@@ -1002,6 +1019,23 @@ export default defineComponent({
   background-color: rgba(var(--v-theme-pink-light), 0.25);
 }
 
+.player-overlay .dim {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background: #000;
+  background: linear-gradient(
+    0deg,
+    rgba(0, 0, 0, 0.8) 0%,
+    rgba(0, 0, 0, 0.1) 30%,
+    rgba(0, 0, 0, 0.2) 60%,
+    rgba(0, 0, 0, 0.8) 100%
+  );
+  cursor: pointer;
+  pointer-events: none;
+  z-index: 15;
+}
+
 .player-controls-top {
   position: absolute;
   top: 0;
@@ -1009,24 +1043,20 @@ export default defineComponent({
   flex-direction: row;
   flex-wrap: nowrap;
   align-items: center;
+  justify-content: center;
   width: 100%;
-  min-height: 60px;
-  background: #000;
-  background: linear-gradient(
-    180deg,
-    rgba(0, 0, 0, 0.8) 0%,
-    rgba(0, 0, 0, 0.1) 80%,
-    rgba(0, 0, 0, 0) 100%
-  );
   z-index: 20;
   transform: translateY(0%);
   transition: transform 0.5s;
 }
 
 .video-title {
-  max-width: 60%;
-  margin-right: -46px;
+  display: flex;
+  flex-direction: column;
+  flex-wrap: nowrap;
+  align-items: center;
   font-size: 1.2em;
+  padding: 16px;
 }
 .player-wrapper.fullscreen-active .video-title {
   font-size: 2em;
@@ -1040,11 +1070,11 @@ export default defineComponent({
   right: 0;
   display: none;
   width: fit-content;
-  background-color: rgba(0, 0, 0, 0.3);
+  background-color: rgba(0, 0, 0, 0.5);
   padding: 2px 4px;
   margin: 10px auto;
   border-radius: 2px;
-  z-index: 10;
+  z-index: 30;
   opacity: 0;
   transition:
     opacity 0.3s ease-in-out 0.1s,
@@ -1064,15 +1094,8 @@ export default defineComponent({
   display: flex;
   flex-direction: column;
   flex-wrap: nowrap;
+  justify-content: flex-end;
   width: 100%;
-  min-height: 40px;
-  background: #000;
-  background: linear-gradient(
-    0deg,
-    rgba(0, 0, 0, 0.8) 0%,
-    rgba(0, 0, 0, 0.2) 80%,
-    rgba(0, 0, 0, 0) 100%
-  );
   z-index: 20;
   transform: translateY(0%);
   transition: transform 0.5s;
@@ -1081,10 +1104,44 @@ export default defineComponent({
 /* noinspection CssUnusedSymbol */
 .player-progress .v-progress-linear {
   border-radius: 2px;
+  border: 1px solid rgb(var(--v-theme-purple-lighter));
 }
-.player-progress .v-progress-linear__background,
+.player-progress .v-progress-linear__background {
+  background-color: black !important;
+  opacity: 0.3;
+}
 .player-progress .v-progress-linear__buffer {
   opacity: 0.3;
+}
+
+.player-progress .v-progress-linear__determinate,
+.player-progress .v-progress-linear__buffer {
+  border-right: 2px solid grey;
+}
+
+.player-progress .v-progress-linear__buffer {
+  background-image: linear-gradient(
+    135deg,
+    rgb(var(--v-theme-purple-lighter)) 25%,
+    rgb(var(--v-theme-purple-dark)) 25%,
+    rgb(var(--v-theme-purple-dark)) 50%,
+    rgb(var(--v-theme-purple-lighter)) 50%,
+    rgb(var(--v-theme-purple-lighter)) 75%,
+    rgb(var(--v-theme-purple-dark)) 75%,
+    rgb(var(--v-theme-purple-dark)) 100%
+  );
+  background-size: 20px 20px;
+  animation: barberpole 10s linear infinite;
+}
+
+@keyframes barberpole {
+  100% {
+    background-position: 100% 100%;
+  }
+}
+
+.autoplay-toggle .v-switch__thumb:has(i.mdi-play) {
+  color: white;
 }
 
 #player-progress-tooltip {
@@ -1105,6 +1162,7 @@ export default defineComponent({
   bottom: 70px;
   right: 0;
   background-color: rgba(0, 0, 0, 0.5);
+  border-radius: 4px;
   max-width: max(30%, 300px);
   margin: 10px 10px 10px auto;
   padding: 5px 14px;
@@ -1133,11 +1191,12 @@ export default defineComponent({
   right: 0;
   left: 0;
   background-color: rgba(0, 0, 0, 0.5);
+  border-radius: 2px;
   width: fit-content;
   max-width: max(30%, 300px);
   margin: 10px auto;
   font-size: 0.9em;
-  z-index: 10;
+  z-index: 30;
 }
 .player-continue-playback span {
   text-decoration: underline;

@@ -179,7 +179,6 @@ export default defineComponent({
             episodeList.clientWidth / 2 +
             button.clientWidth / 2;
           episodeList.scrollTo({ left: scrollLeft, behavior: 'smooth' });
-          console.log(button, episodeList, scrollLeft);
         }
       });
     },

@@ -68,6 +68,7 @@ export default class AniworldProvider extends BaseProvider {
     );
     if (!req) return false;
     const { status, data } = req;
+    this.log('Test result', status, data.error);
     return status === 200 && data?.error !== 1;
   }
 

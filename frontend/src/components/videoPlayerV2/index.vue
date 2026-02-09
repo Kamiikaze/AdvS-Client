@@ -878,6 +878,8 @@ export default defineComponent({
       return savedPosition ? parseFloat(savedPosition) : 0;
     },
     savePlayerProgress() {
+      if (!this.isPlaying) return;
+
       if (this.currentTime >= 120) {
         const storageName = this.options.storageName ?? this.options.videoTitle;
         localStorage.setItem(storageName, this.currentTime.toString());

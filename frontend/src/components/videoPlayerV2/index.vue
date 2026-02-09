@@ -452,9 +452,11 @@ export default defineComponent({
       if (sidebar.style.transform === 'translateX(0%)') {
         sidebar.style.transform = 'translateX(100%)';
         sidebar.style.opacity = '0';
+        this.elementRefs.videoPlayer.focus();
       } else {
         sidebar.style.transform = 'translateX(0%)';
         sidebar.style.opacity = '1';
+        this.elementRefs.videoPlayer.focus();
       }
     },
     toggleAutoplay() {

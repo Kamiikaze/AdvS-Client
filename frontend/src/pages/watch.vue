@@ -384,7 +384,7 @@ export default {
     this.$watch(
       () => this.$route.params.id,
       () => {
-        const showId = this.$route.params.id;
+        const showId = this.$route.params.id as string;
         this.setShow(showId);
       },
       { immediate: true }

@@ -7,6 +7,7 @@ import WatchHistory from './entities/WatchHistory';
 import LinkedAccounts from './entities/LinkedAccounts';
 import Patch001 from './patch/Patch001';
 import Patch002 from './patch/Patch002';
+import Patch003 from './patch/Patch003';
 
 export default class MainDB extends SQLCon {
   showList: CoreEntityWrapper<ShowList>;
@@ -20,7 +21,7 @@ export default class MainDB extends SQLCon {
   linkedAccounts: CoreEntityWrapper<LinkedAccounts>;
 
   constructor(mod: ICoreAnyModule) {
-    super(mod, '2');
+    super(mod, '3');
     this.showList = this.registerEntity(new ShowList());
     this.episodes = this.registerEntity(new Episodes());
     this.episodeHosters = this.registerEntity(new EpisodeHosters());
@@ -29,6 +30,7 @@ export default class MainDB extends SQLCon {
 
     this.setUpdateChain(new Patch001(this));
     this.setUpdateChain(new Patch002(this));
+    this.setUpdateChain(new Patch003(this));
 
     // this.setConfig()
     // this.db?.prepare('CREATE TABLE IF NOT EXISTS test (id INTEGER PRIMARY KEY, name TEXT)');

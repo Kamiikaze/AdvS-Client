@@ -283,14 +283,6 @@ export default defineComponent({
         ? this.splitEpisodeTitle(this.currentEpisode)
         : { german: '', english: '' };
     },
-    shouldShowArrows() {
-      const episodeButtonWidth = 64;
-      const estimatedTotalWidth =
-        this.getSeasonEpisodes.length * episodeButtonWidth;
-
-      // Add padding and some buffer
-      return estimatedTotalWidth > this.containerWidth - 100;
-    },
   },
   watch: {
     'selections.episode'() {

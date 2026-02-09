@@ -65,22 +65,24 @@
 
     <!-- Episode Titel & Description -->
     <v-card v-if="episodes.length > 0" class="my-6">
-      <v-card-title>
-        {{ getEpisodeTitles.german }}
-        <span class="d-block text-subtitle-2 font-weight-thin text-disabled">{{
-          getEpisodeTitles.english
-        }}</span>
-      </v-card-title>
-      <v-card-text>
-        <span :class="showMore ? '' : 'ellipsis-wrapper'">{{
+      <div class="d-flex flex-row justify-space-between align-center">
+        <v-card-title>
+          {{ getEpisodeTitles.german }}
+          <span
+            class="d-block text-subtitle-2 font-weight-thin text-disabled"
+            >{{ getEpisodeTitles.english }}</span
+          >
+        </v-card-title>
+        <a
+          class="text-disabled text-decoration-underline cursor-pointer px-4 py-2"
+          @click.prevent="showMore = !showMore"
+          >Beschreibung {{ showMore ? 'ausblenden' : 'anzeigen' }}
+        </a>
+      </div>
+      <v-card-text v-if="showMore">
+        <span>{{
           currentEpisode?.episode_description || 'Keine Beschreibung vorhanden'
         }}</span>
-        <a
-          class="text-disabled d-block mt-1"
-          href="#"
-          @click.prevent="showMore = !showMore"
-          >[{{ showMore ? 'weninger' : 'mehr' }} Anzeigen]</a
-        >
       </v-card-text>
     </v-card>
   </div>

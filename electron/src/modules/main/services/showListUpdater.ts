@@ -21,7 +21,7 @@ export default class ShowListUpdater extends CoreTriggerService<
 
     const lastRun = await db.getConfig('show_list_update');
 
-    if (lastRun.c_value) {
+    if (lastRun) {
       const lastRunMs = Date.parse(String(lastRun.c_value));
       if (!Number.isNaN(lastRunMs)) {
         const threeHoursMs = 3 * 60 * 60 * 1000;

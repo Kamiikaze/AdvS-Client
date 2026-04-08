@@ -77,7 +77,7 @@
             </template>
           </v-tooltip>
 
-          <v-menu location="top center" offset="25px">
+          <v-menu location="top center" offset="25px" attach>
             <template #activator="{ props }">
               <v-badge
                 class="sleeptimer-badge mr-2 pa-1 v-btn v-btn--icon"

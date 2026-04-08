@@ -23,12 +23,10 @@
       <v-card-text>
         <div v-if="search.length >= 3">
           <v-row>
-            <v-col class="pb-0">
-              <h3 v-show="filterSeries.length > 0">
-                Serien ({{ filterSeries.length }})
-              </h3>
+            <v-col v-if="filterSeries.length > 0" class="pb-0">
+              <h3>Serien ({{ filterSeries.length }})</h3>
             </v-col>
-            <v-col v-show="filterAnimes.length > 0" class="pb-0">
+            <v-col v-if="filterAnimes.length > 0" class="pb-0">
               <h3>Animes ({{ filterAnimes.length }})</h3>
             </v-col>
           </v-row>

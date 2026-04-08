@@ -15,10 +15,15 @@ export function splitEpisodeTitle(episode: Episode): {
     return { german: title, english: '' };
   }
 
-  const german = title.substring(0, lastDashIndex).trim();
-  const english = title.substring(lastDashIndex + 3).trim(); // +3 to skip ' - '
+  const german = decodeHtml(title.substring(0, lastDashIndex).trim());
+  const english = decodeHtml(title.substring(lastDashIndex + 3).trim()); // +3 to skip ' - '
 
   return { german, english };
+}
+
+function decodeHtml(html: string) {
+  return new DOMParser().parseFromString(html, 'text/html').documentElement
+    .textContent;
 }
 
 export function useInactivityTracker(

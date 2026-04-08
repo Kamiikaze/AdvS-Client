@@ -1,4 +1,5 @@
 /.idea/
+/.ai/
 
 node_modules
 dist

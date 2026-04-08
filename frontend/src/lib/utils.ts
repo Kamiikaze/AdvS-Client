@@ -15,8 +15,12 @@ export function splitEpisodeTitle(episode: Episode): {
     return { german: title, english: '' };
   }
 
-  const german = decodeHtml(title.substring(0, lastDashIndex).trim());
-  const english = decodeHtml(title.substring(lastDashIndex + 3).trim()); // +3 to skip ' - '
+  const middleDash = [...title.matchAll(/-/g)].at(
+    Math.floor([...title.matchAll(/-/g)].length / 2)
+  )!.index;
+
+  const german = decodeHtml(title.substring(0, middleDash).trim());
+  const english = decodeHtml(title.substring(middleDash + 1).trim()); // +3 to skip ' - '
 
   return { german, english };
 }

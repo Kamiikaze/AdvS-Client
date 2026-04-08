@@ -6,7 +6,7 @@
         <SettingsDev />
       </v-col>
       <v-col cols="6">
-        <SettingsIntegrations class="mb-4" />
+        <SettingsIntegrations disabled class="mb-4" />
         <SettingsDiscord />
       </v-col>
       <v-col cols="6"> </v-col>

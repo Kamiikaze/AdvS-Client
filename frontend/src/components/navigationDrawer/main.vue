@@ -54,18 +54,12 @@
         </v-tooltip>
         <v-tooltip text="Einstellungen">
           <template #activator="{ props }">
-            <v-list-item tabindex="4" v-bind="props" to="/settings">
-              <template #prepend>
-                <v-badge
-                  :model-value="invalidSettings > 0"
-                  :content="invalidSettings"
-                  color="red"
-                  floating
-                >
-                  <v-icon icon="mdi-cog"></v-icon>
-                </v-badge>
-              </template>
-            </v-list-item>
+            <v-list-item
+              tabindex="4"
+              v-bind="props"
+              to="/settings"
+              prepend-icon="mdi-cog"
+            />
           </template>
         </v-tooltip>
       </v-list>

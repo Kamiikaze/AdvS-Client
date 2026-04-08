@@ -1,5 +1,6 @@
 <template>
   <v-card>
+    <v-alert type="warning" variant="text">Vorübergehend deaktiviert</v-alert>
     <v-card-title
       >Synchronisieren <span class="text-disabled">(Beta)</span></v-card-title
     >

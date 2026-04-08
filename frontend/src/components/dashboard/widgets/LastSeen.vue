@@ -30,6 +30,15 @@
       </v-btn>
     </v-card-actions>
   </div>
+  <div v-else class="widget-content">
+    <v-card-title>Zuletzt gesehen </v-card-title>
+    <v-card-subtitle></v-card-subtitle>
+    <v-card-text>
+      <v-row dense>
+        <v-col> Du hast noch keine Episoden gesehen.</v-col>
+      </v-row>
+    </v-card-text>
+  </div>
 </template>
 
 <script lang="ts">

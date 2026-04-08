@@ -5,7 +5,7 @@
     <NavDrawerMain />
     <NavDrawerExtendedHistory />
     <v-main>
-      <AppAlerts />
+      <!--AppAlerts /-->
       <router-view />
     </v-main>
     <ContextMenu ref="globalContextMenu" />
@@ -13,7 +13,6 @@
 </template>
 
 <script lang="ts" setup>
-import AppAlerts from '@/components/appAlerts.vue';
 import ContextMenu from '@/components/contextMenu.vue';
 import NavDrawerExtendedHistory from '@/components/navigationDrawer/extendedHistory.vue';
 import NavDrawerMain from '@/components/navigationDrawer/main.vue';

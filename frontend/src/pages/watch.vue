@@ -12,7 +12,7 @@
         </h1>
       </v-col>
       <v-col cols="1">
-        <v-menu scroll-strategy="close">
+        <v-menu scroll-strategy="close" offset="13">
           <template #activator="{ props }">
             <v-btn
               v-bind="props"
@@ -26,19 +26,19 @@
 
           <v-list class="py-0" density="compact" slim>
             <v-list-item prepend-icon="mdi-refresh" @click="setShow($props.id)">
-              Re-fetch Show
+              Show erneut laden
             </v-list-item>
 
             <v-divider />
 
             <v-list-item prepend-icon="mdi-refresh" @click="refreshHosters">
-              Re-fetch Hosters
+              Stream erneut laden
             </v-list-item>
 
             <v-divider />
 
             <v-list-item prepend-icon="mdi-refresh" @click="toggleIframe">
-              {{ showIframe ? 'Hide' : 'Show' }} Iframe
+              {{ showIframe ? 'Verstecke' : 'Zeige' }} Iframe
             </v-list-item>
 
             <v-divider />

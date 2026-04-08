@@ -13,10 +13,6 @@
           }}</span>
           <span>{{ options.videoTitle }}</span>
         </div>
-
-        <div ref="player-volume-hint" class="player-volume-hint">
-          {{ parseFloat((volume * 100).toFixed(2)) }} %
-        </div>
       </div>
 
       <div ref="player-controls-bottom" class="player-controls-bottom">
@@ -39,20 +35,16 @@
 
         <div class="player-controls ma-2">
           <PlayerButton
-            :icon="isPlaying ? 'mdi-pause' : 'mdi-play'"
+            :icon="'mdi-' + (isPlaying ? 'pause' : 'play')"
             @click="playPause"
           />
-          <PlayerButton
-            class="mr-4"
-            icon="mdi-skip-next"
-            @click="nextUpAction"
-          />
+          <PlayerButton icon="mdi-skip-next" @click="nextUpAction" />
 
-          <VolumeControl
-            ref="volumeControl"
-            class="mr-4"
-            @volume-change="updateVolume"
-          />
+          <v-divider class="ma-2" vertical />
+
+          <VolumeControl ref="volumeControl" @volume-change="updateVolume" />
+
+          <v-divider class="ma-2" vertical />
 
           <div class="player-time mx-2">
             <span>{{ timeDisplay.current }}</span> /
@@ -80,7 +72,7 @@
           <v-menu location="top center" offset="25px" attach>
             <template #activator="{ props }">
               <v-badge
-                class="sleeptimer-badge mr-2 pa-1 v-btn v-btn--icon"
+                class="sleeptimer-badge pa-1 v-btn v-btn--icon"
                 location="top right"
                 offset-x="4"
                 offset-y="4"
@@ -115,12 +107,13 @@
           </v-menu>
 
           <v-btn
-            class="mr-4"
             icon="mdi-cog"
             variant="plain"
             size="30"
             @click="toggleSettings"
           />
+
+          <v-divider class="ma-2" vertical />
 
           <PlayerButton
             :icon="
@@ -184,15 +177,30 @@
         </v-btn>
       </div>
 
+      <div ref="player-volume-hint" class="player-volume-hint">
+        {{ parseFloat((volume * 100).toFixed(2)) }} %
+      </div>
+
       <v-list-item
+        v-if="options.nextEpisodeTitle.includes(' • ')"
         ref="player-next-up"
         class="player-next-up"
         link
         @click="nextUpAction"
       >
-        <v-list-item-title> Nächste Episode </v-list-item-title>
-        <v-list-item-subtitle>
-          {{ options.nextEpisodeTitle }}
+        <v-list-item-title class="d-flex flex-row space-between">
+          Nächste Episode
+        </v-list-item-title>
+        <v-list-item-subtitle class="pt-2 border-t">
+          {{ options.nextEpisodeTitle.split(' • ')[1] }}
+        </v-list-item-subtitle>
+        <v-list-item-subtitle class="mt-2 pt-2 border-t">
+          {{
+            options.nextEpisodeTitle
+              .split(' • ')[0]
+              .replace('S', 'Staffel ')
+              .replace('E', 'Episode ')
+          }}
         </v-list-item-subtitle>
 
         <template #append>
@@ -206,6 +214,12 @@
           </v-progress-circular>
           <v-icon v-else icon="mdi-play" variant="text" size="30" />
         </template>
+      </v-list-item>
+
+      <v-list-item v-else class="player-next-up" link>
+        <v-list-item-title>
+          {{ options.nextEpisodeTitle }}
+        </v-list-item-title>
       </v-list-item>
 
       <v-list-item
@@ -1031,7 +1045,7 @@ export default defineComponent({
   );
   cursor: pointer;
   pointer-events: none;
-  z-index: 15;
+  z-index: 1;
 }
 
 .player-controls-top {

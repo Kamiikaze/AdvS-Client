@@ -1080,7 +1080,6 @@ export default defineComponent({
 .player-wrapper.fullscreen-active .video-title :nth-child(1) {
   font-size: 1em;
 }
-
 .player-wrapper.fullscreen-active .video-title :nth-child(2) {
   font-size: 2em;
 }
@@ -1154,12 +1153,12 @@ export default defineComponent({
     rgb(var(--v-theme-purple-dark)) 100%
   );
   background-size: 20px 20px;
-  animation: barberpole 10s linear infinite;
+  animation: barberpole 15s linear infinite;
 }
 
 @keyframes barberpole {
   100% {
-    background-position: 100% 100%;
+    background-position: 100px 100px;
   }
 }
 

@@ -8,9 +8,7 @@
 
       <div ref="player-controls-top" class="player-controls-top px-2 py-2">
         <div class="video-title">
-          <span class="text-subtitle-2 text-disabled">{{
-            options.showName
-          }}</span>
+          <span class="text-disabled">{{ options.showName }}</span>
           <span>{{ options.videoTitle }}</span>
         </div>
       </div>
@@ -1076,7 +1074,14 @@ export default defineComponent({
   font-size: 1.2em;
   padding: 16px;
 }
-.player-wrapper.fullscreen-active .video-title {
+.video-title :nth-child(1) {
+  font-size: 0.8em;
+}
+.player-wrapper.fullscreen-active .video-title :nth-child(1) {
+  font-size: 1em;
+}
+
+.player-wrapper.fullscreen-active .video-title :nth-child(2) {
   font-size: 2em;
 }
 

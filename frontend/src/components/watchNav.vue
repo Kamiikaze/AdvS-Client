@@ -92,7 +92,7 @@
 
     <!-- Episode Titel & Description -->
     <v-card v-if="episodes.length > 0" class="my-6">
-      <div class="d-flex flex-row justify-space-between align-center">
+      <div class="d-flex flex-row justify-space-between">
         <v-card-title class="text-wrap" style="max-width: calc(100% - 200px)">
           {{ getEpisodeTitles.german }}
           <span
@@ -100,11 +100,20 @@
             >{{ getEpisodeTitles.english }}</span
           >
         </v-card-title>
-        <a
-          class="text-disabled text-decoration-underline cursor-pointer px-4 py-2"
-          @click.prevent="showMore = !showMore"
-          >Beschreibung {{ showMore ? 'ausblenden' : 'anzeigen' }}
-        </a>
+
+        <v-tooltip
+          :text="'Beschreibung ' + (showMore ? 'ausblenden' : 'einblenden')"
+        >
+          <template #activator="{ props }">
+            <v-btn
+              class="mr-2 mt-2"
+              v-bind="props"
+              variant="flat"
+              :icon="'mdi-' + (showMore ? 'minus' : 'plus')"
+              @click="showMore = !showMore"
+            />
+          </template>
+        </v-tooltip>
       </div>
       <v-card-text v-if="showMore">
         <span>{{

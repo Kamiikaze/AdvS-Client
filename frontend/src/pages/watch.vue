@@ -193,7 +193,7 @@ export default {
       await this.fetchEpisodeHosters();
     },
     updateWindowTitle() {
-      document.title = `S${this.selections.season}E${this.selections.episode} - ${this.currentShow?.show_name} | AdvS`;
+      document.title = `S${this.selections.season} E${this.selections.episode} - ${this.currentShow?.show_name} | AdvS`;
     },
     async nextEpisode(episodeNum?: number) {
       if (this.isNext) {
@@ -294,7 +294,7 @@ export default {
     },
     getEpisodeTitle(ep: Episode) {
       const langTitles = splitEpisodeTitle(ep);
-      return `S${ep.season_number}E${ep.episode_number} • ${langTitles.german}`;
+      return `S${ep.season_number} E${ep.episode_number} • ${langTitles.german}`;
     },
   },
   computed: {

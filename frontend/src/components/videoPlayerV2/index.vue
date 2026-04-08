@@ -4,7 +4,7 @@
     :class="isFullscreen ? 'fullscreen-active' : ''"
   >
     <div class="player-overlay">
-      <div v-if="!controlsHidden" class="dim"></div>
+      <div class="dim" :class="controlsHidden ? 'hidden' : ''"></div>
 
       <div ref="player-controls-top" class="player-controls-top px-2 py-2">
         <div class="video-title">
@@ -1025,6 +1025,7 @@ export default defineComponent({
   left: 0;
   width: 100%;
   height: 100%;
+  transition: opacity 5.5s ease-in-out;
 }
 /* noinspection CssUnusedSymbol */
 .player-overlay .v-btn--icon:hover {
@@ -1043,9 +1044,14 @@ export default defineComponent({
     rgba(0, 0, 0, 0.2) 60%,
     rgba(0, 0, 0, 0.8) 100%
   );
+  opacity: 1;
   cursor: pointer;
   pointer-events: none;
   z-index: 1;
+  transition: opacity 0.25s ease-in-out;
+}
+.player-overlay .dim.hidden {
+  opacity: 0;
 }
 
 .player-controls-top {

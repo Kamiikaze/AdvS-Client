@@ -143,7 +143,6 @@
           </v-list-item>
 
           <v-divider />
-
           <v-divider />
 
           <v-list-item
@@ -153,6 +152,14 @@
           >
             Tastenkombinationen
           </v-list-item>
+
+          <v-list-item
+            prepend-icon="mdi-timer-sand"
+            link
+            @click="[(showInactiveSettings = true), toggleSettings()]"
+          >
+            Inaktivität
+          </v-list-item>
         </v-list>
       </div>
 
@@ -161,6 +168,21 @@
         :show="showKeybinds"
         @hide="showKeybinds = false"
       />
+      <InactiveSettings
+        :is-fullscreen="isFullscreen"
+        :show="showInactiveSettings"
+        @hide="showInactiveSettings = false"
+        @start="toggleInactiveTracker('start')"
+        @stop="toggleInactiveTracker('stop')"
+      />
+
+      <div ref="player-volume-hint" class="player-volume-hint">
+        {{ parseFloat((volume * 100).toFixed(2)) }} %
+      </div>
+
+      <div ref="player-inactive" class="player-inactive hidden">
+        {{ inactiveMessageText }}
+      </div>
 
       <div v-show="sleeptimer.show" class="player-sleeptimer-hint">
         {{ sleeptimer.text }}
@@ -173,10 +195,6 @@
         >
           +15m
         </v-btn>
-      </div>
-
-      <div ref="player-volume-hint" class="player-volume-hint">
-        {{ parseFloat((volume * 100).toFixed(2)) }} %
       </div>
 
       <v-list-item
@@ -259,9 +277,10 @@
 
 <script lang="ts">
 import Spinner from '@/components/spinner.vue';
+import InactiveSettings from '@/components/videoPlayerV2/inactiveSettings.vue';
 import type { Episode, Show } from '@/lib/electron';
 import type { DiscordConfig } from '@/lib/types';
-import { convertSecToMin } from '@/lib/utils';
+import { convertSecToMin, useInactivityTracker } from '@/lib/utils';
 import { useAppStore } from '@/store/app';
 import { useShowStore } from '@/store/show';
 import { mapActions, mapState } from 'pinia';
@@ -288,7 +307,13 @@ export interface VideoPlayerOptions {
 
 export default defineComponent({
   name: 'VideoPlayerV2',
-  components: { Spinner, ShortcutsOverview, PlayerButton, VolumeControl },
+  components: {
+    InactiveSettings,
+    Spinner,
+    ShortcutsOverview,
+    PlayerButton,
+    VolumeControl,
+  },
   emits: {
     nextEpisode: (episodeNumber?: number) => {
       return (
@@ -340,6 +365,11 @@ export default defineComponent({
     nextUpShown: false,
     saveProgressIntervalId: 0,
     showKeybinds: false,
+    showInactiveSettings: false,
+    inactiveTracker: null as ReturnType<typeof useInactivityTracker> | null,
+    inactiveMessageShown: false,
+    inactiveMessageText: '',
+    inactiveMessageTimeout: 0,
     eventListeners: [] as [
       HTMLElement | Document,
       string,
@@ -355,6 +385,7 @@ export default defineComponent({
       nextUp: {} as HTMLElement,
       controlVolume: {} as InstanceType<typeof VolumeControl>,
       volumeHint: {} as HTMLElement,
+      inactiveMessage: {} as HTMLElement,
     },
   }),
   methods: {
@@ -936,10 +967,54 @@ export default defineComponent({
         },
       });
     },
+    toggleInactiveTracker(state: 'start' | 'stop') {
+      if (state == 'stop') {
+        if (this.inactiveTracker == null) return;
+        this.inactiveTracker.stop();
+      } else {
+        if (this.inactiveTracker != null) {
+          this.inactiveTracker.stop();
+        }
+
+        if (this.inactiveSettings.enabled) {
+          this.inactiveTracker = useInactivityTracker(
+            this.inactiveSettings.timeout * 1000 * 60 * 60,
+            () => this.toggleInactiveMessage('show'),
+            () => this.toggleInactiveMessage('hide')
+          );
+
+          this.inactiveTracker.start();
+        }
+      }
+    },
+    toggleInactiveMessage(state: 'show' | 'hide') {
+      if (state === 'show') {
+        if (this.inactiveMessageShown) return;
+        this.inactiveMessageShown = true;
+        this.elementRefs.inactiveMessage.classList.remove('hidden');
+        this.inactiveMessageText = `Inaktiv seit 1 Std.
+        Wiedergabe stoppt in 5 Min.
+
+        Taste drücken oder Maus bewegen.`;
+
+        this.inactiveMessageTimeout = window.setTimeout(
+          () => {
+            const player = this.elementRefs.videoPlayer;
+            if (player && !player.paused) player.pause();
+          },
+          1000 * 60 * 5
+        );
+      } else {
+        if (!this.inactiveMessageShown) return;
+        this.inactiveMessageShown = false;
+        clearTimeout(this.inactiveMessageTimeout);
+        this.elementRefs.inactiveMessage.classList.add('hidden');
+      }
+    },
   },
   computed: {
     ...mapState(useShowStore, ['currentShow', 'currentEpisode']),
-    ...mapState(useAppStore, ['showSearch']),
+    ...mapState(useAppStore, ['showSearch', 'inactiveSettings']),
     timeDisplay() {
       return {
         current: this.convertSecToMin(this.currentTime || 0),
@@ -961,6 +1036,7 @@ export default defineComponent({
         typeof VolumeControl
       >,
       volumeHint: this.$refs['player-volume-hint'] as HTMLElement,
+      inactiveMessage: this.$refs['player-inactive'] as HTMLElement,
     };
 
     this.initPlayer();
@@ -973,6 +1049,8 @@ export default defineComponent({
 
     // add media keys support
     document.addEventListener('keyup', this.keyListeners);
+
+    this.toggleInactiveTracker('start');
   },
   created() {
     this.$watch(
@@ -999,6 +1077,7 @@ export default defineComponent({
     clearTimeout(this.hideControlsTimeout);
     clearTimeout(this.nextUpTimeout);
     clearInterval(this.saveProgressIntervalId);
+    this.toggleInactiveTracker('stop');
   },
 });
 </script>
@@ -1085,7 +1164,8 @@ export default defineComponent({
 }
 
 .player-volume-hint,
-.player-sleeptimer-hint {
+.player-sleeptimer-hint,
+.player-inactive {
   position: absolute;
   top: 100px;
   left: 0;
@@ -1108,6 +1188,30 @@ export default defineComponent({
   bottom: 120px;
   display: block;
   opacity: 1;
+}
+
+.player-inactive {
+  top: 0;
+  bottom: 0;
+  height: fit-content;
+  margin: auto;
+  padding: 10px;
+  display: block;
+  opacity: 1;
+  white-space: pre-line;
+  text-align: center;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 4px;
+  color: rgba(255, 255, 255, 0.5);
+  transform: scale(1);
+  transition:
+    transform 0.3s ease-in-out,
+    opacity 0.3s ease-in-out;
+
+  &.hidden {
+    opacity: 0;
+    transform: scale(0.9);
+  }
 }
 
 .player-controls-bottom {

@@ -11,6 +11,10 @@ export const useAppStore = defineStore('app', {
       subscribed: false,
     },
     linkedAccounts: [] as LinkedAccount[],
+    inactiveSettings: {
+      enabled: true,
+      timeout: 1, // hours
+    },
   }),
   getters: {},
   actions: {

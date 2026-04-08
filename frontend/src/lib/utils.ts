@@ -35,7 +35,7 @@ export function useInactivityTracker(
   let inactive = false;
 
   const resetTimer = () => {
-    console.log('Detected activity');
+    console.debug('Detected activity');
     if (inactive) {
       inactive = false;
       onActive?.();
@@ -43,6 +43,7 @@ export function useInactivityTracker(
 
     if (timer) clearTimeout(timer);
     timer = setTimeout(() => {
+      console.log('isInactive');
       inactive = true;
       onInactive();
     }, timeout);
@@ -58,7 +59,12 @@ export function useInactivityTracker(
   ];
 
   const start = () => {
-    console.log('Starting inactivity tracker with timeout:', timeout);
+    console.log(
+      'Starting inactivity tracker with timeout:',
+      timeout / 60 / 60 / 1000,
+      'h'
+    );
+    inactive = false;
     events.forEach((e) => window.addEventListener(e, resetTimer));
     resetTimer();
   };

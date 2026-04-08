@@ -40,6 +40,7 @@ main {
 
 .v-dialog:not(.fullscreen-active) {
   margin-top: var(--v-layout-top);
+  padding-left: var(--v-layout-left);
 
   .v-overlay__scrim {
     margin-top: var(--v-layout-top);

@@ -148,7 +148,7 @@
           <v-list-item
             prepend-icon="mdi-keyboard-outline"
             link
-            @click="showKeybinds = true"
+            @click="[(showKeybinds = true), toggleSettings()]"
           >
             Tastenkombinationen
           </v-list-item>
@@ -490,10 +490,12 @@ export default defineComponent({
         sidebar.style.transform = 'translateX(100%)';
         sidebar.style.opacity = '0';
         this.elementRefs.videoPlayer.focus();
+        return false;
       } else {
         sidebar.style.transform = 'translateX(0%)';
         sidebar.style.opacity = '1';
         this.elementRefs.videoPlayer.focus();
+        return true;
       }
     },
     toggleAutoplay() {

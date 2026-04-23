@@ -20,14 +20,23 @@ export function splitEpisodeTitle(episode: Episode): {
   )!.index;
 
   const german = decodeHtml(title.substring(0, middleDash).trim());
-  const english = decodeHtml(title.substring(middleDash + 1).trim()); // +3 to skip ' - '
+  const english = decodeHtml(title.substring(middleDash + 1).trim());
 
   return { german, english };
 }
 
 function decodeHtml(html: string) {
-  return new DOMParser().parseFromString(html, 'text/html').documentElement
-    .textContent;
+  const textarea = document.createElement('textarea');
+  let decoded = html;
+  let prev;
+
+  do {
+    prev = decoded;
+    textarea.innerHTML = decoded;
+    decoded = textarea.value;
+  } while (decoded !== prev);
+
+  return decoded;
 }
 
 export function useInactivityTracker(

@@ -1204,13 +1204,16 @@ export default defineComponent({
   text-align: center;
   border: 1px solid rgba(255, 255, 255, 0.2);
   border-radius: 4px;
+  z-index: 30;
   color: rgba(255, 255, 255, 0.5);
   transform: scale(1);
   transition:
     transform 0.3s ease-in-out,
-    opacity 0.3s ease-in-out;
+    opacity 0.3s ease-in-out 0.1s,
+    display 0.3s ease-in-out;
 
   &.hidden {
+    display: none;
     opacity: 0;
     transform: scale(0.9);
   }

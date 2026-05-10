@@ -911,7 +911,7 @@ export default defineComponent({
           Math.trunc(this.duration)
         );
       } else {
-        console.log('Not saving below 2min');
+        console.debug('Not saving below 2min');
       }
     },
     updateMediaSession() {

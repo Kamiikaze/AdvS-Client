@@ -14,6 +14,7 @@ declare module 'vue' {
     DatabaseStats: typeof import('./src/components/dashboard/widgets/DatabaseStats.vue')['default']
     Development: typeof import('./src/components/settings/development.vue')['default']
     Discord: typeof import('./src/components/settings/discord.vue')['default']
+    EpisodeButton: typeof import('./src/components/episodeButton.vue')['default']
     ExtendedHistory: typeof import('./src/components/navigationDrawer/extendedHistory.vue')['default']
     ExternalLink: typeof import('./src/components/externalLink.vue')['default']
     General: typeof import('./src/components/settings/general.vue')['default']

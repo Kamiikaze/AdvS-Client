@@ -69,12 +69,14 @@
                 :ref="getEpisodeIndex === index ? 'activeButton' : undefined"
                 class="episode-item"
               >
-                <v-btn
-                  :class="getEpisodeIndex === index ? 'episode-selected' : ''"
-                  @click="$emit('nextEpisode', Number(ep.episode_number))"
-                >
-                  {{ ep.episode_number }}
-                </v-btn>
+                <EpisodeButton
+                  :episode="ep"
+                  :episode-index="getEpisodeIndex"
+                  :index="index"
+                  @next-episode="
+                    $emit('nextEpisode', Number(ep.episode_number))
+                  "
+                />
               </div>
             </div>
 
@@ -125,6 +127,7 @@
 </template>
 
 <script lang="ts">
+import EpisodeButton from '@/components/episodeButton.vue';
 import { type Episode, type HosterLanguage } from '@/lib/electron';
 import { splitEpisodeTitle } from '@/lib/utils';
 import { useShowStore } from '@/store/show';
@@ -132,6 +135,8 @@ import { mapActions, mapState } from 'pinia';
 import { defineComponent, type PropType } from 'vue';
 
 export default defineComponent({
+  name: 'WatchNav',
+  components: { EpisodeButton },
   props: {
     episodes: {
       type: Array as PropType<Episode[]>,
@@ -146,7 +151,6 @@ export default defineComponent({
       );
     },
   },
-  name: 'WatchNav',
   data: () => ({
     showMore: false,
     containerWidth: 0,
@@ -281,7 +285,8 @@ export default defineComponent({
       return this.episodes
         .filter((episode) => episode.season_number == seasonNum)
         .sort(
-          (a, b) => parseInt(a.episode_number) - parseInt(b.episode_number)
+          (a, b) =>
+            parseInt(a.episode_number, 10) - parseInt(b.episode_number, 10)
         );
     },
     getEpisodeIndex() {
@@ -448,5 +453,9 @@ export default defineComponent({
 
 .episode-selected {
   background-color: #643bc9;
+}
+
+.episode-seen {
+  border-bottom: 2px solid rgb(var(--v-theme-pink-light));
 }
 </style>

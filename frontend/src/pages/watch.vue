@@ -2,14 +2,14 @@
   <v-container @contextmenu="openCM">
     <v-row>
       <v-col>
-        <h1
+        <h2
           style="text-wrap: balance"
           :data-alternative-title="
             currentShow?.show_meta?.alternativeTitles || ''
           "
         >
           {{ currentShow?.show_name }}
-        </h1>
+        </h2>
       </v-col>
       <v-col cols="1">
         <v-menu scroll-strategy="close" offset="13">
@@ -37,7 +37,7 @@
 
             <v-divider />
 
-            <v-list-item prepend-icon="mdi-refresh" @click="toggleIframe">
+            <v-list-item prepend-icon="mdi-eye-outline" @click="toggleIframe">
               {{ showIframe ? 'Verstecke' : 'Zeige' }} Iframe
             </v-list-item>
 

@@ -29,7 +29,7 @@ export const StoElementSelector = {
     DESCRIPTION: '.text-body',
     HOSTER: {
       LIST: '#episode-links button',
-      NAME: 'h4',
+      NAME: 'span',
     },
   },
   SHOW_LIST: {

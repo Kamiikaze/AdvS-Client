@@ -68,7 +68,6 @@
 </template>
 <script lang="ts">
 import ExternalLink from '@/components/externalLink.vue';
-import { LinkedAccountStatus } from '@/lib/electron';
 import { useAppStore } from '@/store/app';
 import { mapActions, mapState, mapWritableState } from 'pinia';
 import { defineComponent } from 'vue';
@@ -81,19 +80,8 @@ export default defineComponent({
     ...mapActions(useAppStore, ['toggleDrawer']),
   },
   computed: {
-    ...mapState(useAppStore, ['showExtendedDrawer', 'linkedAccounts']),
+    ...mapState(useAppStore, ['showExtendedDrawer']),
     ...mapWritableState(useAppStore, ['showSearch']),
-    invalidSettings() {
-      let count = 0;
-
-      this.linkedAccounts.forEach((la) => {
-        if (la.status == LinkedAccountStatus.ERROR) {
-          count += 1;
-        }
-      });
-
-      return count;
-    },
   },
 });
 </script>

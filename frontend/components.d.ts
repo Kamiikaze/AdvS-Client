@@ -18,7 +18,6 @@ declare module 'vue' {
     ExternalLink: typeof import('./src/components/externalLink.vue')['default']
     General: typeof import('./src/components/settings/general.vue')['default']
     InactiveSettings: typeof import('./src/components/videoPlayerV2/inactiveSettings.vue')['default']
-    Integrations: typeof import('./src/components/settings/integrations.vue')['default']
     LastSeen: typeof import('./src/components/dashboard/widgets/LastSeen.vue')['default']
     Main: typeof import('./src/components/navigationDrawer/main.vue')['default']
     RecentlyAdded: typeof import('./src/components/dashboard/widgets/RecentlyAdded.vue')['default']

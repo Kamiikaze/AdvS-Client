@@ -278,7 +278,6 @@
 <script lang="ts">
 import Spinner from '@/components/spinner.vue';
 import InactiveSettings from '@/components/videoPlayerV2/inactiveSettings.vue';
-import type { Episode, Show } from '@/lib/electron';
 import type { DiscordConfig } from '@/lib/types';
 import { convertSecToMin, useInactivityTracker } from '@/lib/utils';
 import { useAppStore } from '@/store/app';
@@ -391,7 +390,6 @@ export default defineComponent({
   methods: {
     convertSecToMin,
     ...mapActions(useShowStore, ['updateWatchHistory']),
-    ...mapState(useAppStore, ['linkedAccounts']),
     initPlayer() {
       this.player = this.elementRefs.videoPlayer;
 
@@ -784,28 +782,6 @@ export default defineComponent({
                   }
                 } else {
                   this.controlsPersistent = false;
-                }
-              }
-
-              // Update external WatchState
-              if (this.currentTime > 120 && !this.externalUpdateDone) {
-                this.externalUpdateDone = true;
-
-                const show = this.currentShow as Show;
-                const ep = this.currentEpisode as Episode;
-                const provider = show.show_type == 'anime' ? 'aniworld' : 'sto';
-
-                const linkedAccount = this.linkedAccounts().find(
-                  (la) => la.provider == provider
-                )!;
-                const isLinked = linkedAccount.status === 0;
-
-                if (isLinked) {
-                  console.log('update external episode state', linkedAccount);
-                  window.glxApi.invoke('set-external-epsiode-state', {
-                    providerName: provider,
-                    episodeId: ep.episode_meta.externalEpId,
-                  });
                 }
               }
             }

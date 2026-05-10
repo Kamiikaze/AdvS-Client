@@ -20,7 +20,6 @@ import SearchDialog from '@/components/searchDialog.vue';
 import Toolbar from '@/components/toolbar.vue';
 import type { DiscordConfig } from '@/lib/types';
 import router from '@/router';
-import { useAppStore } from '@/store/app';
 import { useShowStore } from '@/store/show';
 import { getCurrentInstance, onMounted, ref } from 'vue';
 
@@ -50,7 +49,6 @@ if (discordConfig && (JSON.parse(discordConfig) as DiscordConfig).state) {
 
 useShowStore().fetchShows();
 useShowStore().fetchWatchHistory();
-useAppStore().fetchLinkedAccounts();
 
 const globalContextMenu = ref<any>(null);
 

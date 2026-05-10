@@ -1,4 +1,3 @@
-import type { LinkedAccount } from '@/lib/electron';
 import { useShowStore } from '@/store/show';
 import { acceptHMRUpdate, defineStore } from 'pinia';
 
@@ -10,7 +9,6 @@ export const useAppStore = defineStore('app', {
       watchlist: false,
       subscribed: false,
     },
-    linkedAccounts: [] as LinkedAccount[],
     inactiveSettings: {
       enabled: true,
       timeout: 1, // hours
@@ -31,11 +29,6 @@ export const useAppStore = defineStore('app', {
       }
 
       this.showExtendedDrawer[name] = !wasOpen;
-    },
-    async fetchLinkedAccounts() {
-      this.linkedAccounts = (await window.glxApi.invoke(
-        'get-linked-accounts'
-      )) as LinkedAccount[];
     },
   },
 });

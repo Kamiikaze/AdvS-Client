@@ -6,7 +6,6 @@
         <SettingsDev />
       </v-col>
       <v-col cols="6">
-        <SettingsIntegrations disabled class="mb-4" />
         <SettingsDiscord />
       </v-col>
       <v-col cols="6"> </v-col>
@@ -18,7 +17,6 @@
 import SettingsDev from '@/components/settings/development.vue';
 import SettingsDiscord from '@/components/settings/discord.vue';
 import SettingsGeneral from '@/components/settings/general.vue';
-import SettingsIntegrations from '@/components/settings/integrations.vue';
 import { defineComponent } from 'vue';
 
 export default defineComponent({
@@ -26,7 +24,6 @@ export default defineComponent({
   components: {
     SettingsDev,
     SettingsDiscord,
-    SettingsIntegrations,
     SettingsGeneral,
   },
   data: () => ({

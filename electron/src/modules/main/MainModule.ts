@@ -17,10 +17,6 @@ import DesktopShortCut from './action/DesktopShortCut';
 import SetWatchHistory from './action/SetWatchHistory';
 import GetWatchHistory from './action/GetWatchHistory';
 import checkUpdate from '../../util/UpdateChecker';
-import GetLinkedAccounts from './action/GetLinkedAccounts';
-import SetLinkedAccount from './action/SetLinkedAccounts';
-import CheckAccountLinking from './services/checkAccountLinking';
-import SetExternalEpisodeState from './action/SetExternalEpisodeState';
 import SetDiscordRPC from './action/SetDiscordRPC';
 
 export default class MainModule extends BaseKernelModule<
@@ -41,10 +37,6 @@ export default class MainModule extends BaseKernelModule<
       new GetWatchHistory(this),
       new SetWatchHistory(this),
 
-      new GetLinkedAccounts(this),
-      new SetLinkedAccount(this),
-      new SetExternalEpisodeState(this),
-
       new SetDiscordRPC(this),
 
       new GetVersion(this),
@@ -53,7 +45,6 @@ export default class MainModule extends BaseKernelModule<
 
     // Services
     this.addService(new ShowListUpdater(this));
-    this.addService(new CheckAccountLinking(this));
   }
 
   async initModule(): Promise<void> {
@@ -81,7 +72,6 @@ export default class MainModule extends BaseKernelModule<
 
   async final() {
     await this.getKernel().triggerEvent('show-list-updater');
-    await this.getKernel().triggerEvent('check-account-linking');
 
     this.getClient().updatePreloadMsg('Launching App...');
   }

@@ -1,4 +1,3 @@
-/* eslint-disable */
 const os = require('os');
 
 let icon;

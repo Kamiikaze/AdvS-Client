@@ -25,17 +25,17 @@ export function splitEpisodeTitle(episode: Episode): {
   return { german, english };
 }
 
-function decodeHtml(html: string) {
-  const textarea = document.createElement('textarea');
+function decodeHtml(html: string, maxIterations = 5): string {
   let decoded = html;
-  let prev;
-
+  let prev: string;
+  let i = 0;
   do {
+    i += 1;
     prev = decoded;
-    textarea.innerHTML = decoded;
-    decoded = textarea.value;
-  } while (decoded !== prev);
-
+    decoded =
+      new DOMParser().parseFromString(decoded, 'text/html').documentElement
+        .textContent ?? decoded;
+  } while (decoded !== prev && i < maxIterations);
   return decoded;
 }
 

@@ -1,1 +1,7 @@
-export default ['s.to', 'aniworld.to', 'imdb.com', 'github.com'];
+export default [
+  's.to',
+  'serienstream.to',
+  'aniworld.to',
+  'imdb.com',
+  'github.com',
+];

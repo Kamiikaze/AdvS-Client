@@ -26,7 +26,7 @@ AdvS-Client was created to offer users a dedicated desktop application for strea
 
 AdvS-Client is designed to work with the following streaming platforms:
 
-- **[s.to](https://s.to)** - Series streaming platform
+- **[s.to](https://serienstream.to)** - Series streaming platform
 - **[aniworld.to](https://aniworld.to)** - Anime streaming platform
 
 The application provides a unified interface to browse, search, and watch content from these platforms with enhanced features like ad-blocking, watch history, and improved video playback.

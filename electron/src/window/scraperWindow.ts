@@ -84,6 +84,6 @@ export default async function scraperWindow(
       console.error('Timeout reached, closing window');
       kernel.getWindowManager().close(windowId);
       resolve({ redirect: requestUrl, mediaLink: null });
-    }, 6 * 1000);
+    }, 10 * 1000);
   });
 }

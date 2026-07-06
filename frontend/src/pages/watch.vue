@@ -314,7 +314,8 @@ export default {
         url = 'https://aniworld.to/anime/stream/' + this.currentShow.show_slug;
       } else {
         title = 'S.to';
-        url = 'https://s.to/serie/stream/' + this.currentShow.show_slug;
+        url =
+          'https://serienstream.to/serie/stream/' + this.currentShow.show_slug;
       }
 
       return {

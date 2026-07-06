@@ -1,5 +1,4 @@
 import {
-  type CoreModule,
   type IBaseKernelModule,
   type IKernel,
   type InMemCache,
@@ -57,11 +56,14 @@ export default class MainClient extends BaseClient<IKernel, MainDB> {
   }
 
   static getBaseUrl(showType: string) {
-    return showType === 'anime' ? 'https://aniworld.to' : 'https://s.to';
+    return showType === 'anime'
+      ? 'https://aniworld.to'
+      : 'https://serienstream.to';
   }
 
   async fetchShowList(type: 'anime' | 'serie') {
-    const url = type === 'anime' ? 'https://aniworld.to' : 'https://s.to';
+    const url =
+      type === 'anime' ? 'https://aniworld.to' : 'https://serienstream.to';
     const listPath = type === 'anime' ? 'animes' : 'serien';
 
     this.log('fetchShowList', type, url, listPath);
@@ -137,7 +139,7 @@ export default class MainClient extends BaseClient<IKernel, MainDB> {
     const showType = show.show_type;
 
     const baseUrl =
-      showType === 'anime' ? 'https://aniworld.to' : 'https://s.to';
+      showType === 'anime' ? 'https://aniworld.to' : 'https://serienstream.to';
     const prePath =
       showType === 'anime'
         ? `${showType}/stream/${showSlug}`
